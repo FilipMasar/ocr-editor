@@ -1,11 +1,11 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { XMLParser } from "fast-xml-parser";
 import './App.css';
-import TextBlock from './components/TextBlock';
+import Viewer from './components/Viewer';
 
 function App() {
   const [xmlData, setXmlData] = useState<any>();
-  const [textBlocks, setTextBlocks] = useState<any[]>([]);
+  const [imageFile, setImageFile] = useState<File>();
 
   function parseXml(xml: string) {
     const options = {
@@ -19,7 +19,7 @@ function App() {
     setXmlData(obj);
   }
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+  function handleAltoChange(event: ChangeEvent<HTMLInputElement>) {
     if (event.target?.files?.length === 1) {
       const reader = new FileReader()
       reader.onload = async (e) => {
@@ -29,25 +29,21 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    if (xmlData?.alto?.Layout?.Page?.PrintSpace?.TextBlock) {
-      if (Array.isArray(xmlData.alto.Layout.Page.PrintSpace.TextBlock)) {
-        setTextBlocks(xmlData.alto.Layout.Page.PrintSpace.TextBlock);
-      } else {
-        setTextBlocks([xmlData.alto.Layout.Page.PrintSpace.TextBlock]);
-      }
+  function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+    if (event.target?.files?.length === 1) {
+      setImageFile(event.target.files[0])
     }
-  }, [xmlData]);
-
-  console.log(textBlocks)
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div>
+      <header className="header">
         <p>Pick alto xml file: </p>
-        <input type="file" onChange={handleChange} accept=".xml"/>
+        <input type="file" onChange={handleAltoChange} accept=".xml"/>
+        <p>Pick jpeg scan: </p>
+        <input type="file" onChange={handleImageChange} accept=".jpg"/>
       </header>
-        {textBlocks.map((textBlock: any, index: number) => <TextBlock key={index} textBlock={textBlock} />)}
+      <Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
     </div>
   );
 }

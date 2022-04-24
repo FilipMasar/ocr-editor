@@ -1,27 +1,15 @@
-import { FC, useEffect, useState } from "react";
-import TextLine from "./TextLine";
+import { FC } from "react";
 
 interface TextBlockProps {
-  textBlock: any;
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 }
 
-const TextBlock:FC<TextBlockProps> = ({ textBlock }) => {
-  const [textLines, setTextLines] = useState<any[]>([]);
-  
-  useEffect(() => {
-    if (textBlock?.TextLine) {
-      if (Array.isArray(textBlock.TextLine)) {
-        setTextLines(textBlock.TextLine);
-      } else {
-        setTextLines([textBlock.TextLine]);
-      }
-    }
-  }, [textBlock]);
-
+const TextBlock:FC<TextBlockProps> = ({ top, left, width, height }) => {
   return (
-    <div>
-      {textLines.map((textLine: any, index: number) => <TextLine key={index} textLine={textLine} />)}
-    </div>
+    <div style={{ position: "absolute", top, left, width, height, border: "1px red solid" }}/>
   );
 };
 
