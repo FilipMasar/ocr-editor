@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from "react"
 
 interface IllustrationProps {
   top: number;
@@ -8,9 +8,9 @@ interface IllustrationProps {
 }
 
 const Illustration:FC<IllustrationProps> = ({ top, left, width, height }) => {
-  return (
-    <div style={{ position: "absolute", top, left, width, height, border: "1px pink solid" }}/>
-  )
+	return (
+		<div style={{ position: "absolute", top, left, width, height, border: "1px pink solid" }}/>
+	)
 }
 
-export default Illustration;
+export default Illustration

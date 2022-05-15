@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from "react"
 
 interface PrintSpaceProps {
   top: number;
@@ -8,9 +8,9 @@ interface PrintSpaceProps {
 }
 
 const PrintSpace:FC<PrintSpaceProps> = ({ top, left, width, height }) => {
-  return (
-    <div style={{ position: "absolute", top, left, width, height, border: "1px black solid" }}/>
-  )
+	return (
+		<div style={{ position: "absolute", top, left, width, height, border: "1px black solid" }}/>
+	)
 }
 
-export default PrintSpace;
+export default PrintSpace

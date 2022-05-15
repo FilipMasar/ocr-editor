@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from "react"
 
 interface TextBlockProps {
   top: number;
@@ -8,9 +8,9 @@ interface TextBlockProps {
 }
 
 const TextBlock:FC<TextBlockProps> = ({ top, left, width, height }) => {
-  return (
-    <div style={{ position: "absolute", top, left, width, height, border: "1px red solid" }}/>
-  );
-};
+	return (
+		<div style={{ position: "absolute", top, left, width, height, border: "1px red solid" }}/>
+	)
+}
 
-export default TextBlock;
+export default TextBlock

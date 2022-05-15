@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from "react"
 
 interface TextLineProps {
   top: number;
@@ -8,9 +8,9 @@ interface TextLineProps {
 }
 
 const TextLine:FC<TextLineProps> = ({ top, left, width, height }) => {
-  return (
-    <div style={{ position: "absolute", top, left, width, height, border: "1px orange solid" }}/>
-  );
-};
+	return (
+		<div style={{ position: "absolute", top, left, width, height, border: "1px orange solid" }}/>
+	)
+}
 
-export default TextLine;
+export default TextLine

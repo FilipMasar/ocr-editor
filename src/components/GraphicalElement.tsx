@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from "react"
 
 interface GraphicalElementProps {
   top: number;
@@ -8,9 +8,9 @@ interface GraphicalElementProps {
 }
 
 const GraphicalElement:FC<GraphicalElementProps> = ({ top, left, width, height }) => {
-  return (
-    <div style={{ position: "absolute", top, left, width, height, border: "1px purple solid" }}/>
-  )
+	return (
+		<div style={{ position: "absolute", top, left, width, height, border: "1px purple solid" }}/>
+	)
 }
 
-export default GraphicalElement;
+export default GraphicalElement
