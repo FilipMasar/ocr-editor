@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import { XMLParser } from "fast-xml-parser";
 import './App.css';
 import Viewer from './components/Viewer';
+import Editor from './components/Editor';
 
 function App() {
   const [xmlData, setXmlData] = useState<any>();
@@ -36,14 +37,13 @@ function App() {
   }
 
   return (
-    <div>
-      <header className="header">
-        <p>Pick alto xml file: </p>
-        <input type="file" onChange={handleAltoChange} accept=".xml"/>
-        <p>Pick jpeg scan: </p>
-        <input type="file" onChange={handleImageChange} accept=".jpg"/>
-      </header>
-      <Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
+    <div style={{ display: "flex" }}>
+      <div style={{ width: "70%", backgroundColor: "blue", height: "100vh", overflow: "scroll"}}>
+        <Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
+      </div>
+      <div style={{ width: "30%", backgroundColor: "red", height: "100vh", overflow: "scroll"}}>
+        <Editor handleAltoChange={handleAltoChange} handleImageChange={handleImageChange} />
+      </div>
     </div>
   );
 }

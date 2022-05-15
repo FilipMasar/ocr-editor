@@ -84,7 +84,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
   }
 
   return (
-    <div style={{position: "relative", width: "100%", height: "100%", margin: 20}}>
+    <div style={{position: "relative", margin: 20}}>
       {imageFile && <img src={URL.createObjectURL(imageFile)}  alt={imageFile.name} />}
       
       <PrintSpace top={printSpace["@_VPOS"]} left={printSpace["@_HPOS"]} width={printSpace["@_WIDTH"]} height={printSpace["@_HEIGHT"]} />
