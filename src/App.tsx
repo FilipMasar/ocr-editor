@@ -3,10 +3,12 @@ import { XMLParser } from "fast-xml-parser"
 import "./App.css"
 import Viewer from "./components/Viewer"
 import Editor from "./components/Editor"
+import AppContext from "./context/appContext"
 
 function App() {
 	const [xmlData, setXmlData] = useState<any>()
 	const [imageFile, setImageFile] = useState<File>()
+	const [zoom, setZoom] = useState<number>(1)
 
 	function parseXml(xml: string) {
 		const options = {
@@ -37,14 +39,16 @@ function App() {
 	}
 
 	return (
-		<div style={{ display: "flex" }}>
-			<div style={{ width: "70%", backgroundColor: "blue", height: "100vh", overflow: "scroll"}}>
-				<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
+		<AppContext.Provider value={{zoom, setZoom} }>
+			<div style={{ display: "flex" }}>
+				<div style={{ width: "70%", backgroundColor: "blue", height: "100vh", overflow: "scroll"}}>
+					<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
+				</div>
+				<div style={{ width: "30%", backgroundColor: "red", height: "100vh", overflow: "scroll"}}>
+					<Editor handleAltoChange={handleAltoChange} handleImageChange={handleImageChange} />
+				</div>
 			</div>
-			<div style={{ width: "30%", backgroundColor: "red", height: "100vh", overflow: "scroll"}}>
-				<Editor handleAltoChange={handleAltoChange} handleImageChange={handleImageChange} />
-			</div>
-		</div>
+		</AppContext.Provider>
 	)
 }
 

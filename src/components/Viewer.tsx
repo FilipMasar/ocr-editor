@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react"
+import { FC, useContext, useEffect, useState } from "react"
+import AppContext from "../context/appContext"
 import GraphicalElement from "./GraphicalElement"
 import Illustration from "./Illustration"
 import PrintSpace from "./PrintSpace"
@@ -17,6 +18,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 	const [strings, setStrings] = useState<any[]>([])
 	const [illustrations, setIllustrations] = useState<any[]>([])
 	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
+	const { zoom } = useContext(AppContext)
 
 	useEffect(() => {
 		setTextBlocks([])
@@ -85,52 +87,56 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 
 	return (
 		<div style={{position: "relative", margin: 20}}>
-			{imageFile && <img src={URL.createObjectURL(imageFile)}  alt={imageFile.name} />}
+			{imageFile && <img 
+				src={URL.createObjectURL(imageFile)}
+				alt={imageFile.name}
+				style={{width: printSpace["@_WIDTH"] * zoom, height: printSpace["@_HEIGHT"] * zoom}}
+			/>}
       
 			<PrintSpace 
-				top={printSpace["@_VPOS"]}
-				left={printSpace["@_HPOS"]}
-				width={printSpace["@_WIDTH"]}
-				height={printSpace["@_HEIGHT"]}
+				top={printSpace["@_VPOS"] * zoom}
+				left={printSpace["@_HPOS"] * zoom}
+				width={printSpace["@_WIDTH"] * zoom}
+				height={printSpace["@_HEIGHT"] * zoom}
 			/>
       
 			{textBlocks.map((textBlock: any, index: number) => 
 				<TextBlock 
 					key={index}
-					top={textBlock["@_VPOS"]}
-					left={textBlock["@_HPOS"]}
-					width={textBlock["@_WIDTH"]}
-					height={textBlock["@_HEIGHT"]} 
+					top={textBlock["@_VPOS"] * zoom}
+					left={textBlock["@_HPOS"] * zoom}
+					width={textBlock["@_WIDTH"] * zoom}
+					height={textBlock["@_HEIGHT"] * zoom} 
 				/>
 			)}
 
 			{illustrations.map((illustration: any, index: number) =>
 				<Illustration 
 					key={index}
-					top={illustration["@_VPOS"]}
-					left={illustration["@_HPOS"]}
-					width={illustration["@_WIDTH"]}
-					height={illustration["@_HEIGHT"]}
+					top={illustration["@_VPOS"] * zoom}
+					left={illustration["@_HPOS"] * zoom}
+					width={illustration["@_WIDTH"] * zoom}
+					height={illustration["@_HEIGHT"] * zoom}
 				/>
 			)}
 
 			{graphicalElements.map((graphicalElement: any, index: number) =>
 				<GraphicalElement 
 					key={index}
-					top={graphicalElement["@_VPOS"]}
-					left={graphicalElement["@_HPOS"]}
-					width={graphicalElement["@_WIDTH"]}
-					height={graphicalElement["@_HEIGHT"]}
+					top={graphicalElement["@_VPOS"] * zoom}
+					left={graphicalElement["@_HPOS"] * zoom}
+					width={graphicalElement["@_WIDTH"] * zoom}
+					height={graphicalElement["@_HEIGHT"] * zoom}
 				/>
 			)}
 
 			{textLines.map((textLine: any, index: number) =>
 				<TextLine 
 					key={index}
-					top={textLine["@_VPOS"]}
-					left={textLine["@_HPOS"]}
-					width={textLine["@_WIDTH"]}
-					height={textLine["@_HEIGHT"]}
+					top={textLine["@_VPOS"] * zoom}
+					left={textLine["@_HPOS"] * zoom}
+					width={textLine["@_WIDTH"] * zoom}
+					height={textLine["@_HEIGHT"] * zoom}
 				/>
 			)}
 
