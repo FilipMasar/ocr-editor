@@ -1,4 +1,5 @@
-import { FC } from "react"
+import { FC, useContext, useEffect, useState } from "react"
+import StyleContext, { defaultStyle, TextStyle } from "../context/styleContext"
 
 interface StringProps {
   top: number;
@@ -7,13 +8,27 @@ interface StringProps {
   height: number;
   text: string;
   lineVPos: number;
+  styleRefs: string;
 }
 
-const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos }) => {
+const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs }) => {
+	const { styles } = useContext(StyleContext)
+	const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle)
+
+	useEffect(() => {
+		const styleRefsArray = styleRefs.split(" ")
+    
+		for (const id of styleRefsArray) {
+			if (styles[id]) {
+				setTextStyle(styles[id])
+			}
+		}
+	})
+
 	return (
 		<>
 			<div style={{ position: "absolute", top, left, width, height, border: "1px green solid" }} />
-			<span style={{ position: "absolute", top: lineVPos, left, fontFamily: "Times New Roman", fontSize: 50, fontWeight: 200, lineHeight: "44px" }}>{text}</span>
+			<span style={{ position: "absolute", top: lineVPos, left, fontFamily: textStyle.fontFamily, fontSize: textStyle.fontSize }}>{text}</span>
 		</>
 	)
 }

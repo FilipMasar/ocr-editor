@@ -20,13 +20,24 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
 	const { zoom } = useContext(AppContext)
 
+	const addStyles = (obj: any, parentStyleRefs: string) => {
+		if (obj["@_STYLEREFS"] !== undefined) return obj
+
+		return {
+			...obj,
+			["@_STYLEREFS"]: parentStyleRefs
+		}
+	}
+
 	useEffect(() => {
 		setTextBlocks([])
 		if (printSpace?.TextBlock) {
+			const parentStyleRefs = printSpace["@_STYLEREFS"]
+
 			if (Array.isArray(printSpace.TextBlock)) {
-				setTextBlocks(printSpace.TextBlock)
+				setTextBlocks(printSpace.TextBlock.map((x:any) => addStyles(x, parentStyleRefs)))
 			} else {
-				setTextBlocks([printSpace.TextBlock])
+				setTextBlocks([addStyles(printSpace.TextBlock, parentStyleRefs)])
 			}
 		}
 
@@ -53,10 +64,12 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 		setTextLines([])
 		for (const textBlock of textBlocks) {
 			if (textBlock?.TextLine) {
+				const parentStyleRefs = textBlock["@_STYLEREFS"]
+
 				if (Array.isArray(textBlock.TextLine)) {
-					setTextLines(old => old.concat(textBlock.TextLine))
+					setTextLines(old => [...old, ...textBlock.TextLine.map((x:any) => addStyles(x, parentStyleRefs))])
 				} else {
-					setTextLines(old => [...old, textBlock.TextLine])
+					setTextLines(old => [...old, addStyles(textBlock.TextLine, parentStyleRefs)])
 				}
 			}
 		}
@@ -66,6 +79,8 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 		setStrings([])
 		for (const textLine of textLines) {
 			if (textLine?.String) {
+				const parentStyleRefs = textLine["@_STYLEREFS"]
+
 				if (Array.isArray(textLine.String)) {
 					const tmp = textLine.String.map((s: any) => {
 						return {
@@ -73,9 +88,10 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 							lineVPos: textLine["@_VPOS"],
 						}
 					})
-					setStrings(old => old.concat(tmp))
+					setStrings(old => [...old, ...tmp.map((x:any) => addStyles(x, parentStyleRefs))])
 				} else {
-					setStrings(old => [...old, {...textLine.String, lineVPos: textLine["@_VPOS"]}])
+					const tmp = {...textLine.String, lineVPos: textLine["@_VPOS"]}
+					setStrings(old => [...old, addStyles(tmp, parentStyleRefs)])
 				}
 			}
 		}
@@ -149,6 +165,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 					height={string["@_HEIGHT"]}
 					text={string["@_CONTENT"]}
 					lineVPos={string.lineVPos}
+					styleRefs={string["@_STYLEREFS"]}
 				/>
 			)}
 		</div>
