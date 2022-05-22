@@ -1,11 +1,11 @@
 import { FC, useContext, useEffect, useState } from "react"
 import AppContext from "../context/appContext"
-import GraphicalElement from "./GraphicalElement"
-import Illustration from "./Illustration"
-import PrintSpace from "./PrintSpace"
-import String from "./String"
-import TextBlock from "./TextBlock"
-import TextLine from "./TextLine"
+import GraphicalElement from "./elements/GraphicalElement"
+import Illustration from "./elements/Illustration"
+import PrintSpace from "./elements/PrintSpace"
+import String from "./elements/String"
+import TextBlock from "./elements/TextBlock"
+import TextLine from "./elements/TextLine"
 
 interface ViewerProps {
   imageFile: File | undefined;
@@ -159,12 +159,12 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 			{strings.map((string: any, index: number) =>
 				<String 
 					key={index}
-					top={string["@_VPOS"]}
-					left={string["@_HPOS"]}
-					width={string["@_WIDTH"]}
-					height={string["@_HEIGHT"]}
+					top={string["@_VPOS"] * zoom}
+					left={string["@_HPOS"] * zoom}
+					width={string["@_WIDTH"] * zoom}
+					height={string["@_HEIGHT"] * zoom}
 					text={string["@_CONTENT"]}
-					lineVPos={string.lineVPos}
+					lineVPos={string.lineVPos * zoom}
 					styleRefs={string["@_STYLEREFS"]}
 				/>
 			)}

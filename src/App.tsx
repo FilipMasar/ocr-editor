@@ -67,7 +67,7 @@ function App() {
 
 	return (
 		<AppContext.Provider value={{zoom, setZoom} }>
-			<StyleContext.Provider value={{ styles }}>
+			<StyleContext.Provider value={{ styles, setStyles }}>
 				<div style={{ display: "flex" }}>
 					<div style={{ width: "70%", backgroundColor: "blue", height: "100vh", overflow: "scroll"}}>
 						<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
