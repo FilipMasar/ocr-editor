@@ -8,8 +8,9 @@ interface EditorProps {
 }
 
 const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange}) => {
-	const {zoom, setZoom} = useContext(AppContext)
+	const {settings, setSettings} = useContext(AppContext)
 	const {styles, setStyles} = useContext(StyleContext)
+	const {zoom, imageOpacity} = settings
 
 	return (
 		<div>
@@ -18,8 +19,11 @@ const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange}) => {
 			<p>Pick jpeg scan: </p>
 			<input type="file" onChange={handleImageChange} accept=".jpg"/>
 			<p>Zoom: {zoom}</p>
-			<button onClick={() => setZoom(old => Math.round((old - 0.1) * 100) / 100)}>-</button>
-			<button onClick={() => setZoom(old => Math.round((old + 0.1) * 100) / 100)}>+</button>
+			<button onClick={() => setSettings(old => ({...old, zoom: Math.round((old.zoom - 0.1) * 100) / 100}))}>-</button>
+			<button onClick={() => setSettings(old => ({...old, zoom: Math.round((old.zoom + 0.1) * 100) / 100}))}>+</button>
+			<p>Image opacity: {imageOpacity}</p>
+			<button onClick={() => setSettings(old => ({...old, imageOpacity: Math.round((old.imageOpacity - 0.1) * 100) / 100}))}>-</button>
+			<button onClick={() => setSettings(old => ({...old, imageOpacity: Math.round((old.imageOpacity + 0.1) * 100) / 100}))}>+</button>
 			<hr />
 			<p>Font settings:</p>
 			{Object.keys(styles).map(key => (

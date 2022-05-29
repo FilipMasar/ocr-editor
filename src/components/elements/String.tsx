@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from "react"
+import { FC, useContext, useEffect, useState } from "react"
 import AppContext from "../../context/appContext"
 import StyleContext, { defaultStyle, TextStyle } from "../../context/styleContext"
 
@@ -14,7 +14,8 @@ interface StringProps {
 
 const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs }) => {
 	const { styles } = useContext(StyleContext)
-	const { zoom } = useContext(AppContext)
+	const { settings } = useContext(AppContext)
+	const { zoom } = settings
 	const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle)
 
 	useEffect(() => {

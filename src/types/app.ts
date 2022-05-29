@@ -1,3 +1,4 @@
-export type AppData = {
-  scaler: number
+export type Settings = {
+  zoom: number,
+  imageOpacity: number
 }

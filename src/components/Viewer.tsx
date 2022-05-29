@@ -18,7 +18,8 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 	const [strings, setStrings] = useState<any[]>([])
 	const [illustrations, setIllustrations] = useState<any[]>([])
 	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
-	const { zoom } = useContext(AppContext)
+	const { settings } = useContext(AppContext)
+	const { zoom, imageOpacity } = settings
 
 	const addStyles = (obj: any, parentStyleRefs: string) => {
 		if (obj["@_STYLEREFS"] !== undefined) return obj
@@ -106,7 +107,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 			{imageFile && <img 
 				src={URL.createObjectURL(imageFile)}
 				alt={imageFile.name}
-				style={{width: printSpace["@_WIDTH"] * zoom, height: printSpace["@_HEIGHT"] * zoom}}
+				style={{width: printSpace["@_WIDTH"] * zoom, height: printSpace["@_HEIGHT"] * zoom, opacity: imageOpacity}}
 			/>}
       
 			<PrintSpace 

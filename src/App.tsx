@@ -3,13 +3,14 @@ import { XMLParser } from "fast-xml-parser"
 import "./App.css"
 import Viewer from "./components/Viewer"
 import Editor from "./components/Editor"
-import AppContext from "./context/appContext"
+import AppContext, { defaultSettings } from "./context/appContext"
 import StyleContext, { TextStyle } from "./context/styleContext"
+import { Settings } from "./types/app"
 
 function App() {
 	const [xmlData, setXmlData] = useState<any>()
 	const [imageFile, setImageFile] = useState<File>()
-	const [zoom, setZoom] = useState<number>(1)
+	const [settings, setSettings] = useState<Settings>(defaultSettings)
 	const [styles, setStyles] = useState<Record<string, TextStyle>>({})
 
 	function parseStyles(stylesObj: any) {
@@ -66,10 +67,10 @@ function App() {
 	}
 
 	return (
-		<AppContext.Provider value={{zoom, setZoom} }>
+		<AppContext.Provider value={{settings, setSettings}}>
 			<StyleContext.Provider value={{ styles, setStyles }}>
 				<div style={{ display: "flex" }}>
-					<div style={{ width: "70%", backgroundColor: "blue", height: "100vh", overflow: "scroll"}}>
+					<div style={{ width: "70%", backgroundColor: "#fff", height: "100vh", overflow: "scroll"}}>
 						<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
 					</div>
 					<div style={{ width: "30%", backgroundColor: "red", height: "100vh", overflow: "scroll"}}>
