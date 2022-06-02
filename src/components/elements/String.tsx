@@ -31,7 +31,20 @@ const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styl
 	return (
 		<>
 			<div style={{ position: "absolute", top, left, width, height, border: "1px green solid" }} />
-			<span style={{ width: width, position: "absolute", top: lineVPos, left, fontFamily: textStyle.fontFamily, fontSize: textStyle.fontSize * zoom }}>{text}</span>
+			<div 
+				contentEditable="true"
+				suppressContentEditableWarning={true}
+				onInput={(e) => console.log(e.currentTarget.textContent)}
+				style={{ 
+					position: "absolute", 
+					top: lineVPos, 
+					left,
+					fontFamily: textStyle.fontFamily,
+					fontSize: textStyle.fontSize * zoom 
+				}}
+			>
+				{text}
+			</div>
 		</>
 	)
 }
