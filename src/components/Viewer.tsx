@@ -10,9 +10,10 @@ import TextLine from "./elements/TextLine"
 interface ViewerProps {
   imageFile: File | undefined;
   printSpace: any;
+	updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void;
 }
 
-const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
+const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 	const [textBlocks, setTextBlocks] = useState<any[]>([])
 	const [textLines, setTextLines] = useState<any[]>([])
 	const [strings, setStrings] = useState<any[]>([])
@@ -36,9 +37,12 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 			const parentStyleRefs = printSpace["@_STYLEREFS"]
 
 			if (Array.isArray(printSpace.TextBlock)) {
-				setTextBlocks(printSpace.TextBlock.map((x:any) => addStyles(x, parentStyleRefs)))
+				setTextBlocks(printSpace.TextBlock.map((x :any, index: number) => ({
+					...addStyles(x, parentStyleRefs),
+					textBlockindex: index,
+				})))
 			} else {
-				setTextBlocks([addStyles(printSpace.TextBlock, parentStyleRefs)])
+				setTextBlocks([{...addStyles(printSpace.TextBlock, parentStyleRefs), textBlockindex: -1}])
 			}
 		}
 
@@ -68,9 +72,17 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 				const parentStyleRefs = textBlock["@_STYLEREFS"]
 
 				if (Array.isArray(textBlock.TextLine)) {
-					setTextLines(old => [...old, ...textBlock.TextLine.map((x:any) => addStyles(x, parentStyleRefs))])
+					setTextLines(old => [...old, ...textBlock.TextLine.map((x: any, index: number) => ({
+						...addStyles(x, parentStyleRefs),
+						textBlockindex: textBlock.textBlockindex,
+						textLineindex: index
+					}))])
 				} else {
-					setTextLines(old => [...old, addStyles(textBlock.TextLine, parentStyleRefs)])
+					setTextLines(old => [...old, {
+						...addStyles(textBlock.TextLine, parentStyleRefs),
+						textBlockindex: textBlock.textBlockindex,
+						textLineindex: -1
+					}])
 				}
 			}
 		}
@@ -89,10 +101,20 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 							lineVPos: textLine["@_VPOS"],
 						}
 					})
-					setStrings(old => [...old, ...tmp.map((x:any) => addStyles(x, parentStyleRefs))])
+					setStrings(old => [...old, ...tmp.map((x: any, index: number) => ({
+						...addStyles(x, parentStyleRefs),
+						textBlockindex: textLine.textBlockindex,
+						textLineindex: textLine.textLineindex,
+						textStringindex: index
+					}))])
 				} else {
 					const tmp = {...textLine.String, lineVPos: textLine["@_VPOS"]}
-					setStrings(old => [...old, addStyles(tmp, parentStyleRefs)])
+					setStrings(old => [...old, {
+						...addStyles(tmp, parentStyleRefs),
+						textBlockindex: textLine.textBlockindex,
+						textLineindex: textLine.textLineindex,
+						textStringindex: -1
+					}])
 				}
 			}
 		}
@@ -167,6 +189,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace}) => {
 					text={string["@_CONTENT"]}
 					lineVPos={string.lineVPos * zoom}
 					styleRefs={string["@_STYLEREFS"]}
+					updateString={(value: string) => updateString(string.textBlockindex, string.textLineindex, string.textStringindex, value)}
 				/>
 			)}
 		</div>

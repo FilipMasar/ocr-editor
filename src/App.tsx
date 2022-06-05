@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react"
-import { XMLParser } from "fast-xml-parser"
+import { XMLBuilder, XmlBuilderOptions, XMLParser } from "fast-xml-parser"
+import FileSaver from "file-saver"
 import "./App.css"
 import Viewer from "./components/Viewer"
 import Editor from "./components/Editor"
@@ -66,15 +67,59 @@ function App() {
 		}
 	}
 
+	function updateTextBlock(textBlock: any, index: number) {
+		setXmlData((old: any) => {
+			if (index === -1) {
+				old.alto.Layout.Page.PrintSpace.TextBlock = textBlock
+			} else {
+				old.alto.Layout.Page.PrintSpace.TextBlock[index] = textBlock
+			}
+			return old
+		})
+	}
+
+	function updateString(textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) {
+		const printSpace = xmlData?.alto?.Layout?.Page?.PrintSpace
+		if (printSpace) {
+			const textBlock = textBlockIndex === -1 ? printSpace.TextBlock : printSpace.TextBlock[textBlockIndex]
+			if (textLineIndex === -1) {
+				if (textStringIndex === -1) {
+					textBlock.TextLine.String["@_CONTENT"] = value
+				} else {
+					textBlock.TextLine.String[textStringIndex]["@_CONTENT"] = value
+				}
+			} else {
+				if (textStringIndex === -1) {
+					textBlock.TextLine[textLineIndex].String["@_CONTENT"] = value
+				} else {
+					textBlock.TextLine[textLineIndex].String[textStringIndex]["@_CONTENT"] = value
+				}
+			}
+			updateTextBlock(textBlock, textBlockIndex)
+		}
+	}
+
+	function exportNewXML() {
+		const options: Partial<XmlBuilderOptions> = {
+			ignoreAttributes: false,
+			attributeNamePrefix : "@_",
+			format: true
+		}
+		const builder = new XMLBuilder(options)
+		const xmlContent = builder.build(xmlData)
+		const file = new File([xmlContent], "updated.xml")
+		FileSaver.saveAs(file)
+	}
+
 	return (
 		<AppContext.Provider value={{settings, setSettings}}>
 			<StyleContext.Provider value={{ styles, setStyles }}>
 				<div style={{ display: "flex" }}>
 					<div style={{ width: "70%", backgroundColor: "#fff", height: "100vh", overflow: "scroll"}}>
-						<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} />
+						<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} updateString={updateString} />
 					</div>
-					<div style={{ width: "30%", backgroundColor: "red", height: "100vh", overflow: "scroll"}}>
-						<Editor handleAltoChange={handleAltoChange} handleImageChange={handleImageChange} />
+					<div style={{ width: "30%", backgroundColor: "red", height: "100vh", overflow: "scroll", padding: 12}}>
+						<Editor handleAltoChange={handleAltoChange} handleImageChange={handleImageChange} onExport={exportNewXML} />
 					</div>
 				</div>
 			</StyleContext.Provider>

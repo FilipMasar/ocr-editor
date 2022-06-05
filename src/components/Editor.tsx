@@ -5,15 +5,16 @@ import StyleContext from "../context/styleContext"
 interface EditorProps {
   handleAltoChange: any;
   handleImageChange: any;
+	onExport: () => void;
 }
 
-const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange}) => {
+const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange, onExport}) => {
 	const {settings, setSettings} = useContext(AppContext)
 	const {styles, setStyles} = useContext(StyleContext)
 	const {zoom, imageOpacity} = settings
 
 	return (
-		<div>
+		<>
 			<p>Pick alto xml file: </p>
 			<input type="file" onChange={handleAltoChange} accept=".xml"/>
 			<p>Pick jpeg scan: </p>
@@ -37,7 +38,9 @@ const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange}) => {
 					<p>Font family: {styles[key].fontFamily}</p>
 				</div>
 			))}
-		</div>
+			<hr />
+			<button onClick={onExport}>Export Updated XML</button>
+		</>
 	)
 }
 

@@ -10,9 +10,10 @@ interface StringProps {
   text: string;
   lineVPos: number;
   styleRefs: string;
+	updateString: (value: string) => void;
 }
 
-const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs }) => {
+const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs, updateString }) => {
 	const { styles } = useContext(StyleContext)
 	const { settings } = useContext(AppContext)
 	const { zoom } = settings
@@ -34,7 +35,7 @@ const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styl
 			<div 
 				contentEditable="true"
 				suppressContentEditableWarning={true}
-				onInput={(e) => console.log(e.currentTarget.textContent)}
+				onInput={(e) => updateString(e.currentTarget.textContent as string)}
 				style={{ 
 					position: "absolute", 
 					top: lineVPos, 
