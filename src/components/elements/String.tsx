@@ -16,7 +16,7 @@ interface StringProps {
 const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs, updateString }) => {
 	const { styles } = useContext(StyleContext)
 	const { settings } = useContext(AppContext)
-	const { zoom } = settings
+	const { zoom, show } = settings
 	const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle)
 
 	useEffect(() => {
@@ -31,21 +31,23 @@ const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styl
 
 	return (
 		<>
-			<div style={{ position: "absolute", top, left, width, height, border: "1px green solid" }} />
-			<div 
-				contentEditable="true"
-				suppressContentEditableWarning={true}
-				onInput={(e) => updateString(e.currentTarget.textContent as string)}
-				style={{ 
-					position: "absolute", 
-					top: lineVPos, 
-					left,
-					fontFamily: textStyle.fontFamily,
-					fontSize: textStyle.fontSize * zoom 
-				}}
-			>
-				{text}
-			</div>
+			{show.strings && <div style={{ position: "absolute", top, left, width, height, border: "1px green solid" }} />}
+			{show.text && 
+				<div 
+					contentEditable="true"
+					suppressContentEditableWarning={true}
+					onInput={(e) => updateString(e.currentTarget.textContent as string)}
+					style={{ 
+						position: "absolute", 
+						top: lineVPos, 
+						left,
+						fontFamily: textStyle.fontFamily,
+						fontSize: textStyle.fontSize * zoom 
+					}}
+				>
+					{text}
+				</div>
+			}
 		</>
 	)
 }

@@ -39,6 +39,52 @@ const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange, onExport})
 				</div>
 			))}
 			<hr />
+			<p>Show:</p>
+			<div>
+				<input
+					type="checkbox"
+					checked={settings.show.printSpace}
+					onChange={(e) => setSettings(old => ({...old, show: {...old.show, printSpace: e.target.checked}}))}
+				/>
+				<label>Print space</label>
+				<input
+					type="checkbox"
+					checked={settings.show.illustrations}
+					onChange={(e) => setSettings(old => ({...old, show: {...old.show, illustrations: e.target.checked}}))}
+				/>
+				<label>Illustrations</label>
+				<input
+					type="checkbox"
+					checked={settings.show.graphicalElements}
+					onChange={(e) => setSettings(old => ({...old, show: {...old.show, graphicalElements: e.target.checked}}))}
+				/>
+				<label>Graphical elements</label>
+				<input
+					type="checkbox"
+					checked={settings.show.textBlocks}
+					onChange={(e) => setSettings(old => ({...old, show: {...old.show, textBlocks: e.target.checked}}))}
+				/>
+				<label>Text blocks</label>
+				<input
+					type="checkbox"
+					checked={settings.show.textLines}
+					onChange={(e) => setSettings(old => ({...old, show: {...old.show, textLines: e.target.checked}}))}
+				/>
+				<label>Text lines</label>
+				<input 
+					type="checkbox" 
+					checked={settings.show.strings} 
+					onChange={(e) => setSettings(old => ({...old, show: {...old.show, strings: e.target.checked}}))}
+				/>
+				<label>Strings</label>
+				<input
+					type="checkbox"
+					checked={settings.show.text}
+					onChange={(e) => setSettings(old => ({...old, show: {...old.show, text: e.target.checked}}))}
+				/>
+				<label>Text</label>
+			</div>
+			<hr />
 			<button onClick={onExport}>Export Updated XML</button>
 		</>
 	)

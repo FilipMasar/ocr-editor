@@ -20,7 +20,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 	const [illustrations, setIllustrations] = useState<any[]>([])
 	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
 	const { settings } = useContext(AppContext)
-	const { zoom, imageOpacity } = settings
+	const { zoom, imageOpacity, show } = settings
 
 	const addStyles = (obj: any, parentStyleRefs: string) => {
 		if (obj["@_STYLEREFS"] !== undefined) return obj
@@ -132,14 +132,16 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 				style={{width: printSpace["@_WIDTH"] * zoom, height: printSpace["@_HEIGHT"] * zoom, opacity: imageOpacity}}
 			/>}
       
-			<PrintSpace 
-				top={printSpace["@_VPOS"] * zoom}
-				left={printSpace["@_HPOS"] * zoom}
-				width={printSpace["@_WIDTH"] * zoom}
-				height={printSpace["@_HEIGHT"] * zoom}
-			/>
+			{show.printSpace && (
+				<PrintSpace 
+					top={printSpace["@_VPOS"] * zoom}
+					left={printSpace["@_HPOS"] * zoom}
+					width={printSpace["@_WIDTH"] * zoom}
+					height={printSpace["@_HEIGHT"] * zoom}
+				/>
+			)}
       
-			{textBlocks.map((textBlock: any, index: number) => 
+			{show.textBlocks && textBlocks.map((textBlock: any, index: number) => 
 				<TextBlock 
 					key={index}
 					top={textBlock["@_VPOS"] * zoom}
@@ -149,7 +151,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 				/>
 			)}
 
-			{illustrations.map((illustration: any, index: number) =>
+			{show.illustrations && illustrations.map((illustration: any, index: number) =>
 				<Illustration 
 					key={index}
 					top={illustration["@_VPOS"] * zoom}
@@ -159,7 +161,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 				/>
 			)}
 
-			{graphicalElements.map((graphicalElement: any, index: number) =>
+			{show.graphicalElements && graphicalElements.map((graphicalElement: any, index: number) =>
 				<GraphicalElement 
 					key={index}
 					top={graphicalElement["@_VPOS"] * zoom}
@@ -169,7 +171,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 				/>
 			)}
 
-			{textLines.map((textLine: any, index: number) =>
+			{show.textLines && textLines.map((textLine: any, index: number) =>
 				<TextLine 
 					key={index}
 					top={textLine["@_VPOS"] * zoom}
