@@ -16,7 +16,7 @@ interface StringProps {
 const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs, updateString }) => {
 	const { styles } = useContext(StyleContext)
 	const { settings } = useContext(AppContext)
-	const { zoom, show } = settings
+	const { show } = settings
 	const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle)
 
 	useEffect(() => {
@@ -42,7 +42,7 @@ const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styl
 						top: lineVPos, 
 						left,
 						fontFamily: textStyle.fontFamily,
-						fontSize: textStyle.fontSize * zoom 
+						fontSize: textStyle.fontSize
 					}}
 				>
 					{text}

@@ -125,71 +125,71 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 	}
 
 	return (
-		<div style={{position: "relative", margin: 20}}>
+		<div style={{position: "relative", margin: 20, transform: `scale(${zoom})`, transformOrigin: "0% 0% 0px"}}>
 			{imageFile && <img 
 				src={URL.createObjectURL(imageFile)}
 				alt={imageFile.name}
-				style={{width: printSpace["@_WIDTH"] * zoom, height: printSpace["@_HEIGHT"] * zoom, opacity: imageOpacity}}
+				style={{width: printSpace["@_WIDTH"], height: printSpace["@_HEIGHT"], opacity: imageOpacity}}
 			/>}
       
 			{show.printSpace && (
 				<PrintSpace 
-					top={printSpace["@_VPOS"] * zoom}
-					left={printSpace["@_HPOS"] * zoom}
-					width={printSpace["@_WIDTH"] * zoom}
-					height={printSpace["@_HEIGHT"] * zoom}
+					top={printSpace["@_VPOS"]}
+					left={printSpace["@_HPOS"]}
+					width={printSpace["@_WIDTH"]}
+					height={printSpace["@_HEIGHT"]}
 				/>
 			)}
       
 			{show.textBlocks && textBlocks.map((textBlock: any, index: number) => 
 				<TextBlock 
 					key={index}
-					top={textBlock["@_VPOS"] * zoom}
-					left={textBlock["@_HPOS"] * zoom}
-					width={textBlock["@_WIDTH"] * zoom}
-					height={textBlock["@_HEIGHT"] * zoom} 
+					top={textBlock["@_VPOS"]}
+					left={textBlock["@_HPOS"]}
+					width={textBlock["@_WIDTH"]}
+					height={textBlock["@_HEIGHT"]} 
 				/>
 			)}
 
 			{show.illustrations && illustrations.map((illustration: any, index: number) =>
 				<Illustration 
 					key={index}
-					top={illustration["@_VPOS"] * zoom}
-					left={illustration["@_HPOS"] * zoom}
-					width={illustration["@_WIDTH"] * zoom}
-					height={illustration["@_HEIGHT"] * zoom}
+					top={illustration["@_VPOS"]}
+					left={illustration["@_HPOS"]}
+					width={illustration["@_WIDTH"]}
+					height={illustration["@_HEIGHT"]}
 				/>
 			)}
 
 			{show.graphicalElements && graphicalElements.map((graphicalElement: any, index: number) =>
 				<GraphicalElement 
 					key={index}
-					top={graphicalElement["@_VPOS"] * zoom}
-					left={graphicalElement["@_HPOS"] * zoom}
-					width={graphicalElement["@_WIDTH"] * zoom}
-					height={graphicalElement["@_HEIGHT"] * zoom}
+					top={graphicalElement["@_VPOS"]}
+					left={graphicalElement["@_HPOS"]}
+					width={graphicalElement["@_WIDTH"]}
+					height={graphicalElement["@_HEIGHT"]}
 				/>
 			)}
 
 			{show.textLines && textLines.map((textLine: any, index: number) =>
 				<TextLine 
 					key={index}
-					top={textLine["@_VPOS"] * zoom}
-					left={textLine["@_HPOS"] * zoom}
-					width={textLine["@_WIDTH"] * zoom}
-					height={textLine["@_HEIGHT"] * zoom}
+					top={textLine["@_VPOS"]}
+					left={textLine["@_HPOS"]}
+					width={textLine["@_WIDTH"]}
+					height={textLine["@_HEIGHT"]}
 				/>
 			)}
 
 			{strings.map((string: any, index: number) =>
 				<String 
 					key={index}
-					top={string["@_VPOS"] * zoom}
-					left={string["@_HPOS"] * zoom}
-					width={string["@_WIDTH"] * zoom}
-					height={string["@_HEIGHT"] * zoom}
+					top={string["@_VPOS"]}
+					left={string["@_HPOS"]}
+					width={string["@_WIDTH"]}
+					height={string["@_HEIGHT"]}
 					text={string["@_CONTENT"]}
-					lineVPos={string.lineVPos * zoom}
+					lineVPos={string.lineVPos}
 					styleRefs={string["@_STYLEREFS"]}
 					updateString={(value: string) => updateString(string.textBlockindex, string.textLineindex, string.textStringindex, value)}
 				/>
