@@ -114,12 +114,17 @@ function App() {
 	return (
 		<AppContext.Provider value={{settings, setSettings}}>
 			<StyleContext.Provider value={{ styles, setStyles }}>
-				<div style={{ display: "flex" }}>
-					<div style={{ width: "70%", backgroundColor: "#fff", height: "100vh", overflow: "scroll"}}>
+				<div className="relative flex">
+					<div className="w-2/3 h-screen bg-white overflow-scroll">
 						<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} updateString={updateString} />
 					</div>
-					<div style={{ width: "30%", backgroundColor: "red", height: "100vh", overflow: "scroll", padding: 12}}>
+					<div className="w-1/3 h-screen bg-indigo-100 overflow-scroll">
 						<Editor handleAltoChange={handleAltoChange} handleImageChange={handleImageChange} onExport={exportNewXML} />
+					</div>
+					<div className="absolute bottom-0 left-0 right-0 flex items-center">
+						<div className="bg-white border p-4 inline-block">
+							TODO
+						</div>
 					</div>
 				</div>
 			</StyleContext.Provider>

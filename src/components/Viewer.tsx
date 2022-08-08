@@ -22,6 +22,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 	const { settings } = useContext(AppContext)
 	const { zoom, imageOpacity, show } = settings
 
+	console.log("G", graphicalElements)
 	const addStyles = (obj: any, parentStyleRefs: string) => {
 		if (obj["@_STYLEREFS"] !== undefined) return obj
 
@@ -125,11 +126,13 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 	}
 
 	return (
-		<div style={{position: "relative", margin: 20, transform: `scale(${zoom})`, transformOrigin: "0% 0% 0px"}}>
+		<div className="relative m-4" style={{transform: `scale(${zoom})`, transformOrigin: "0% 0% 0px"}}>
 			{imageFile && <img 
 				src={URL.createObjectURL(imageFile)}
 				alt={imageFile.name}
-				style={{width: printSpace["@_WIDTH"], height: printSpace["@_HEIGHT"], opacity: imageOpacity}}
+				width={printSpace["@_WIDTH"]}
+				height={printSpace["@_HEIGHT"]}
+				style={{ opacity: imageOpacity, maxWidth: "none" }}
 			/>}
       
 			{show.printSpace && (
