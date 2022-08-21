@@ -1,4 +1,5 @@
 import { ChangeEvent, FC, useContext } from "react"
+import { Upload } from "react-feather"
 import AppContext from "../context/appContext"
 import StyleContext from "../context/styleContext"
 
@@ -48,7 +49,22 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 
 			<hr className="w-full h-0.5 bg-black my-2" />
 
-			<label className="text-sm text-gray-900" htmlFor="zoomInput">Zoom</label>
+			<div className="flex gap-2 mb-2">
+				<button
+					className="w-full btn-primary"
+					onClick={onOpenAltoEditor}
+				>
+					Open Alto Editor
+				</button>
+				<button
+					className="w-full btn-primary"
+					onClick={onOpenTextEditor}
+				>
+					Open Text Editor
+				</button>
+			</div>
+
+			<label className="text-sm text-gray-900" htmlFor="zoomInput">Zoom: {zoom}</label>
 			<input
 				id="zoomInput"
 				className="w-full"
@@ -60,7 +76,7 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 				onChange={updateZoom} 
 			/>
 
-			<label className="text-sm text-gray-900" htmlFor="opacityInput">Image opacity</label>
+			<label className="text-sm text-gray-900" htmlFor="opacityInput">Image opacity: {imageOpacity}</label>
 			<input
 				id="opacityInput"
 				className="w-full"
@@ -71,23 +87,6 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 				value={imageOpacity}
 				onChange={updateOpacity} 
 			/>
-
-			<hr className="w-full h-0.5 bg-black my-2"/>
-
-			<div className="flex gap-2">
-				<button
-					className="w-full text-sm text-white bg-blue-500 hover:bg-blue-700 border border-blue-500 hover:border-blue-700 rounded-lg py-2 px-4"
-					onClick={onOpenAltoEditor}
-				>
-				Open Alto Editor
-				</button>
-				<button
-					className="w-full text-sm text-white bg-blue-500 hover:bg-blue-700 border border-blue-500 hover:border-blue-700 rounded-lg py-2 px-4"
-					onClick={onOpenTextEditor}
-				>
-				Open Text Editor
-				</button>
-			</div>
 
 			<hr className="w-full h-0.5 bg-black my-2"/>
 
@@ -149,8 +148,16 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 				/>
 				<label>Text</label>
 			</div>
-			<hr />
-			<button onClick={onExport}>Export Updated XML</button>
+
+			<hr className="w-full h-0.5 bg-black my-2"/>
+			
+			<button 
+				className="w-full flex gap-2 justify-center items-center btn-primary"
+				onClick={onExport}
+			>
+				<Upload size={20} />
+				<span>Export Updated XML</span>
+			</button>
 		</div>
 	)
 }
