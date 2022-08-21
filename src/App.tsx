@@ -8,6 +8,7 @@ import AppContext, { defaultSettings } from "./context/appContext"
 import StyleContext, { TextStyle } from "./context/styleContext"
 import { Settings } from "./types/app"
 import AltoEditor from "./components/AltoEditor"
+import TextEditor from "./components/TextEditor/TextEditor"
 
 function App() {
 	const [xmlData, setXmlData] = useState<any>()
@@ -73,11 +74,42 @@ function App() {
 	function updateTextBlock(textBlock: any, index: number) {
 		setXmlData((old: any) => {
 			if (index === -1) {
-				old.alto.Layout.Page.PrintSpace.TextBlock = textBlock
+				return {
+					...old,
+					alto: {
+						...old.alto,
+						Layout: {
+							...old.alto.Layout,
+							Page: {
+								...old.alto.Layout.Page,
+								PrintSpace: {
+									...old.alto.Layout.Page.PrintSpace,
+									TextBlock: textBlock
+								}
+							}
+						}
+					}
+				}
 			} else {
-				old.alto.Layout.Page.PrintSpace.TextBlock[index] = textBlock
+				const tmp = old.alto.Layout.Page.PrintSpace.TextBlock
+				tmp[index] = textBlock
+				return {
+					...old,
+					alto: {
+						...old.alto,
+						Layout: {
+							...old.alto.Layout,
+							Page: {
+								...old.alto.Layout.Page,
+								PrintSpace: {
+									...old.alto.Layout.Page.PrintSpace,
+									TextBlock: tmp
+								}
+							}
+						}
+					}
+				}
 			}
-			return old
 		})
 	}
 
@@ -132,14 +164,20 @@ function App() {
 					</div>
 
 					{showTextEditor && (
-						<div className="absolute bottom-0 left-0 right-0 flex items-center">
-							<div className="bg-white border p-4 inline-block">
-							TODO
-							</div>
-						</div>
+						<TextEditor 
+							printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace}
+							setShowTextEditor={setShowTextEditor}
+							updateString={updateString}
+						/>
 					)}
 
-					{showAltoEditor && <AltoEditor xmlData={xmlData} setXmlData={setXmlData} setShowAltoEditor={setShowAltoEditor} /> }
+					{showAltoEditor && (
+						<AltoEditor
+							xmlData={xmlData}
+							setXmlData={setXmlData}
+							setShowAltoEditor={setShowAltoEditor} 
+						/> 
+					)}
 
 				</div>
 			</StyleContext.Provider>
