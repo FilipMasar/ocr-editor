@@ -22,7 +22,6 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 	const { settings } = useContext(AppContext)
 	const { zoom, imageOpacity, show } = settings
 
-	console.log("G", graphicalElements)
 	const addStyles = (obj: any, parentStyleRefs: string) => {
 		if (obj["@_STYLEREFS"] !== undefined) return obj
 

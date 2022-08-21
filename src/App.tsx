@@ -3,16 +3,19 @@ import { XMLBuilder, XmlBuilderOptions, XMLParser } from "fast-xml-parser"
 import FileSaver from "file-saver"
 import "./App.css"
 import Viewer from "./components/Viewer"
-import Editor from "./components/Editor"
+import Panel from "./components/Panel"
 import AppContext, { defaultSettings } from "./context/appContext"
 import StyleContext, { TextStyle } from "./context/styleContext"
 import { Settings } from "./types/app"
+import AltoEditor from "./components/AltoEditor"
 
 function App() {
 	const [xmlData, setXmlData] = useState<any>()
 	const [imageFile, setImageFile] = useState<File>()
 	const [settings, setSettings] = useState<Settings>(defaultSettings)
 	const [styles, setStyles] = useState<Record<string, TextStyle>>({})
+	const [showAltoEditor, setShowAltoEditor] = useState(false)
+	const [showTextEditor, setShowTextEditor] = useState(false)
 
 	function parseStyles(stylesObj: any) {
 		setStyles({})
@@ -119,13 +122,25 @@ function App() {
 						<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} updateString={updateString} />
 					</div>
 					<div className="w-1/3 h-screen bg-indigo-100 overflow-scroll">
-						<Editor handleAltoChange={handleAltoChange} handleImageChange={handleImageChange} onExport={exportNewXML} />
+						<Panel 
+							handleAltoChange={handleAltoChange}
+							handleImageChange={handleImageChange}
+							onExport={exportNewXML}
+							onOpenAltoEditor={() => setShowAltoEditor(true)}
+							onOpenTextEditor={() => setShowTextEditor(true)} 
+						/>
 					</div>
-					<div className="absolute bottom-0 left-0 right-0 flex items-center">
-						<div className="bg-white border p-4 inline-block">
+
+					{showTextEditor && (
+						<div className="absolute bottom-0 left-0 right-0 flex items-center">
+							<div className="bg-white border p-4 inline-block">
 							TODO
+							</div>
 						</div>
-					</div>
+					)}
+
+					{showAltoEditor && <AltoEditor xmlData={xmlData} setXmlData={setXmlData} setShowAltoEditor={setShowAltoEditor} /> }
+
 				</div>
 			</StyleContext.Provider>
 		</AppContext.Provider>

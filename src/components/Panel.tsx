@@ -2,13 +2,15 @@ import { ChangeEvent, FC, useContext } from "react"
 import AppContext from "../context/appContext"
 import StyleContext from "../context/styleContext"
 
-interface EditorProps {
+interface PanelProps {
   handleAltoChange: any;
   handleImageChange: any;
 	onExport: () => void;
+	onOpenAltoEditor: () => void;
+	onOpenTextEditor: () => void;
 }
 
-const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange, onExport}) => {
+const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, onOpenAltoEditor, onOpenTextEditor}) => {
 	const {settings, setSettings} = useContext(AppContext)
 	const {styles, setStyles} = useContext(StyleContext)
 	const {zoom, imageOpacity} = settings
@@ -69,6 +71,23 @@ const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange, onExport})
 				value={imageOpacity}
 				onChange={updateOpacity} 
 			/>
+
+			<hr className="w-full h-0.5 bg-black my-2"/>
+
+			<div className="flex gap-2">
+				<button
+					className="w-full text-sm text-white bg-blue-500 hover:bg-blue-700 border border-blue-500 hover:border-blue-700 rounded-lg py-2 px-4"
+					onClick={onOpenAltoEditor}
+				>
+				Open Alto Editor
+				</button>
+				<button
+					className="w-full text-sm text-white bg-blue-500 hover:bg-blue-700 border border-blue-500 hover:border-blue-700 rounded-lg py-2 px-4"
+					onClick={onOpenTextEditor}
+				>
+				Open Text Editor
+				</button>
+			</div>
 
 			<hr className="w-full h-0.5 bg-black my-2"/>
 
@@ -136,4 +155,4 @@ const Editor:FC<EditorProps> = ({handleAltoChange, handleImageChange, onExport})
 	)
 }
 
-export default Editor
+export default Panel
