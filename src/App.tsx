@@ -4,16 +4,14 @@ import FileSaver from "file-saver"
 import "./App.css"
 import Viewer from "./components/Viewer"
 import Panel from "./components/Panel"
-import AppContext, { defaultSettings } from "./context/appContext"
+import { PanelProvider } from "./context/panelContext"
 import StyleContext, { TextStyle } from "./context/styleContext"
-import { Settings } from "./types/app"
 import AltoEditor from "./components/AltoEditor"
 import TextEditor from "./components/TextEditor/TextEditor"
 
 function App() {
 	const [xmlData, setXmlData] = useState<any>()
 	const [imageFile, setImageFile] = useState<File>()
-	const [settings, setSettings] = useState<Settings>(defaultSettings)
 	const [styles, setStyles] = useState<Record<string, TextStyle>>({})
 	const [showAltoEditor, setShowAltoEditor] = useState(false)
 	const [showTextEditor, setShowTextEditor] = useState(false)
@@ -147,7 +145,7 @@ function App() {
 	}
 
 	return (
-		<AppContext.Provider value={{settings, setSettings}}>
+		<PanelProvider>
 			<StyleContext.Provider value={{ styles, setStyles }}>
 				<div className="relative flex">
 					<div className="w-2/3 h-screen bg-white overflow-scroll">
@@ -181,7 +179,7 @@ function App() {
 
 				</div>
 			</StyleContext.Provider>
-		</AppContext.Provider>
+		</PanelProvider>
 	)
 }
 

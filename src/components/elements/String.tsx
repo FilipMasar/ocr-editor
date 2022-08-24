@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useState } from "react"
-import AppContext from "../../context/appContext"
+import { usePanelContext } from "../../context/panelContext"
 import StyleContext, { defaultStyle, TextStyle } from "../../context/styleContext"
 
 interface StringProps {
@@ -15,7 +15,7 @@ interface StringProps {
 
 const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs, updateString }) => {
 	const { styles } = useContext(StyleContext)
-	const { settings } = useContext(AppContext)
+	const { settings } = usePanelContext()
 	const { show } = settings
 	const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle)
 

@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useContext } from "react"
 import { Upload } from "react-feather"
-import AppContext from "../context/appContext"
+import { usePanelContext } from "../context/panelContext"
 import StyleContext from "../context/styleContext"
 
 interface PanelProps {
@@ -12,7 +12,7 @@ interface PanelProps {
 }
 
 const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, onOpenAltoEditor, onOpenTextEditor}) => {
-	const {settings, setSettings} = useContext(AppContext)
+	const {settings, setSettings} = usePanelContext()
 	const {styles, setStyles} = useContext(StyleContext)
 	const {zoom, imageOpacity} = settings
 

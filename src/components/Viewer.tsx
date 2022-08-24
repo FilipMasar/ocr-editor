@@ -1,5 +1,5 @@
-import { FC, useContext, useEffect, useState } from "react"
-import AppContext from "../context/appContext"
+import { FC, useEffect, useState } from "react"
+import { usePanelContext } from "../context/panelContext"
 import GraphicalElement from "./elements/GraphicalElement"
 import Illustration from "./elements/Illustration"
 import PrintSpace from "./elements/PrintSpace"
@@ -19,7 +19,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 	const [strings, setStrings] = useState<any[]>([])
 	const [illustrations, setIllustrations] = useState<any[]>([])
 	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
-	const { settings } = useContext(AppContext)
+	const { settings } = usePanelContext()
 	const { zoom, imageOpacity, show } = settings
 
 	const addStyles = (obj: any, parentStyleRefs: string) => {
