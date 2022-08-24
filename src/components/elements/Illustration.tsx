@@ -9,7 +9,10 @@ interface IllustrationProps {
 
 const Illustration:FC<IllustrationProps> = ({ top, left, width, height }) => {
 	return (
-		<div style={{ position: "absolute", top, left, width, height, border: "1px pink solid" }}/>
+		<div 
+			style={{ position: "absolute", top, left, width, height }}
+			className="border border-pink-500 hover:bg-pink-500 hover:opacity-10"
+		/>
 	)
 }
 

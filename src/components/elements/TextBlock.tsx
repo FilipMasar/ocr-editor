@@ -9,7 +9,10 @@ interface TextBlockProps {
 
 const TextBlock:FC<TextBlockProps> = ({ top, left, width, height }) => {
 	return (
-		<div style={{ position: "absolute", top, left, width, height, border: "1px red solid" }}/>
+		<div
+			style={{ position: "absolute", top, left, width, height }}
+			className="border border-red-500 hover:bg-red-500 hover:opacity-10"
+		/>
 	)
 }
 

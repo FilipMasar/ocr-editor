@@ -9,7 +9,10 @@ interface GraphicalElementProps {
 
 const GraphicalElement:FC<GraphicalElementProps> = ({ top, left, width, height }) => {
 	return (
-		<div style={{ position: "absolute", top, left, width, height, border: "1px purple solid" }}/>
+		<div 
+			style={{ position: "absolute", top, left, width, height }}
+			className="border border-purple-500 hover:bg-purple-500 hover:opacity-30"
+		/>
 	)
 }
 

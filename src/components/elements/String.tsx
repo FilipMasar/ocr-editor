@@ -31,7 +31,12 @@ const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styl
 
 	return (
 		<>
-			{show.strings && <div style={{ position: "absolute", top, left, width, height, border: "1px green solid" }} />}
+			{show.strings && (
+				<div 
+					style={{ position: "absolute", top, left, width, height }} 
+					className="border border-green-500 hover:bg-green-500 hover:opacity-30"
+				/>
+			)}
 			{show.text && 
 				<div 
 					contentEditable="true"

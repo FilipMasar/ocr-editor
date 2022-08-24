@@ -175,6 +175,7 @@ const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
 
 			{show.textLines && textLines.map((textLine: any, index: number) =>
 				<TextLine 
+					xml={textLine}
 					key={index}
 					top={textLine["@_VPOS"]}
 					left={textLine["@_HPOS"]}

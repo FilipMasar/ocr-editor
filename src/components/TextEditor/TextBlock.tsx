@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react"
+import { getStringsFromLine } from "../../utils/alto"
 import EditableLine from "./EditableLine"
 
 interface TextBlockProps {
@@ -29,16 +30,6 @@ const TextBlock:FC<TextBlockProps> = ({ textBlock, updateString }) => {
 			}
 		}
 	}, [textBlock])
-
-	function getStringsFromLine(textLine: any) {
-		if (textLine?.String) {
-			if (Array.isArray(textLine.String)) {
-				return textLine.String.map((s: any) => s["@_CONTENT"])
-			} else {
-				return textLine.String["@_CONTENT"]
-			}
-		}
-	}
   
 	return (
 		<div className="border m-2 p-2">
