@@ -5,16 +5,21 @@ import StyleContext from "../context/styleContext"
 
 interface PanelProps {
   handleAltoChange: any;
-  handleImageChange: any;
 	onExport: () => void;
 	onOpenAltoEditor: () => void;
 	onOpenTextEditor: () => void;
 }
 
-const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, onOpenAltoEditor, onOpenTextEditor}) => {
-	const {settings, setSettings} = usePanelContext()
+const Panel:FC<PanelProps> = ({handleAltoChange, onExport, onOpenAltoEditor, onOpenTextEditor}) => {
+	const {settings, setSettings, setImageFile} = usePanelContext()
 	const {styles, setStyles} = useContext(StyleContext)
 	const {zoom, imageOpacity} = settings
+
+	function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+		if (event.target?.files?.length === 1) {
+			setImageFile(event.target.files[0])
+		}
+	}
 
 	const updateZoom = (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault()

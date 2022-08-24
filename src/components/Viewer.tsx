@@ -8,18 +8,17 @@ import TextBlock from "./elements/TextBlock"
 import TextLine from "./elements/TextLine"
 
 interface ViewerProps {
-  imageFile: File | undefined;
   printSpace: any;
 	updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void;
 }
 
-const Viewer:FC<ViewerProps> = ({imageFile, printSpace, updateString}) => {
+const Viewer:FC<ViewerProps> = ({printSpace, updateString}) => {
 	const [textBlocks, setTextBlocks] = useState<any[]>([])
 	const [textLines, setTextLines] = useState<any[]>([])
 	const [strings, setStrings] = useState<any[]>([])
 	const [illustrations, setIllustrations] = useState<any[]>([])
 	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
-	const { settings } = usePanelContext()
+	const { settings, imageFile } = usePanelContext()
 	const { zoom, imageOpacity, show } = settings
 
 	const addStyles = (obj: any, parentStyleRefs: string) => {

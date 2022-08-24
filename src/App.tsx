@@ -11,7 +11,6 @@ import TextEditor from "./components/TextEditor/TextEditor"
 
 function App() {
 	const [xmlData, setXmlData] = useState<any>()
-	const [imageFile, setImageFile] = useState<File>()
 	const [styles, setStyles] = useState<Record<string, TextStyle>>({})
 	const [showAltoEditor, setShowAltoEditor] = useState(false)
 	const [showTextEditor, setShowTextEditor] = useState(false)
@@ -60,12 +59,6 @@ function App() {
 				parseXml(String(e.target?.result))
 			}
 			reader.readAsText(event.target.files[0])
-		}
-	}
-
-	function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
-		if (event.target?.files?.length === 1) {
-			setImageFile(event.target.files[0])
 		}
 	}
 
@@ -149,12 +142,11 @@ function App() {
 			<StyleContext.Provider value={{ styles, setStyles }}>
 				<div className="relative flex">
 					<div className="w-2/3 h-screen bg-white overflow-scroll">
-						<Viewer imageFile={imageFile} printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} updateString={updateString} />
+						<Viewer printSpace={xmlData?.alto?.Layout?.Page?.PrintSpace} updateString={updateString} />
 					</div>
 					<div className="w-1/3 h-screen bg-indigo-100 overflow-scroll">
 						<Panel 
 							handleAltoChange={handleAltoChange}
-							handleImageChange={handleImageChange}
 							onExport={exportNewXML}
 							onOpenAltoEditor={() => setShowAltoEditor(true)}
 							onOpenTextEditor={() => setShowTextEditor(true)} 
