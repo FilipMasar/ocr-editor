@@ -10,8 +10,8 @@ export const defaultSettings: Settings = {
 		graphicalElements: true,
 		textBlocks: true,
 		textLines: true,
-		strings: true,
-		text: true,
+		strings: false,
+		text: false,
 	}
 }
 

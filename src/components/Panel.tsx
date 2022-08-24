@@ -29,7 +29,7 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 	return (
 		<div className="p-4">
 
-			<label className="text-sm text-gray-900" htmlFor="altoFileInput">Pick ALTO xml File</label>
+			<label htmlFor="altoFileInput">Pick ALTO xml File</label>
 			<input 
 				id='altoFileInput'
 				type="file"
@@ -38,7 +38,7 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 				className="w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 cursor-pointer focus:outline-none" 
 			/>
 
-			<label className="text-sm text-gray-900" htmlFor="scanFileInput">Pick jpeg scan</label>
+			<label htmlFor="scanFileInput">Pick jpeg scan</label>
 			<input 
 				id='scanFileInput'
 				type="file"
@@ -64,7 +64,7 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 				</button>
 			</div>
 
-			<label className="text-sm text-gray-900" htmlFor="zoomInput">Zoom: {zoom}</label>
+			<label htmlFor="zoomInput">Zoom: {zoom}</label>
 			<input
 				id="zoomInput"
 				className="w-full"
@@ -76,7 +76,7 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 				onChange={updateZoom} 
 			/>
 
-			<label className="text-sm text-gray-900" htmlFor="opacityInput">Image opacity: {imageOpacity}</label>
+			<label htmlFor="opacityInput">Image opacity: {imageOpacity}</label>
 			<input
 				id="opacityInput"
 				className="w-full"
@@ -102,51 +102,68 @@ const Panel:FC<PanelProps> = ({handleAltoChange, handleImageChange, onExport, on
 					<p>Font family: {styles[key].fontFamily}</p>
 				</div>
 			))}
-			<hr />
-			<p>Show:</p>
+
+			<hr className="w-full h-0.5 bg-black my-2"/>
+
+			<p>Display Elements:</p>
+
 			<div>
-				<input
-					type="checkbox"
-					checked={settings.show.printSpace}
-					onChange={(e) => setSettings(old => ({...old, show: {...old.show, printSpace: e.target.checked}}))}
-				/>
-				<label>Print space</label>
-				<input
-					type="checkbox"
-					checked={settings.show.illustrations}
-					onChange={(e) => setSettings(old => ({...old, show: {...old.show, illustrations: e.target.checked}}))}
-				/>
-				<label>Illustrations</label>
-				<input
-					type="checkbox"
-					checked={settings.show.graphicalElements}
-					onChange={(e) => setSettings(old => ({...old, show: {...old.show, graphicalElements: e.target.checked}}))}
-				/>
-				<label>Graphical elements</label>
-				<input
-					type="checkbox"
-					checked={settings.show.textBlocks}
-					onChange={(e) => setSettings(old => ({...old, show: {...old.show, textBlocks: e.target.checked}}))}
-				/>
-				<label>Text blocks</label>
-				<input
-					type="checkbox"
-					checked={settings.show.textLines}
-					onChange={(e) => setSettings(old => ({...old, show: {...old.show, textLines: e.target.checked}}))}
-				/>
-				<label>Text lines</label>
-				<input 
-					type="checkbox" 
-					checked={settings.show.strings} 
-					onChange={(e) => setSettings(old => ({...old, show: {...old.show, strings: e.target.checked}}))}
-				/>
-				<label>Strings</label>
-				<input
-					type="checkbox"
-					checked={settings.show.text}
-					onChange={(e) => setSettings(old => ({...old, show: {...old.show, text: e.target.checked}}))}
-				/>
-				<label>Text</label>
+				<div className="flex items-center gap-2">
+					<input
+						type="checkbox"
+						checked={settings.show.printSpace}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, printSpace: e.target.checked}}))}
+					/>
+					<label>Print space</label>
+				</div>
+				<div className="flex items-center gap-2">
+					<input
+						type="checkbox"
+						checked={settings.show.illustrations}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, illustrations: e.target.checked}}))}
+					/>
+					<label>Illustrations</label>
+				</div>
+				<div className="flex items-center gap-2">
+					<input
+						type="checkbox"
+						checked={settings.show.graphicalElements}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, graphicalElements: e.target.checked}}))}
+					/>
+					<label>Graphical elements</label>
+				</div>
+				<div className="flex items-center gap-2">
+					<input
+						type="checkbox"
+						checked={settings.show.textBlocks}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, textBlocks: e.target.checked}}))}
+					/>
+					<label>Text blocks</label>
+				</div>
+				<div className="flex items-center gap-2">
+					<input
+						type="checkbox"
+						checked={settings.show.textLines}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, textLines: e.target.checked}}))}
+					/>
+					<label>Text lines</label>
+				</div>
+				<div className="flex items-center gap-2">
+					<input 
+						type="checkbox" 
+						checked={settings.show.strings} 
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, strings: e.target.checked}}))}
+					/>
+					<label>Strings</label>
+				</div>
+				<div className="flex items-center gap-2">
+					<input
+						type="checkbox"
+						checked={settings.show.text}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, text: e.target.checked}}))}
+					/>
+					<label>Text</label>
+				</div>
 			</div>
 
 			<hr className="w-full h-0.5 bg-black my-2"/>
