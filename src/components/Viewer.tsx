@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react"
+import { useAltoContext } from "../context/altoContext"
 import { usePanelContext } from "../context/panelContext"
 import GraphicalElement from "./elements/GraphicalElement"
 import Illustration from "./elements/Illustration"
@@ -7,17 +8,11 @@ import String from "./elements/String"
 import TextBlock from "./elements/TextBlock"
 import TextLine from "./elements/TextLine"
 
-interface ViewerProps {
-  printSpace: any;
-	updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void;
-}
-
-const Viewer:FC<ViewerProps> = ({printSpace, updateString}) => {
+const Viewer:FC = () => {
 	const [textBlocks, setTextBlocks] = useState<any[]>([])
 	const [textLines, setTextLines] = useState<any[]>([])
 	const [strings, setStrings] = useState<any[]>([])
-	const [illustrations, setIllustrations] = useState<any[]>([])
-	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
+	const { printSpace, illustrations, graphicalElements, updateString } = useAltoContext()
 	const { settings, imageFile } = usePanelContext()
 	const { zoom, imageOpacity, show } = settings
 
@@ -42,24 +37,6 @@ const Viewer:FC<ViewerProps> = ({printSpace, updateString}) => {
 				})))
 			} else {
 				setTextBlocks([{...addStyles(printSpace.TextBlock, parentStyleRefs), textBlockindex: -1}])
-			}
-		}
-
-		setIllustrations([])
-		if (printSpace?.Illustration) {
-			if (Array.isArray(printSpace.Illustration)) {
-				setIllustrations(printSpace.Illustration)
-			} else {
-				setIllustrations([printSpace.Illustration])
-			}
-		}
-
-		setGraphicalElements([])
-		if (printSpace?.GraphicalElement) {
-			if (Array.isArray(printSpace.GraphicalElement)) {
-				setGraphicalElements(printSpace.GraphicalElement)
-			} else {
-				setGraphicalElements([printSpace.GraphicalElement])
 			}
 		}
 	}, [printSpace])

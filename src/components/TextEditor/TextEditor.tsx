@@ -1,14 +1,14 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import { X } from "react-feather"
+import { useAltoContext } from "../../context/altoContext"
 import TextBlock from "./TextBlock"
 
 interface TextEditorProps {
-  printSpace: any
   setShowTextEditor: Dispatch<SetStateAction<boolean>>
-  updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void;
 }
 
-const TextEditor:FC<TextEditorProps> = ({ printSpace, setShowTextEditor, updateString }) => {
+const TextEditor:FC<TextEditorProps> = ({ setShowTextEditor }) => {
+	const { printSpace, updateString } = useAltoContext()
 	const [textBlocks, setTextBlocks] = useState<any[]>([])
 
 	useEffect(() => {

@@ -1,24 +1,43 @@
-import { ChangeEvent, FC, useContext } from "react"
+import FileSaver from "file-saver"
+import { ChangeEvent, FC, MouseEvent } from "react"
 import { Upload } from "react-feather"
+import { useAltoContext } from "../context/altoContext"
 import { usePanelContext } from "../context/panelContext"
-import StyleContext from "../context/styleContext"
+import { jsonToXml, xmlToJson } from "../utils/xmlConvertor"
 
 interface PanelProps {
-  handleAltoChange: any;
-	onExport: () => void;
 	onOpenAltoEditor: () => void;
 	onOpenTextEditor: () => void;
 }
 
-const Panel:FC<PanelProps> = ({handleAltoChange, onExport, onOpenAltoEditor, onOpenTextEditor}) => {
-	const {settings, setSettings, setImageFile} = usePanelContext()
-	const {styles, setStyles} = useContext(StyleContext)
-	const {zoom, imageOpacity} = settings
+const Panel:FC<PanelProps> = ({ onOpenAltoEditor, onOpenTextEditor }) => {
+	const { alto, setAlto, styles, setStyles } = useAltoContext()
+	const { settings, setSettings, setImageFile } = usePanelContext()
+	const { zoom, imageOpacity } = settings
 
 	function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
 		if (event.target?.files?.length === 1) {
 			setImageFile(event.target.files[0])
 		}
+	}
+
+	function handleAltoChange(event: ChangeEvent<HTMLInputElement>) {
+		if (event.target?.files?.length === 1) {
+			const reader = new FileReader()
+			reader.onload = async (e) => {
+				const obj = xmlToJson(String(e.target?.result))
+				setAlto(obj)
+			}
+			reader.readAsText(event.target.files[0])
+		}
+	}
+
+	const onExport = (e: MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
+		
+		const xmlContent = jsonToXml(alto)
+		const file = new File([xmlContent], "updated.xml")
+		FileSaver.saveAs(file)
 	}
 
 	const updateZoom = (e: ChangeEvent<HTMLInputElement>) => {

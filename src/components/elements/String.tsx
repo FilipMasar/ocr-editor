@@ -1,6 +1,12 @@
-import { FC, useContext, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
+import { useAltoContext } from "../../context/altoContext"
 import { usePanelContext } from "../../context/panelContext"
-import StyleContext, { defaultStyle, TextStyle } from "../../context/styleContext"
+import { TextStyle } from "../../types/app"
+
+const defaultStyle: TextStyle = {
+	fontSize: 16,
+	fontFamily: "Times New Roman",
+}
 
 interface StringProps {
   top: number;
@@ -14,7 +20,7 @@ interface StringProps {
 }
 
 const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs, updateString }) => {
-	const { styles } = useContext(StyleContext)
+	const { styles } = useAltoContext()
 	const { settings } = usePanelContext()
 	const { show } = settings
 	const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle)

@@ -1,14 +1,14 @@
 import { Dispatch, FC, SetStateAction, useCallback, useEffect } from "react"
 import ReactJson from "react-json-view"
 import { X } from "react-feather"
+import { useAltoContext } from "../context/altoContext"
 
 interface AltoEditorProps {
-  xmlData: any;
-  setXmlData: Dispatch<any>
   setShowAltoEditor: Dispatch<SetStateAction<boolean>>
 }
 
-const AltoEditor:FC<AltoEditorProps> = ({ xmlData, setXmlData, setShowAltoEditor }) => {
+const AltoEditor:FC<AltoEditorProps> = ({ setShowAltoEditor }) => {
+	const { alto, setAlto } = useAltoContext()
 	
 	const escFunction = useCallback((event: KeyboardEvent) => {
 		if (event.key === "Escape") {
@@ -32,12 +32,12 @@ const AltoEditor:FC<AltoEditorProps> = ({ xmlData, setXmlData, setShowAltoEditor
 						<X />
 					</div>
 					<ReactJson 
-						src={xmlData}
+						src={alto}
 						name={null}
 						displayDataTypes={false}
 						collapsed={3}
-						onEdit={(edit) => setXmlData(edit.updated_src)} 
-						onDelete={(edit) => setXmlData(edit.updated_src)} />
+						onEdit={(edit) => setAlto(edit.updated_src)} 
+						onDelete={(edit) => setAlto(edit.updated_src)} />
 				</div>
 			</div>
 			<div className="z-10 absolute top-0 left-0 right-0 h-screen w-screen bg-black opacity-25" />

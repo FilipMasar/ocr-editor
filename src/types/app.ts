@@ -11,3 +11,8 @@ export type Settings = {
     text: boolean,
   }
 }
+
+export type TextStyle = {
+  fontSize: number,
+  fontFamily: string,
+}
