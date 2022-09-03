@@ -26,8 +26,8 @@ const TextEditor:FC<TextEditorProps> = ({ setShowTextEditor }) => {
 	}, [printSpace])
   
 	return (
-		<div className="absolute bottom-0 left-0 right-0 flex items-end justify-center max-h-screen max-w-screen p-4">
-			<div className="relative bg-gray-300 opacity-100 border p-4 inline-block max-h-full max-w-full overflow-auto">
+		<div className="absolute bottom-0 left-0 right-0 flex items-end justify-center p-4">
+			<div className="relative bg-gray-300 opacity-100 border p-4 inline-block max-h-[50vh] max-w-full overflow-auto">
 				<div className=" z-50 absolute p-2 right-2 top-2 cursor-pointer" onClick={() => setShowTextEditor(false)}>
 					<X />
 				</div>
