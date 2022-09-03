@@ -167,7 +167,7 @@ const Viewer:FC = () => {
 					left={string["@_HPOS"]}
 					width={string["@_WIDTH"]}
 					height={string["@_HEIGHT"]}
-					text={string["@_CONTENT"]}
+					text={string["@_CONTENT"].toString()}
 					lineVPos={string.lineVPos}
 					styleRefs={string["@_STYLEREFS"]}
 				/>
