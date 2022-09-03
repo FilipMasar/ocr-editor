@@ -16,5 +16,10 @@ export type Settings = {
 export type TextStyle = {
   fontSize: number,
   fontFamily: string,
-  color?: string
+  color?: string,
+}
+
+export type PageDimensions = {
+  width: number,
+  height: number,
 }

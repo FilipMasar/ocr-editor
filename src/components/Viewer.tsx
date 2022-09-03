@@ -12,7 +12,7 @@ const Viewer:FC = () => {
 	const [textBlocks, setTextBlocks] = useState<any[]>([])
 	const [textLines, setTextLines] = useState<any[]>([])
 	const [strings, setStrings] = useState<any[]>([])
-	const { printSpace, illustrations, graphicalElements } = useAltoContext()
+	const { pageDimensions, printSpace, illustrations, graphicalElements } = useAltoContext()
 	const { settings, imageFile } = usePanelContext()
 	const { zoom, imageOpacity, show } = settings
 
@@ -105,8 +105,8 @@ const Viewer:FC = () => {
 			{imageFile && <img 
 				src={URL.createObjectURL(imageFile)}
 				alt={imageFile.name}
-				width={printSpace["@_WIDTH"]}
-				height={printSpace["@_HEIGHT"]}
+				width={pageDimensions.width}
+				height={pageDimensions.height}
 				style={{ opacity: imageOpacity, maxWidth: "none" }}
 			/>}
       

@@ -1,5 +1,5 @@
 import { createContext, Dispatch, FC, PropsWithChildren, SetStateAction, useCallback, useContext, useEffect, useState } from "react"
-import { TextStyle } from "../types/app"
+import { PageDimensions, TextStyle } from "../types/app"
 
 
 interface AltoProviderValue {
@@ -7,6 +7,7 @@ interface AltoProviderValue {
   setAlto: Dispatch<any>
   styles: Record<string, TextStyle>
   setStyles: Dispatch<SetStateAction<Record<string, TextStyle>>>
+	pageDimensions: PageDimensions
   printSpace: any
   illustrations: any
   graphicalElements: any
@@ -19,6 +20,7 @@ const defaultAltoProviderValue: AltoProviderValue = {
 	setAlto: () => null,
 	styles: {},
 	setStyles: () => null,
+	pageDimensions: { width: 0, height: 0 },
 	printSpace: undefined,
 	illustrations: [],
 	graphicalElements: [],
@@ -31,6 +33,7 @@ const useAltoContext = () => useContext(AltoContext)
 
 const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 	const [alto, setAlto] = useState<any>()
+	const [pageDimensions, setPageDimensions] = useState<PageDimensions>({ width: 0, height: 0 })
 	const [styles, setStyles] = useState<Record<string, TextStyle>>({})
 	const [printSpace, setPrintSpace] = useState<any>()
 	const [illustrations, setIllustrations] = useState<any[]>([])
@@ -62,6 +65,26 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 			}
 		} else {
 			setStyles({})
+		}
+	}, [alto])
+
+	/*
+  * Get page dimensions for image
+  */
+	useEffect(() => {
+		const page = alto?.alto?.Layout?.Page
+		if (page) {
+			if (page["@_WIDTH"] && page["@_HEIGHT"]) {
+				setPageDimensions({
+					width: page["@_WIDTH"],
+					height: page["@_HEIGHT"],
+				})
+			} else if (page.PrintSpace) {
+				setPageDimensions({
+					width: page.PrintSpace["@_WIDTH"],
+					height: page.PrintSpace["@_HEIGHT"],
+				})
+			}
 		}
 	}, [alto])
 
@@ -172,6 +195,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 				setAlto,
 				styles,
 				setStyles,
+				pageDimensions,
 				printSpace,
 				illustrations,
 				graphicalElements,
