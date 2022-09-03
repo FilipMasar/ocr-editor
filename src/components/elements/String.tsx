@@ -14,12 +14,10 @@ interface StringProps {
   width: number;
   height: number;
   text: string;
-  lineVPos: number;
   styleRefs: string;
-	updateString: (value: string) => void;
 }
 
-const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styleRefs, updateString }) => {
+const String:FC<StringProps> = ({ top, left, width, height, text, styleRefs }) => {
 	const { styles } = useAltoContext()
 	const { settings } = usePanelContext()
 	const { show } = settings
@@ -45,18 +43,21 @@ const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styl
 			)}
 			{show.text && 
 				<div 
-					contentEditable="true"
-					suppressContentEditableWarning={true}
-					onInput={(e) => updateString(e.currentTarget.textContent as string)}
+					className="flex items-start justify-between"
 					style={{ 
 						position: "absolute", 
-						top: lineVPos, 
+						top, 
 						left,
 						fontFamily: textStyle.fontFamily,
-						fontSize: textStyle.fontSize
+						fontSize: `calc(${textStyle.fontSize}pt / 0.2645833333)`,
+						lineHeight: `${height}px`,
+						height,
+						width,
 					}}
 				>
-					{text}
+					{text.split("").map((char: string, index: number) => (
+						<span key={index}>{char}</span>
+					))}
 				</div>
 			}
 		</>

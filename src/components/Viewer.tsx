@@ -12,7 +12,7 @@ const Viewer:FC = () => {
 	const [textBlocks, setTextBlocks] = useState<any[]>([])
 	const [textLines, setTextLines] = useState<any[]>([])
 	const [strings, setStrings] = useState<any[]>([])
-	const { printSpace, illustrations, graphicalElements, updateString } = useAltoContext()
+	const { printSpace, illustrations, graphicalElements } = useAltoContext()
 	const { settings, imageFile } = usePanelContext()
 	const { zoom, imageOpacity, show } = settings
 
@@ -168,9 +168,7 @@ const Viewer:FC = () => {
 					width={string["@_WIDTH"]}
 					height={string["@_HEIGHT"]}
 					text={string["@_CONTENT"]}
-					lineVPos={string.lineVPos}
 					styleRefs={string["@_STYLEREFS"]}
-					updateString={(value: string) => updateString(string.textBlockindex, string.textLineindex, string.textStringindex, value)}
 				/>
 			)}
 		</div>
