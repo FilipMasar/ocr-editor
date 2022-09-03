@@ -10,6 +10,8 @@ interface PanelProps {
 	onOpenTextEditor: () => void;
 }
 
+const fontColors = ["bg-blue-900 opacity-50", "bg-red-900 opacity-50", "bg-green-900 opacity-50", "bg-yellow-900 opacity-50"]
+
 const Panel:FC<PanelProps> = ({ onOpenAltoEditor, onOpenTextEditor }) => {
 	const { alto, setAlto, styles, setStyles } = useAltoContext()
 	const { settings, setSettings, setImageFile } = usePanelContext()
@@ -116,14 +118,32 @@ const Panel:FC<PanelProps> = ({ onOpenAltoEditor, onOpenTextEditor }) => {
 
 			<p>Font settings:</p>
 			{Object.keys(styles).map(key => (
-				<div key={key}>
-					<p>{key}</p>
-					<input 
-						type="number" 
-						value={styles[key].fontSize} 
-						onChange={(e) => setStyles(old => ({...old, [key]: {...old[key], fontSize: parseInt(e.target.value)}}))}
-					/>
-					<p>Font family: {styles[key].fontFamily}</p>
+				<div key={key} className="mt-2">
+					<div className="flex gap-4">
+						<label>{key}</label>
+						<div className="flex gap-2">
+							{fontColors.map(color => (
+								<div 
+									key={color}
+									className={`w-4 h-4 rounded-full ${color} cursor-pointer ${styles[key].color === color && "border-4 border-black"}`}
+									onClick={() => {
+										setStyles(old => ({...old, [key]: { ...old[key], color: old[key].color === color ? undefined : color }}))
+										setSettings(old => ({...old, show: {...old.show, strings: true}}))
+									}}
+								/>	
+							))}
+						</div>
+					</div>
+					<div className="flex gap-4 ml-2">
+						<label>- FONTSIZE: </label>
+						<input 
+							type="number" 
+							className="w-20 pl-2"
+							value={styles[key].fontSize} 
+							onChange={(e) => setStyles(old => ({...old, [key]: {...old[key], fontSize: parseInt(e.target.value)}}))}
+						/>
+					</div>
+					<label className="ml-2">- FONTFAMILY: {styles[key].fontFamily}</label>
 				</div>
 			))}
 

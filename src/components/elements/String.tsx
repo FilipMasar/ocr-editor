@@ -39,7 +39,7 @@ const String:FC<StringProps> = ({ top, left, width, height, text, lineVPos, styl
 			{show.strings && (
 				<div 
 					style={{ position: "absolute", top, left, width, height }} 
-					className="border border-green-500 hover:bg-green-500 hover:opacity-30"
+					className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}
 				/>
 			)}
 			{show.textFit && 

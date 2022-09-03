@@ -16,4 +16,5 @@ export type Settings = {
 export type TextStyle = {
   fontSize: number,
   fontFamily: string,
+  color?: string
 }
