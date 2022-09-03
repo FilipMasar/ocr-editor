@@ -183,10 +183,18 @@ const Panel:FC<PanelProps> = ({ onOpenAltoEditor, onOpenTextEditor }) => {
 				<div className="flex items-center gap-2">
 					<input
 						type="checkbox"
-						checked={settings.show.text}
-						onChange={(e) => setSettings(old => ({...old, show: {...old.show, text: e.target.checked}}))}
+						checked={settings.show.textFit}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, textFit: e.target.checked}}))}
 					/>
-					<label>Text</label>
+					<label>Text fit</label>
+				</div>
+				<div className="flex items-center gap-2">
+					<input
+						type="checkbox"
+						checked={settings.show.textAbove}
+						onChange={(e) => setSettings(old => ({...old, show: {...old.show, textAbove: e.target.checked}}))}
+					/>
+					<label>Text above</label>
 				</div>
 			</div>
 

@@ -8,7 +8,8 @@ export type Settings = {
     textBlocks: boolean,
     textLines: boolean,
     strings: boolean,
-    text: boolean,
+    textFit: boolean,
+    textAbove: boolean,
   }
 }
 

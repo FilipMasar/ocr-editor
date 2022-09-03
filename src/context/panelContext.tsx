@@ -19,7 +19,8 @@ const defaultSettings: Settings = {
 		textBlocks: true,
 		textLines: true,
 		strings: false,
-		text: false,
+		textFit: false,
+		textAbove: false,
 	}
 }
 

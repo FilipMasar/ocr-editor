@@ -168,6 +168,7 @@ const Viewer:FC = () => {
 					width={string["@_WIDTH"]}
 					height={string["@_HEIGHT"]}
 					text={string["@_CONTENT"]}
+					lineVPos={string.lineVPos}
 					styleRefs={string["@_STYLEREFS"]}
 				/>
 			)}
