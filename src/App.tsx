@@ -1,5 +1,4 @@
 import { useState } from "react"
-import "./App.css"
 import Viewer from "./components/Viewer"
 import Panel from "./components/Panel"
 import { PanelProvider } from "./context/panelContext"
