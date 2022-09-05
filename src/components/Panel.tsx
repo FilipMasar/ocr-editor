@@ -2,20 +2,21 @@ import FileSaver from "file-saver"
 import { ChangeEvent, FC, MouseEvent } from "react"
 import { Upload } from "react-feather"
 import { useAltoContext } from "../context/altoContext"
+import { useAltoEditorContext } from "../context/altoEditorContext"
 import { usePanelContext } from "../context/panelContext"
 import { jsonToXml, xmlToJson } from "../utils/xmlConvertor"
 
 interface PanelProps {
-	onOpenAltoEditor: () => void;
 	onOpenTextEditor: () => void;
 }
 
 const fontColors = ["bg-blue-900 opacity-50", "bg-red-900 opacity-50", "bg-green-900 opacity-50", "bg-yellow-900 opacity-50"]
 
-const Panel:FC<PanelProps> = ({ onOpenAltoEditor, onOpenTextEditor }) => {
+const Panel:FC<PanelProps> = ({ onOpenTextEditor }) => {
 	const { alto, setAlto, styles, setStyles } = useAltoContext()
 	const { settings, setSettings, setImageFile } = usePanelContext()
 	const { zoom, imageOpacity } = settings
+	const { openAltoEditor } = useAltoEditorContext()
 
 	function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
 		if (event.target?.files?.length === 1) {
@@ -78,7 +79,7 @@ const Panel:FC<PanelProps> = ({ onOpenAltoEditor, onOpenTextEditor }) => {
 			<div className="flex gap-2 mb-2">
 				<button
 					className="w-full btn-primary"
-					onClick={onOpenAltoEditor}
+					onClick={() => openAltoEditor(alto, () => setAlto)}
 				>
 					Open Alto Editor
 				</button>

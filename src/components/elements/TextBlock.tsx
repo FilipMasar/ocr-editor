@@ -1,17 +1,22 @@
 import { FC } from "react"
 
 interface TextBlockProps {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
+  element: any
+	metadata: any
 }
 
-const TextBlock:FC<TextBlockProps> = ({ top, left, width, height }) => {
+const TextBlock:FC<TextBlockProps> = ({ element, metadata }) => {
 	return (
 		<div
-			style={{ position: "absolute", top, left, width, height }}
+			style={{ 
+				position: "absolute",
+				top: element["@_VPOS"],
+				left: element["@_HPOS"],
+				width: element["@_WIDTH"],
+				height: element["@_HEIGHT"] 
+			}}
 			className="border border-red-500 hover:bg-red-500 hover:opacity-10"
+			onClick={() => console.log(metadata)}
 		/>
 	)
 }

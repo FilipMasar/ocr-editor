@@ -1,19 +1,13 @@
-import { Dispatch, FC, SetStateAction, useCallback, useEffect } from "react"
+import { FC, useCallback, useEffect } from "react"
 import ReactJson from "react-json-view"
 import { X } from "react-feather"
-import { useAltoContext } from "../context/altoContext"
+import { useAltoEditorContext } from "../context/altoEditorContext"
 
-interface AltoEditorProps {
-  setShowAltoEditor: Dispatch<SetStateAction<boolean>>
-}
-
-const AltoEditor:FC<AltoEditorProps> = ({ setShowAltoEditor }) => {
-	const { alto, setAlto } = useAltoContext()
+const AltoEditor:FC = () => {
+	const { alto, update, closeAltoEditor } = useAltoEditorContext()
 	
 	const escFunction = useCallback((event: KeyboardEvent) => {
-		if (event.key === "Escape") {
-			setShowAltoEditor(false)
-		}
+		if (event.key === "Escape") closeAltoEditor()
 	}, [])
 
 	useEffect(() => {
@@ -24,11 +18,13 @@ const AltoEditor:FC<AltoEditorProps> = ({ setShowAltoEditor }) => {
 		}
 	}, [])
   
+	if (alto === undefined) return null
+
 	return (
 		<>
 			<div className="z-20 absolute top-0 left-0 right-0 flex items-center justify-center h-screen w-screen">
 				<div className="relative bg-gray-300 opacity-100 border p-4 inline-block w-2/3 h-2/3 overflow-auto">
-					<div className=" z-50 absolute p-2 right-2 top-2 cursor-pointer" onClick={() => setShowAltoEditor(false)}>
+					<div className=" z-50 absolute p-2 right-2 top-2 cursor-pointer" onClick={closeAltoEditor}>
 						<X />
 					</div>
 					<ReactJson 
@@ -36,8 +32,8 @@ const AltoEditor:FC<AltoEditorProps> = ({ setShowAltoEditor }) => {
 						name={null}
 						displayDataTypes={false}
 						collapsed={3}
-						onEdit={(edit) => setAlto(edit.updated_src)} 
-						onDelete={(edit) => setAlto(edit.updated_src)} />
+						onEdit={(edit) => update(edit.updated_src)} 
+						onDelete={(edit) => update(edit.updated_src)} />
 				</div>
 			</div>
 			<div className="z-10 absolute top-0 left-0 right-0 h-screen w-screen bg-black opacity-25" />

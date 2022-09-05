@@ -1,5 +1,6 @@
 import { createContext, Dispatch, FC, PropsWithChildren, SetStateAction, useCallback, useContext, useEffect, useState } from "react"
 import { PageDimensions, TextStyle } from "../types/app"
+import { addMetadata } from "../utils/alto"
 
 
 interface AltoProviderValue {
@@ -11,6 +12,7 @@ interface AltoProviderValue {
   printSpace: any
   illustrations: any
   graphicalElements: any
+	textBlocks: any
   updateTextBlock: (textBlock: any, index: number) => void
   updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void
 }
@@ -24,6 +26,7 @@ const defaultAltoProviderValue: AltoProviderValue = {
 	printSpace: undefined,
 	illustrations: [],
 	graphicalElements: [],
+	textBlocks: [],
 	updateTextBlock: () => null,
 	updateString: () => null,
 }
@@ -38,6 +41,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 	const [printSpace, setPrintSpace] = useState<any>()
 	const [illustrations, setIllustrations] = useState<any[]>([])
 	const [graphicalElements, setGraphicalElements] = useState<any[]>([])
+	const [textBlocks, setTextBlocks] = useState<any[]>([])
   
 	/*
   * Parse styles from Alto file
@@ -100,28 +104,25 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 	}, [alto])
 
 	/*
-  * Parse Illustration and GraphicalElement from Alto file
+  * Parse Illustration, GraphicalElement, TextBlock from Alto file
   */
 	useEffect(() => {
 		if (printSpace?.Illustration) {
-			if (Array.isArray(printSpace.Illustration)) {
-				setIllustrations(printSpace.Illustration)
-			} else {
-				setIllustrations([printSpace.Illustration])
-			}
+			setIllustrations(addMetadata(printSpace.Illustration))
 		} else {
 			setIllustrations([])
 		}
 
-		setGraphicalElements([])
 		if (printSpace?.GraphicalElement) {
-			if (Array.isArray(printSpace.GraphicalElement)) {
-				setGraphicalElements(printSpace.GraphicalElement)
-			} else {
-				setGraphicalElements([printSpace.GraphicalElement])
-			}
+			setGraphicalElements(addMetadata(printSpace.GraphicalElement))
 		} else {
 			setGraphicalElements([])
+		}
+
+		if (printSpace?.TextBlock) {
+			setTextBlocks(addMetadata(printSpace.TextBlock, printSpace["@_STYLEREFS"]))
+		} else {
+			setTextBlocks([])
 		}
 	}, [printSpace])
 
@@ -199,6 +200,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 				printSpace,
 				illustrations,
 				graphicalElements,
+				textBlocks,
 				updateTextBlock,
 				updateString
 			}}

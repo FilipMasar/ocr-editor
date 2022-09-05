@@ -1,12 +1,14 @@
 import { FC, useCallback, useEffect, useRef, useState } from "react"
+import { useAltoContext } from "../../context/altoContext"
 
 interface EditableLineProps {
+	text: string | string[]
   textLine: any
-  updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void;
 }
 
-const EditableLine:FC<EditableLineProps> = ({ textLine, updateString }) => {
+const EditableLine:FC<EditableLineProps> = ({ text, textLine }) => {
 	const ref = useRef<HTMLDivElement>(null)
+	const { updateString } = useAltoContext()
 	const [error, setError] = useState<string>()
 
 	const onUpdate = (newText: string | null | undefined) => {
@@ -17,11 +19,11 @@ const EditableLine:FC<EditableLineProps> = ({ textLine, updateString }) => {
 
 		setError(undefined)
 
-		if (Array.isArray(textLine.strings)) {
-			if (newText.split(" ").length === textLine.strings.length) {
+		if (Array.isArray(text)) {
+			if (newText.split(" ").length === text.length) {
 				// update
 				newText.split(" ").forEach((value: string, index: number) => {
-					updateString(textLine.textBlockindex, textLine.textLineindex, index, value)
+					updateString(textLine.metadata.textBlockIndex, textLine.metadata.index, index, value)
 				})
 			} else {
 				setError("number of words is different. Firstly, add or delete node in alto editor")
@@ -29,7 +31,7 @@ const EditableLine:FC<EditableLineProps> = ({ textLine, updateString }) => {
 		} else {
 			if (newText.split(" ").length === 1) {
 				// update
-				updateString(textLine.textBlockindex, textLine.textLineindex, -1, newText)
+				updateString(textLine.metadata.textBlockIndex, textLine.metadata.index, -1, newText)
 			} else {
 				setError("number of words is different. Firstly, add or delete node in alto editor")
 			}
@@ -60,7 +62,7 @@ const EditableLine:FC<EditableLineProps> = ({ textLine, updateString }) => {
 				onBlur={(e) => onUpdate(e.currentTarget.textContent)}
 				className={error ? "border-2 border-red-500" : ""}
 			>
-				{Array.isArray(textLine.strings) ? textLine.strings.join(" ") : textLine.strings}
+				{Array.isArray(text) ? text.join(" ") : text}
 			</div>
 			{error && <label className="text-xs text-red-500">{error}</label>}
 		</>
