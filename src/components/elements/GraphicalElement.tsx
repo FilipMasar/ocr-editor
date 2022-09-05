@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { useAltoContext } from "../../context/altoContext"
 import { useAltoEditorContext } from "../../context/altoEditorContext"
 
 interface GraphicalElementProps {
@@ -7,7 +8,16 @@ interface GraphicalElementProps {
 }
 
 const GraphicalElement:FC<GraphicalElementProps> = ({ element, metadata }) => {
+	const { updateGraphicalElement } = useAltoContext()
 	const { openAltoEditor } = useAltoEditorContext()
+
+	const handleClick = () => {
+		openAltoEditor(
+			element, 
+			() => (updated: any) => updateGraphicalElement(updated, metadata.index)
+		)
+	}
+
 	return (
 		<div 
 			style={{ 
@@ -18,7 +28,7 @@ const GraphicalElement:FC<GraphicalElementProps> = ({ element, metadata }) => {
 				height: element["@_HEIGHT"] 
 			}}
 			className="border border-purple-500 hover:bg-purple-500 hover:opacity-30"
-			onClick={() => openAltoEditor(element, () => (a: any) => console.log(a, metadata))}
+			onClick={handleClick}
 		/>
 	)
 }

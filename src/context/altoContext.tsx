@@ -13,6 +13,7 @@ interface AltoProviderValue {
   illustrations: any
   graphicalElements: any
 	textBlocks: any
+	updateGraphicalElement: (graphicalElement: any, index: number) => void
   updateTextBlock: (textBlock: any, index: number) => void
   updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void
 }
@@ -27,6 +28,7 @@ const defaultAltoProviderValue: AltoProviderValue = {
 	illustrations: [],
 	graphicalElements: [],
 	textBlocks: [],
+	updateGraphicalElement: () => null,
 	updateTextBlock: () => null,
 	updateString: () => null,
 }
@@ -126,6 +128,49 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 		}
 	}, [printSpace])
 
+	const updateGraphicalElement = useCallback((graphicalElement: any, index: number) => {
+		console.log(graphicalElement, index)
+		setAlto((old: any) => {
+			if (index === -1) {
+				return {
+					...old,
+					alto: {
+						...old.alto,
+						Layout: {
+							...old.alto.Layout,
+							Page: {
+								...old.alto.Layout.Page,
+								PrintSpace: {
+									...old.alto.Layout.Page.PrintSpace,
+									GraphicalElement: graphicalElement
+								}
+							}
+						}
+					}
+				}
+			} else {
+				const tmp = old.alto.Layout.Page.PrintSpace.GraphicalElement
+				tmp[index] = graphicalElement
+				return {
+					...old,
+					alto: {
+						...old.alto,
+						Layout: {
+							...old.alto.Layout,
+							Page: {
+								...old.alto.Layout.Page,
+								PrintSpace: {
+									...old.alto.Layout.Page.PrintSpace,
+									GraphicalElement: tmp
+								}
+							}
+						}
+					}
+				}
+			}
+		})
+	}, [])
+
 	const updateTextBlock = useCallback((textBlock: any, index: number) => {
 		setAlto((old: any) => {
 			if (index === -1) {
@@ -201,6 +246,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 				illustrations,
 				graphicalElements,
 				textBlocks,
+				updateGraphicalElement,
 				updateTextBlock,
 				updateString
 			}}
