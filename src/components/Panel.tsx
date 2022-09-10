@@ -4,19 +4,18 @@ import { Upload } from "react-feather"
 import { useAltoContext } from "../context/altoContext"
 import { useAltoEditorContext } from "../context/altoEditorContext"
 import { usePanelContext } from "../context/panelContext"
+import { useTextEditorContext } from "../context/textEditorContext"
 import { jsonToXml, xmlToJson } from "../utils/xmlConvertor"
 
-interface PanelProps {
-	onOpenTextEditor: () => void;
-}
 
 const fontColors = ["bg-blue-900 opacity-50", "bg-red-900 opacity-50", "bg-green-900 opacity-50", "bg-yellow-900 opacity-50"]
 
-const Panel:FC<PanelProps> = ({ onOpenTextEditor }) => {
-	const { alto, setAlto, styles, setStyles } = useAltoContext()
+const Panel:FC = () => {
+	const { alto, setAlto, styles, setStyles, textBlocks } = useAltoContext()
 	const { settings, setSettings, setImageFile } = usePanelContext()
 	const { zoom, imageOpacity } = settings
 	const { openAltoEditor } = useAltoEditorContext()
+	const { openTextEditor } = useTextEditorContext()
 
 	function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
 		if (event.target?.files?.length === 1) {
@@ -85,7 +84,7 @@ const Panel:FC<PanelProps> = ({ onOpenTextEditor }) => {
 				</button>
 				<button
 					className="w-full btn-primary"
-					onClick={onOpenTextEditor}
+					onClick={() => openTextEditor("ALL", textBlocks)}
 				>
 					Open Text Editor
 				</button>
