@@ -6,7 +6,7 @@ interface TextBlockProps {
   textBlock: any
 }
 
-const TextBlock:FC<TextBlockProps> = ({ textBlock }) => {
+const EditableBlock:FC<TextBlockProps> = ({ textBlock }) => {
 	const [textLines, setTextLines] = useState<any[]>([])
 
 	useEffect(() => {
@@ -34,4 +34,4 @@ const TextBlock:FC<TextBlockProps> = ({ textBlock }) => {
 	)
 }
 
-export default TextBlock
+export default EditableBlock

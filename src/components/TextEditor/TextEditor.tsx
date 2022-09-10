@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction } from "react"
 import { X } from "react-feather"
 import { useAltoContext } from "../../context/altoContext"
-import TextBlock from "./TextBlock"
+import EditableBlock from "./EditableBlock"
 
 interface TextEditorProps {
   setShowTextEditor: Dispatch<SetStateAction<boolean>>
@@ -20,7 +20,7 @@ const TextEditor:FC<TextEditorProps> = ({ setShowTextEditor }) => {
 				<h2 className="text-xl mr-12 font-semibold">Text Editor</h2>
 				
 				{textBlocks.map((textBlock: any) => (
-					<TextBlock 
+					<EditableBlock 
 						key={textBlock.metadata.index}
 						textBlock={textBlock}
 					/>
