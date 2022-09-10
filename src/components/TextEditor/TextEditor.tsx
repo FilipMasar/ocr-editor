@@ -25,8 +25,7 @@ const TextEditor:FC  = () => {
 					/>
 				))}
 				
-				{/* TODO */}
-				{/* {type === "TEXTBLOCK" && <EditableBlock textBlock={element} />} */}
+				{type === "TEXTBLOCK" && <EditableBlock textBlock={element} />}
 			</div>
 		</div>
 	)
