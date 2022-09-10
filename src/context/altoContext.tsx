@@ -1,6 +1,6 @@
 import { createContext, Dispatch, FC, PropsWithChildren, SetStateAction, useCallback, useContext, useEffect, useState } from "react"
 import { PageDimensions, TextStyle } from "../types/app"
-import { addMetadata } from "../utils/alto"
+import { addMetadata, toNumber } from "../utils/alto"
 
 
 interface AltoProviderValue {
@@ -56,7 +56,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 					setStyles(old => ({ 
 						...old, 
 						[style["@_ID"]]: {
-							fontSize: style["@_FONTSIZE"],
+							fontSize: toNumber(style["@_FONTSIZE"]),
 							fontFamily: style["@_FONTFAMILY"],
 						} 
 					}))
@@ -64,7 +64,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 			} else {
 				setStyles({
 					[stylesObj.TextStyle["@_ID"]]: {
-						fontSize: stylesObj.TextStyle["@_FONTSIZE"],
+						fontSize: toNumber(stylesObj.TextStyle["@_FONTSIZE"]),
 						fontFamily: stylesObj.TextStyle["@_FONTFAMILY"],
 					}
 				})
@@ -82,13 +82,13 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 		if (page) {
 			if (page["@_WIDTH"] && page["@_HEIGHT"]) {
 				setPageDimensions({
-					width: page["@_WIDTH"],
-					height: page["@_HEIGHT"],
+					width: toNumber(page["@_WIDTH"]),
+					height: toNumber(page["@_HEIGHT"]),
 				})
 			} else if (page.PrintSpace) {
 				setPageDimensions({
-					width: page.PrintSpace["@_WIDTH"],
-					height: page.PrintSpace["@_HEIGHT"],
+					width: toNumber(page.PrintSpace["@_WIDTH"]),
+					height: toNumber(page.PrintSpace["@_HEIGHT"]),
 				})
 			}
 		}

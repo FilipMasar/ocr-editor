@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react"
 import { useAltoContext } from "../context/altoContext"
 import { usePanelContext } from "../context/panelContext"
-import { addMetadata } from "../utils/alto"
+import { addMetadata, toNumber } from "../utils/alto"
 import GraphicalElement from "./elements/GraphicalElement"
 import Illustration from "./elements/Illustration"
 import PrintSpace from "./elements/PrintSpace"
@@ -38,7 +38,7 @@ const Viewer:FC = () => {
 				const otherMetadata = {
 					textBlockIndex: textLine.metadata.textBlockIndex,
 					textLineIndex: textLine.metadata.index,
-					lineVPos: textLine.element["@_VPOS"]
+					lineVPos: toNumber(textLine.element["@_VPOS"])
 				}
 
 				setStrings(old => [...old, ...addMetadata(textLine.element.String, parentStyleRefs, otherMetadata)])
@@ -62,10 +62,10 @@ const Viewer:FC = () => {
       
 			{show.printSpace && (
 				<PrintSpace 
-					top={printSpace["@_VPOS"]}
-					left={printSpace["@_HPOS"]}
-					width={printSpace["@_WIDTH"]}
-					height={printSpace["@_HEIGHT"]}
+					top={toNumber(printSpace["@_VPOS"])}
+					left={toNumber(printSpace["@_HPOS"])}
+					width={toNumber(printSpace["@_WIDTH"])}
+					height={toNumber(printSpace["@_HEIGHT"])}
 				/>
 			)}
 

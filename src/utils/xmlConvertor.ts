@@ -2,7 +2,7 @@ import { XMLBuilder, XmlBuilderOptions, XMLParser } from "fast-xml-parser"
 
 export const xmlToJson = (xml: string) => {
 	const options = {
-		parseAttributeValue: true,
+		parseAttributeValue: false,
 		ignoreAttributes: false,
 		attributeNamePrefix : "@_",
 		allowBooleanAttributes: true

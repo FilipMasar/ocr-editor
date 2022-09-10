@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react"
 import { useAltoContext } from "../../context/altoContext"
 import { usePanelContext } from "../../context/panelContext"
 import { TextStyle } from "../../types/app"
+import { toNumber } from "../../utils/alto"
 
 const defaultStyle: TextStyle = {
 	fontSize: 16,
@@ -19,11 +20,11 @@ const String:FC<StringProps> = ({ element, metadata}) => {
 	const { show } = settings
 	const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle)
 
-	const top = element["@_VPOS"]
-	const left = element["@_HPOS"]
-	const width = element["@_WIDTH"]
-	const height = element["@_HEIGHT"]
-	const text = element["@_CONTENT"].toString()
+	const top = toNumber(element["@_VPOS"])
+	const left = toNumber(element["@_HPOS"])
+	const width = toNumber(element["@_WIDTH"])
+	const height = toNumber(element["@_HEIGHT"])
+	const text = element["@_CONTENT"]
 
 	useEffect(() => {
 		const styleRefsArray = metadata["@_STYLEREFS"].split(" ")

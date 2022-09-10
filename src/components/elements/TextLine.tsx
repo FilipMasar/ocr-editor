@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react"
-import { getStringsFromLine } from "../../utils/alto"
+import { getStringsFromLine, toNumber } from "../../utils/alto"
 
 interface TextLineProps {
   element: any;
@@ -9,6 +9,11 @@ interface TextLineProps {
 const TextLine:FC<TextLineProps> = ({ element, metadata }) => {
 	const [text, setText] = useState<string>()
 
+	const top = toNumber(element["@_VPOS"])
+	const left = toNumber(element["@_HPOS"])
+	const width = toNumber(element["@_WIDTH"])
+	const height = toNumber(element["@_HEIGHT"])
+
 	useEffect(() => {
 		const strings = getStringsFromLine(element)
 		Array.isArray(strings) ? setText(strings.join(" ")) : setText(strings)
@@ -17,13 +22,7 @@ const TextLine:FC<TextLineProps> = ({ element, metadata }) => {
 	return (
 		<>
 			<div
-				style={{ 
-					position: "absolute",
-					top: element["@_VPOS"],
-					left: element["@_HPOS"],
-					width: element["@_WIDTH"],
-					height: element["@_HEIGHT"] 
-				}}
+				style={{ position: "absolute", top, left, width, height }}
 				className="border border-orange-500 hover:bg-red-500 hover:opacity-30"
 				title={text}
 				onClick={() => console.log(metadata)}
