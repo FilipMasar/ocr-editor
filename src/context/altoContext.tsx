@@ -14,6 +14,7 @@ interface AltoProviderValue {
   graphicalElements: any
 	textBlocks: any
 	updateGraphicalElement: (graphicalElement: any, index: number) => void
+	updateIllustration: (illustration: any, index: number) => void
   updateTextBlock: (textBlock: any, index: number) => void
   updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void
 }
@@ -29,6 +30,7 @@ const defaultAltoProviderValue: AltoProviderValue = {
 	graphicalElements: [],
 	textBlocks: [],
 	updateGraphicalElement: () => null,
+	updateIllustration: () => null,
 	updateTextBlock: () => null,
 	updateString: () => null,
 }
@@ -129,7 +131,6 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 	}, [printSpace])
 
 	const updateGraphicalElement = useCallback((graphicalElement: any, index: number) => {
-		console.log(graphicalElement, index)
 		setAlto((old: any) => {
 			if (index === -1) {
 				return {
@@ -162,6 +163,48 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 								PrintSpace: {
 									...old.alto.Layout.Page.PrintSpace,
 									GraphicalElement: tmp
+								}
+							}
+						}
+					}
+				}
+			}
+		})
+	}, [])
+
+	const updateIllustration = useCallback((Illustration: any, index: number) => {
+		setAlto((old: any) => {
+			if (index === -1) {
+				return {
+					...old,
+					alto: {
+						...old.alto,
+						Layout: {
+							...old.alto.Layout,
+							Page: {
+								...old.alto.Layout.Page,
+								PrintSpace: {
+									...old.alto.Layout.Page.PrintSpace,
+									Illustration: Illustration
+								}
+							}
+						}
+					}
+				}
+			} else {
+				const tmp = old.alto.Layout.Page.PrintSpace.Illustration
+				tmp[index] = Illustration
+				return {
+					...old,
+					alto: {
+						...old.alto,
+						Layout: {
+							...old.alto.Layout,
+							Page: {
+								...old.alto.Layout.Page,
+								PrintSpace: {
+									...old.alto.Layout.Page.PrintSpace,
+									Illustration: tmp
 								}
 							}
 						}
@@ -247,6 +290,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 				graphicalElements,
 				textBlocks,
 				updateGraphicalElement,
+				updateIllustration,
 				updateTextBlock,
 				updateString
 			}}
