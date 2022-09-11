@@ -143,7 +143,15 @@ const Panel:FC = () => {
 							onChange={(e) => setStyles(old => ({...old, [key]: {...old[key], fontSize: parseInt(e.target.value)}}))}
 						/>
 					</div>
-					<label className="ml-2">- FONTFAMILY: {styles[key].fontFamily}</label>
+					<div className="flex gap-4 ml-2 mt-2">
+						<label>- FONTFAMILY: </label>
+						<input
+							type="text"
+							className="w-40"
+							value={styles[key].fontFamily}
+							onChange={(e) => setStyles(old => ({...old, [key]: {...old[key], fontFamily: e.target.value}}))}
+						/>
+					</div>
 				</div>
 			))}
 
