@@ -16,6 +16,7 @@ interface AltoProviderValue {
 	updateGraphicalElement: (graphicalElement: any, index: number) => void
 	updateIllustration: (illustration: any, index: number) => void
   updateTextBlock: (textBlock: any, index: number) => void
+	updateTextLine: (textLine: any, textBlockIndex: number, textLineIndex: number) => void
   updateString: (textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => void
 }
 
@@ -32,6 +33,7 @@ const defaultAltoProviderValue: AltoProviderValue = {
 	updateGraphicalElement: () => null,
 	updateIllustration: () => null,
 	updateTextBlock: () => null,
+	updateTextLine: () => null,
 	updateString: () => null,
 }
 
@@ -256,6 +258,18 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 		})
 	}, [])
 
+	const updateTextLine = useCallback((textLine: any, textBlockIndex: number, textLineIndex: number) => {
+		if (printSpace) {
+			const textBlock = textBlockIndex === -1 ? printSpace.TextBlock : printSpace.TextBlock[textBlockIndex]
+			if (textLineIndex === -1) {
+				textBlock.TextLine = textLine
+			} else {
+				textBlock.TextLine[textLineIndex] = textLine
+			}
+			updateTextBlock(textBlock, textBlockIndex)
+		}
+	}, [])
+
 	const updateString = useCallback((textBlockIndex: number, textLineIndex: number, textStringIndex: number, value: string) => {
 		if (printSpace) {
 			const textBlock = textBlockIndex === -1 ? printSpace.TextBlock : printSpace.TextBlock[textBlockIndex]
@@ -292,6 +306,7 @@ const AltoProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 				updateGraphicalElement,
 				updateIllustration,
 				updateTextBlock,
+				updateTextLine,
 				updateString
 			}}
 		>

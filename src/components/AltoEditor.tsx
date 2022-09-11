@@ -36,7 +36,10 @@ const AltoEditor:FC = () => {
 						onDelete={(edit) => update(edit.updated_src)} />
 				</div>
 			</div>
-			<div className="z-10 absolute top-0 left-0 right-0 h-screen w-screen bg-black opacity-25" />
+			<div
+				onClick={closeAltoEditor}
+				className="z-10 absolute top-0 left-0 right-0 h-screen w-screen bg-black opacity-25"
+			/>
 		</>
 	)
 }
