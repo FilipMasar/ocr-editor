@@ -18,7 +18,10 @@ const App:FC = () => {
 				<AltoEditorProvider>
 					<TextEditorProvider>
 						<div className="relative flex">
-							<div className="z-10 btn-primary absolute top-0 right-0 p-2 m-2" onClick={() => setPanelOpened(old => !old)}>
+							<div 
+								className="z-10 btn-primary absolute top-0 right-0 p-2 m-2 !border-blue-700"
+								onClick={() => setPanelOpened(old => !old)}
+							>
 								<AlignJustify />
 							</div>
 							<div className={`${panelOpened ? "w-2/3" : "w-screen"} h-screen bg-white overflow-scroll`}>
