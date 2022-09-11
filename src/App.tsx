@@ -1,6 +1,6 @@
 import { FC, useState } from "react"
 import Viewer from "./components/Viewer"
-import Panel from "./components/Panel"
+import Panel from "./components/panel/Panel"
 import { PanelProvider } from "./context/panelContext"
 import AltoEditor from "./components/AltoEditor"
 import TextEditor from "./components/TextEditor/TextEditor"
