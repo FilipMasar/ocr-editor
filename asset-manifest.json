@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ocr-editor/static/css/main.840154ae.css",
-    "main.js": "/ocr-editor/static/js/main.c5577a50.js",
-    "static/js/787.1c39f847.chunk.js": "/ocr-editor/static/js/787.1c39f847.chunk.js",
-    "index.html": "/ocr-editor/index.html",
-    "main.840154ae.css.map": "/ocr-editor/static/css/main.840154ae.css.map",
-    "main.c5577a50.js.map": "/ocr-editor/static/js/main.c5577a50.js.map",
-    "787.1c39f847.chunk.js.map": "/ocr-editor/static/js/787.1c39f847.chunk.js.map"
+    "main.css": "/static/css/main.840154ae.css",
+    "main.js": "/static/js/main.3d74addd.js",
+    "static/js/787.1c39f847.chunk.js": "/static/js/787.1c39f847.chunk.js",
+    "index.html": "/index.html",
+    "main.840154ae.css.map": "/static/css/main.840154ae.css.map",
+    "main.3d74addd.js.map": "/static/js/main.3d74addd.js.map",
+    "787.1c39f847.chunk.js.map": "/static/js/787.1c39f847.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.840154ae.css",
-    "static/js/main.c5577a50.js"
+    "static/js/main.3d74addd.js"
   ]
 }
