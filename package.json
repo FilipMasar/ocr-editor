@@ -1,4 +1,5 @@
 {
+  "homepage": "http://filipmasar.github.io/ocr-editor/",
   "name": "ocr-editor",
   "version": "0.1.0",
   "private": true,
@@ -24,6 +25,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -55,6 +58,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
+    "gh-pages": "^4.0.0",
     "postcss": "^8.4.16",
     "tailwindcss": "^3.1.8"
   }
