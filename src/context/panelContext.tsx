@@ -5,8 +5,8 @@ import { Settings } from "../types/app"
 interface PanelProviderValue {
   settings: Settings, 
   setSettings: Dispatch<SetStateAction<Settings>>
-  imageFile: File | undefined
-  setImageFile: Dispatch<SetStateAction<File | undefined>>
+  imageSrc: string | undefined
+  setImageSrc: Dispatch<SetStateAction<string | undefined>>
 }
 
 const defaultSettings: Settings = {
@@ -27,8 +27,8 @@ const defaultSettings: Settings = {
 const defaultPanelValue: PanelProviderValue = {
 	settings: defaultSettings, 
 	setSettings: () => null,
-	imageFile: undefined,
-	setImageFile: () => null
+	imageSrc: undefined,
+	setImageSrc: () => null
 }
 
 const PanelContext = createContext<PanelProviderValue>(defaultPanelValue)
@@ -36,15 +36,15 @@ const usePanelContext = () => useContext(PanelContext)
 
 const PanelProvider: FC<PropsWithChildren<any>> = ({ children }) => {
 	const [settings, setSettings] = useState<Settings>(defaultSettings)
-	const [imageFile, setImageFile] = useState<File>()
+	const [imageSrc, setImageSrc] = useState<string>()
 
 	return (
 		<PanelContext.Provider 
 			value={{
 				settings, 
 				setSettings,
-				imageFile,
-				setImageFile
+				imageSrc,
+				setImageSrc
 			}}
 		>
 			{children}

@@ -13,7 +13,7 @@ const Viewer:FC = () => {
 	const [textLines, setTextLines] = useState<any[]>([])
 	const [strings, setStrings] = useState<any[]>([])
 	const { pageDimensions, printSpace, illustrations, graphicalElements, textBlocks } = useAltoContext()
-	const { settings, imageFile } = usePanelContext()
+	const { settings, imageSrc } = usePanelContext()
 	const { zoom, imageOpacity, show } = settings
   
 	useEffect(() => {
@@ -52,9 +52,9 @@ const Viewer:FC = () => {
 
 	return (
 		<div className="relative m-4" style={{transform: `scale(${zoom})`, transformOrigin: "0% 0% 0px"}}>
-			{imageFile && <img 
-				src={URL.createObjectURL(imageFile)}
-				alt={imageFile.name}
+			{imageSrc && <img 
+				src={imageSrc}
+				alt="page scan"
 				width={pageDimensions.width}
 				height={pageDimensions.height}
 				style={{ opacity: imageOpacity, maxWidth: "none" }}

@@ -1,6 +1,6 @@
 import FileSaver from "file-saver"
 import { ChangeEvent, FC, MouseEvent } from "react"
-import { Upload } from "react-feather"
+import { Save, Upload } from "react-feather"
 import { useAltoContext } from "../context/altoContext"
 import { useAltoEditorContext } from "../context/altoEditorContext"
 import { usePanelContext } from "../context/panelContext"
@@ -12,14 +12,18 @@ const fontColors = ["bg-blue-900 opacity-50", "bg-red-900 opacity-50", "bg-green
 
 const Panel:FC = () => {
 	const { alto, setAlto, styles, setStyles, textBlocks } = useAltoContext()
-	const { settings, setSettings, setImageFile } = usePanelContext()
+	const { settings, setSettings, imageSrc, setImageSrc } = usePanelContext()
 	const { zoom, imageOpacity } = settings
 	const { openAltoEditor } = useAltoEditorContext()
 	const { openTextEditor } = useTextEditorContext()
 
 	function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
 		if (event.target?.files?.length === 1) {
-			setImageFile(event.target.files[0])
+			const reader = new FileReader()
+			reader.onload = async (e) => {
+				setImageSrc(String(e.target?.result))
+			}
+			reader.readAsDataURL(event.target.files[0])
 		}
 	}
 
@@ -34,12 +38,33 @@ const Panel:FC = () => {
 		}
 	}
 
+	const loadFromLocalStorage = (e: MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
+
+		const a = localStorage.getItem("ocr-editor-alto")
+		const i = localStorage.getItem("ocr-editor-image")
+
+		if (a) setAlto(JSON.parse(a))
+		if (i) setImageSrc(i)
+	}
+
+	const onSave = (e: MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
+
+		if (alto && imageSrc) {
+			localStorage.setItem("ocr-editor-alto", JSON.stringify(alto))
+			localStorage.setItem("ocr-editor-image", imageSrc)
+		}
+	}
+
 	const onExport = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault()
 		
-		const xmlContent = jsonToXml(alto)
-		const file = new File([xmlContent], "updated.xml")
-		FileSaver.saveAs(file)
+		if (alto) {
+			const xmlContent = jsonToXml(alto)
+			const file = new File([xmlContent], "updated.xml")
+			FileSaver.saveAs(file)
+		}
 	}
 
 	const updateZoom = (e: ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +79,14 @@ const Panel:FC = () => {
 
 	return (
 		<div className="p-4">
+			<button
+				className="w-full btn-primary"
+				onClick={loadFromLocalStorage}
+			>
+					Continue from saved
+			</button>
 
+			<div className="text-center">or</div>
 			<label htmlFor="altoFileInput">Pick ALTO xml File</label>
 			<input 
 				id='altoFileInput'
@@ -227,10 +259,20 @@ const Panel:FC = () => {
 			</div>
 
 			<hr className="w-full h-0.5 bg-black my-2"/>
+
+			<button 
+				className="w-full flex gap-2 justify-center items-center btn-primary mb-2"
+				onClick={onSave}
+				disabled={alto === undefined || imageSrc === undefined}
+			>
+				<Save size={20} />
+				<span>Save</span>
+			</button>
 			
 			<button 
 				className="w-full flex gap-2 justify-center items-center btn-primary"
 				onClick={onExport}
+				disabled={alto === undefined}
 			>
 				<Upload size={20} />
 				<span>Export Updated XML</span>
