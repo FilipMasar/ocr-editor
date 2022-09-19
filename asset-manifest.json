@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ocr-editor/static/css/main.678a286b.css",
-    "main.js": "/ocr-editor/static/js/main.8fa1974a.js",
+    "main.css": "/ocr-editor/static/css/main.08205d4f.css",
+    "main.js": "/ocr-editor/static/js/main.27bb3cd1.js",
     "static/js/787.1c39f847.chunk.js": "/ocr-editor/static/js/787.1c39f847.chunk.js",
     "index.html": "/ocr-editor/index.html",
-    "main.678a286b.css.map": "/ocr-editor/static/css/main.678a286b.css.map",
-    "main.8fa1974a.js.map": "/ocr-editor/static/js/main.8fa1974a.js.map",
+    "main.08205d4f.css.map": "/ocr-editor/static/css/main.08205d4f.css.map",
+    "main.27bb3cd1.js.map": "/ocr-editor/static/js/main.27bb3cd1.js.map",
     "787.1c39f847.chunk.js.map": "/ocr-editor/static/js/787.1c39f847.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.678a286b.css",
-    "static/js/main.8fa1974a.js"
+    "static/css/main.08205d4f.css",
+    "static/js/main.27bb3cd1.js"
   ]
 }
