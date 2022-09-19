@@ -24,11 +24,17 @@ const App:FC = () => {
 							>
 								<AlignJustify />
 							</div>
-							<div className={`${panelOpened ? "w-2/3" : "w-screen"} h-screen bg-white overflow-scroll`}>
+							<div 
+								style={{height: window.innerHeight}}
+								className={`${panelOpened ? "w-2/3" : "w-screen"} bg-white overflow-scroll`}
+							>
 								<Viewer />
 							</div>
 							{panelOpened && (
-								<div className="w-1/3 h-screen bg-indigo-100 overflow-scroll">
+								<div 
+									style={{height: window.innerHeight}}
+									className="w-1/3 bg-indigo-100 overflow-scroll"
+								>
 									<Panel />
 								</div>
 							)}
