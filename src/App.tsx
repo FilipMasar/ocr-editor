@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import Viewer from "./components/Viewer"
 import Panel from "./components/panel/Panel"
 import { PanelProvider } from "./context/panelContext"
@@ -11,6 +11,18 @@ import { AlignJustify } from "react-feather"
 
 const App:FC = () => {
 	const [panelOpened, setPanelOpened] = useState(true)
+	const [height, setHeight] = useState(window.innerHeight)
+
+	useEffect(() => {
+		function handleSizeChange() {
+			setHeight(window.innerHeight)
+		}
+		
+		window.addEventListener("resize", handleSizeChange)
+		return () => {
+			window.removeEventListener("resize", handleSizeChange)
+		}	
+	})
 
 	return (
 		<PanelProvider>
@@ -25,14 +37,14 @@ const App:FC = () => {
 								<AlignJustify />
 							</div>
 							<div 
-								style={{height: window.innerHeight}}
+								style={{ height: height }}
 								className={`${panelOpened ? "w-2/3" : "w-screen"} bg-white overflow-scroll`}
 							>
 								<Viewer />
 							</div>
 							{panelOpened && (
 								<div 
-									style={{height: window.innerHeight}}
+									style={{ height: height }}
 									className="w-1/3 bg-indigo-100 overflow-scroll"
 								>
 									<Panel />
