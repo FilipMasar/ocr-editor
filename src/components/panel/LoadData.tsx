@@ -44,12 +44,12 @@ const LoadData:FC = () => {
 	}
 
 	return (
-		<div className="p-4">
+		<div className="p-4 mt-12">
 			<button
 				className="w-full btn-primary"
 				onClick={loadFromLocalStorage}
 			>
-				Continue from saved
+				Continue from previously closed work
 			</button>
 			{error && <label className="text-xs text-red-500">{error}</label>}
 
