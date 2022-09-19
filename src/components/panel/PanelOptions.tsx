@@ -53,16 +53,10 @@ const PanelOptions:FC = () => {
 	}, [alto, imageSrc])
 
 	useEffect(() => {
-		const handleTabClose = (event: BeforeUnloadEvent) => {
-			event.preventDefault()
-
-			saveToLocalStorage()
-		}
-
-		window.addEventListener("beforeunload", handleTabClose)
+		window.addEventListener("visibilitychange", saveToLocalStorage)
 
 		return () => {
-			window.removeEventListener("beforeunload", handleTabClose)
+			window.removeEventListener("visibilitychange", saveToLocalStorage)
 		}
 	}, [saveToLocalStorage])
 
