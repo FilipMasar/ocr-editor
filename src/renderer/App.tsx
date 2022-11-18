@@ -1,9 +1,6 @@
 import { MantineProvider } from '@mantine/core';
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import AppRoutes from './AppRoutes';
 import ProjectProvider from './context/ProjectContext';
-import Project from './pages/Project';
-import ProjectAssetsList from './pages/ProjectAssetsList';
-import StartingPage from './pages/StartingPage';
 
 export default function App() {
   return (
@@ -13,15 +10,7 @@ export default function App() {
       theme={{ colorScheme: 'light' }}
     >
       <ProjectProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<StartingPage />} />
-            <Route path="/project">
-              <Route index element={<Project />} />
-              <Route path="list" element={<ProjectAssetsList />} />
-            </Route>
-          </Routes>
-        </Router>
+        <AppRoutes />
       </ProjectProvider>
     </MantineProvider>
   );

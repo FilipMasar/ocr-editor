@@ -23,7 +23,7 @@ import {
   openProject,
   removeAssetFromProject,
 } from './project';
-import { addToRecentProjects, getRecentProjects } from './configData';
+import { getRecentProjects } from './configData';
 
 class AppUpdater {
   constructor() {
@@ -43,69 +43,68 @@ ipcMain.on('project-channel', async (event, data) => {
     return;
   }
 
-  switch (data.action) {
-    case 'CREATE_PROJECT':
-      // TODO add try catch everywhere and put them inside functions not here, reply with ERROR, render it in the UI
-      try {
+  try {
+    switch (data.action) {
+      case 'CREATE_PROJECT':
         currentProjectPath = await createProject(mainWindow);
         if (currentProjectPath) {
-          addToRecentProjects(currentProjectPath);
           event.reply('project-channel', {
             action: 'UPDATE_ASSET_LIST',
             payload: [],
           });
         }
-      } catch (error) {
-        console.error(error);
-      }
-      break;
-    case 'OPEN_PROJECT':
-      // TODO add try catch everywhere and put them inside functions not here, reply with ERROR, render it in the UI
-      try {
+        break;
+
+      case 'OPEN_PROJECT':
         currentProjectPath = await openProject(mainWindow, data.payload);
         if (currentProjectPath) {
-          addToRecentProjects(currentProjectPath);
           currentProjectAssets = await getProjectAssetList(currentProjectPath);
-
           event.reply('project-channel', {
             action: 'UPDATE_ASSET_LIST',
             payload: currentProjectAssets,
           });
         }
-      } catch (error) {
-        console.error(error);
-      }
-      break;
-    case 'ADD_IMAGES':
-      await addImagesToProject(mainWindow, currentProjectPath);
-      currentProjectAssets = await getProjectAssetList(currentProjectPath);
-      event.reply('project-channel', {
-        action: 'UPDATE_ASSET_LIST',
-        payload: currentProjectAssets,
-      });
-      break;
-    case 'ADD_ALTOS':
-      await addAltosToProject(mainWindow, currentProjectPath);
-      currentProjectAssets = await getProjectAssetList(currentProjectPath);
-      event.reply('project-channel', {
-        action: 'UPDATE_ASSET_LIST',
-        payload: currentProjectAssets,
-      });
-      break;
-    case 'REMOVE_ASSET':
-      await removeAssetFromProject(
-        currentProjectPath,
-        data.payload.directory,
-        data.payload.name
-      );
-      currentProjectAssets = await getProjectAssetList(currentProjectPath);
-      event.reply('project-channel', {
-        action: 'UPDATE_ASSET_LIST',
-        payload: currentProjectAssets,
-      });
-      break;
-    default:
-      console.log('No function found');
+        break;
+
+      case 'ADD_IMAGES':
+        await addImagesToProject(mainWindow, currentProjectPath);
+        currentProjectAssets = await getProjectAssetList(currentProjectPath);
+        event.reply('project-channel', {
+          action: 'UPDATE_ASSET_LIST',
+          payload: currentProjectAssets,
+        });
+        break;
+
+      case 'ADD_ALTOS':
+        await addAltosToProject(mainWindow, currentProjectPath);
+        currentProjectAssets = await getProjectAssetList(currentProjectPath);
+        event.reply('project-channel', {
+          action: 'UPDATE_ASSET_LIST',
+          payload: currentProjectAssets,
+        });
+        break;
+
+      case 'REMOVE_ASSET':
+        await removeAssetFromProject(
+          currentProjectPath,
+          data.payload.directory,
+          data.payload.name
+        );
+        currentProjectAssets = await getProjectAssetList(currentProjectPath);
+        event.reply('project-channel', {
+          action: 'UPDATE_ASSET_LIST',
+          payload: currentProjectAssets,
+        });
+        break;
+      default:
+        console.log('No function found');
+    }
+  } catch (error: any) {
+    console.error(error);
+    event.reply('project-channel', {
+      action: 'ERROR',
+      payload: error?.message || 'Something went wrong',
+    });
   }
 });
 

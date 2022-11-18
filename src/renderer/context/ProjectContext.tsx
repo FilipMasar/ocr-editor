@@ -19,6 +19,7 @@ export const useProject = (): ProjectContextValues =>
 // Provider
 const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
   const [projectAssets, setProjectAssets] = useState<ProjectAssets>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const createProject = () => {
     window.electron.ipcRenderer.sendMessage('project-channel', {
@@ -52,11 +53,22 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const resetErrorMessage = () => {
+    setErrorMessage(undefined);
+  };
+
   useEffect(() => {
     window.electron.ipcRenderer.on('project-channel', (data) => {
       console.log('project-channel', data);
-      if (data.action === 'UPDATE_ASSET_LIST') {
-        setProjectAssets(data.payload);
+      switch (data.action) {
+        case 'UPDATE_ASSET_LIST':
+          setProjectAssets(data.payload);
+          break;
+        case 'ERROR':
+          setErrorMessage(String(data.payload));
+          break;
+        default:
+          console.log('Unhandled action:', data.action);
       }
     });
   }, []);
@@ -65,6 +77,8 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     <ProjectContext.Provider
       value={{
         projectAssets,
+        errorMessage,
+        resetErrorMessage,
         createProject,
         openProject,
         addImages,

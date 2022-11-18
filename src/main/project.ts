@@ -1,6 +1,7 @@
 import { BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 import path from 'path';
+import { addToRecentProjects } from './configData';
 
 // TODO
 type PageData = {
@@ -26,15 +27,14 @@ export const createProject = async (
     properties: ['createDirectory'],
   });
 
-  if (canceled || filePath === undefined) {
-    console.log('User canceled');
-    return undefined;
-  }
+  if (canceled || filePath === undefined) return undefined;
 
   const imagesDir = path.join(filePath, 'images');
   const altosDir = path.join(filePath, 'altos');
   fs.mkdirSync(imagesDir, { recursive: true });
   fs.mkdirSync(altosDir, { recursive: true });
+
+  addToRecentProjects(filePath);
 
   return filePath;
 };
@@ -52,10 +52,7 @@ export const openProject = async (
       properties: ['openDirectory'],
     });
 
-    if (canceled || filePaths.length === 0) {
-      console.log('User canceled');
-      return undefined;
-    }
+    if (canceled || filePaths.length === 0) return undefined;
 
     [projectPath] = filePaths;
   }
@@ -64,9 +61,10 @@ export const openProject = async (
   const imagesDir = path.join(projectPath, 'images');
   const altosDir = path.join(projectPath, 'altos');
   if (!fs.existsSync(imagesDir) || !fs.existsSync(altosDir)) {
-    console.error('Invalid project directory');
-    return undefined;
+    throw new Error('Directory is not a valid project directory!');
   }
+
+  addToRecentProjects(projectPath);
 
   return projectPath;
 };
@@ -75,10 +73,7 @@ export const addImagesToProject = async (
   mainWindow: BrowserWindow,
   projectPath: string | undefined
 ) => {
-  if (projectPath === undefined) {
-    console.error('projectPath is not defined');
-    return;
-  }
+  if (projectPath === undefined) throw new Error("Project path isn't defined");
 
   const { filePaths, canceled } = await dialog.showOpenDialog(mainWindow, {
     title: 'Pick images to add to your project',
@@ -87,10 +82,7 @@ export const addImagesToProject = async (
     filters: [{ name: 'Images', extensions: ['jpg', 'png'] }],
   });
 
-  if (canceled) {
-    console.log('User canceled');
-    return;
-  }
+  if (canceled) return;
 
   filePaths.forEach((filePath) => {
     const newPath = path.join(projectPath, 'images', path.basename(filePath));
@@ -102,10 +94,7 @@ export const addAltosToProject = async (
   mainWindow: BrowserWindow,
   projectPath: string | undefined
 ) => {
-  if (projectPath === undefined) {
-    console.error('projectPath is not defined');
-    return;
-  }
+  if (projectPath === undefined) throw new Error("Project path isn't defined");
 
   const { filePaths, canceled } = await dialog.showOpenDialog(mainWindow, {
     title: 'Pick alto files to add to your project',
@@ -114,10 +103,7 @@ export const addAltosToProject = async (
     filters: [{ name: 'Alto xml files', extensions: ['xml'] }],
   });
 
-  if (canceled) {
-    console.log('User canceled');
-    return;
-  }
+  if (canceled) return;
 
   filePaths.forEach((filePath) => {
     const newPath = path.join(projectPath, 'altos', path.basename(filePath));
@@ -130,10 +116,7 @@ export const removeAssetFromProject = async (
   directory: 'images' | 'altos',
   name: string
 ) => {
-  if (projectPath === undefined) {
-    console.error('projectPath is not defined');
-    return;
-  }
+  if (projectPath === undefined) throw new Error("Project path isn't defined");
 
   const filePath = path.join(projectPath, directory, name);
   fs.unlinkSync(filePath);
@@ -142,10 +125,7 @@ export const removeAssetFromProject = async (
 export const getProjectAssetList = async (
   projectPath: string | undefined
 ): Promise<ProjectAssetList> => {
-  if (projectPath === undefined) {
-    console.error('projectPath is not defined');
-    return [];
-  }
+  if (projectPath === undefined) throw new Error("Project path isn't defined");
 
   const images = fs.readdirSync(path.join(projectPath, 'images'));
   const altos = fs.readdirSync(path.join(projectPath, 'altos'));
