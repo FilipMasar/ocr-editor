@@ -26,8 +26,11 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
-  const openProject = () => {
-    console.log('open project');
+  const openProject = (projectPath?: string) => {
+    window.electron.ipcRenderer.sendMessage('project-channel', {
+      action: 'OPEN_PROJECT',
+      payload: projectPath,
+    });
   };
 
   const addImages = () => {
@@ -44,9 +47,8 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     window.electron.ipcRenderer.on('project-channel', (data) => {
-      console.log(data);
+      console.log('project-channel', data);
       if (data.action === 'UPDATE_ASSET_LIST') {
-        console.log(data.payload);
         setProjectAssets(data.payload);
       }
     });
@@ -57,6 +59,7 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
       value={{
         projectAssets,
         createProject,
+        openProject,
         addImages,
         addAltos,
       }}

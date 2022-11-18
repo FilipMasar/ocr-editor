@@ -20,7 +20,9 @@ import {
   addImagesToProject,
   getProjectAssetList,
   ProjectAssetList,
+  openProject,
 } from './project';
+import { addToRecentProjects, getRecentProjects } from './configData';
 
 class AppUpdater {
   constructor() {
@@ -45,11 +47,30 @@ ipcMain.on('project-channel', async (event, data) => {
       // TODO add try catch everywhere and put them inside functions not here, reply with ERROR, render it in the UI
       try {
         currentProjectPath = await createProject(mainWindow);
-        console.log('Current project path:', currentProjectPath);
-        event.reply('project-channel', {
-          action: 'UPDATE_ASSET_LIST',
-          payload: [],
-        });
+        if (currentProjectPath) {
+          addToRecentProjects(currentProjectPath);
+          event.reply('project-channel', {
+            action: 'UPDATE_ASSET_LIST',
+            payload: [],
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      break;
+    case 'OPEN_PROJECT':
+      // TODO add try catch everywhere and put them inside functions not here, reply with ERROR, render it in the UI
+      try {
+        currentProjectPath = await openProject(mainWindow, data.payload);
+        if (currentProjectPath) {
+          addToRecentProjects(currentProjectPath);
+          currentProjectAssets = await getProjectAssetList(currentProjectPath);
+
+          event.reply('project-channel', {
+            action: 'UPDATE_ASSET_LIST',
+            payload: currentProjectPath,
+          });
+        }
       } catch (error) {
         console.error(error);
       }
@@ -68,6 +89,19 @@ ipcMain.on('project-channel', async (event, data) => {
       event.reply('project-channel', {
         action: 'UPDATE_ASSET_LIST',
         payload: currentProjectAssets,
+      });
+      break;
+    default:
+      console.log('No function found');
+  }
+});
+
+ipcMain.on('config-channel', async (event, data) => {
+  switch (data.action) {
+    case 'GET_RECENT_PROJECTS':
+      event.reply('config-channel', {
+        action: 'RECENT_PROJECTS',
+        payload: getRecentProjects(),
       });
       break;
     default:

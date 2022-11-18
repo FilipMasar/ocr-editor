@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
-export type Channels = 'project-channel';
+export type Channels = 'project-channel' | 'config-channel';
 export type ChannelData = {
   action: string;
   payload?: any;
