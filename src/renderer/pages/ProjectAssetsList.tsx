@@ -1,5 +1,7 @@
+import { Table, Title, Text, Button } from '@mantine/core';
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { PlusCircle } from 'react-feather';
+import AssetsListRow from 'renderer/components/AssetsListRow';
 import { useProject } from 'renderer/context/ProjectContext';
 
 const ProjectAssetsList: FC = () => {
@@ -8,32 +10,50 @@ const ProjectAssetsList: FC = () => {
   if (projectAssets === undefined) return <div>Something went wrong</div>;
 
   return (
-    <div>
-      <h1>List</h1>
-      <table>
+    <div style={{ padding: 20 }}>
+      <Title order={2}>List of project assets</Title>
+      <Table mt="xl" maw={600} withColumnBorders highlightOnHover>
         <thead>
           <tr>
-            <th>Image</th>
-            <th>Altos</th>
+            <th>
+              <Text size="lg">Image</Text>
+            </th>
+            <th>
+              <Text size="lg">ALTO</Text>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {projectAssets.map(({ image, alto }) => (
-            <tr key={image}>
-              <td>{image}</td>
-              <td>{alto}</td>
-            </tr>
+          {projectAssets.map(({ image, alto }, index) => (
+            <AssetsListRow
+              key={image}
+              image={image}
+              alto={alto}
+              index={index}
+            />
           ))}
+          <tr>
+            <td>
+              <Button
+                variant="subtle"
+                leftIcon={<PlusCircle />}
+                onClick={addImages}
+              >
+                Add images
+              </Button>
+            </td>
+            <td>
+              <Button
+                variant="subtle"
+                leftIcon={<PlusCircle />}
+                onClick={addAltos}
+              >
+                Add altos
+              </Button>
+            </td>
+          </tr>
         </tbody>
-      </table>
-
-      <button type="button" onClick={addImages}>
-        Add images
-      </button>
-      <button type="button" onClick={addAltos}>
-        Add altos
-      </button>
-      <Link to="/">home</Link>
+      </Table>
     </div>
   );
 };

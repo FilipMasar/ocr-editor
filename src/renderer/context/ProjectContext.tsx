@@ -45,6 +45,13 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const removeAsset = (directory: 'images' | 'altos', name: string) => {
+    window.electron.ipcRenderer.sendMessage('project-channel', {
+      action: 'REMOVE_ASSET',
+      payload: { directory, name },
+    });
+  };
+
   useEffect(() => {
     window.electron.ipcRenderer.on('project-channel', (data) => {
       console.log('project-channel', data);
@@ -62,6 +69,7 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
         openProject,
         addImages,
         addAltos,
+        removeAsset,
       }}
     >
       {children}

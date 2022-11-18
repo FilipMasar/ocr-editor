@@ -21,6 +21,7 @@ import {
   getProjectAssetList,
   ProjectAssetList,
   openProject,
+  removeAssetFromProject,
 } from './project';
 import { addToRecentProjects, getRecentProjects } from './configData';
 
@@ -85,6 +86,18 @@ ipcMain.on('project-channel', async (event, data) => {
       break;
     case 'ADD_ALTOS':
       await addAltosToProject(mainWindow, currentProjectPath);
+      currentProjectAssets = await getProjectAssetList(currentProjectPath);
+      event.reply('project-channel', {
+        action: 'UPDATE_ASSET_LIST',
+        payload: currentProjectAssets,
+      });
+      break;
+    case 'REMOVE_ASSET':
+      await removeAssetFromProject(
+        currentProjectPath,
+        data.payload.directory,
+        data.payload.name
+      );
       currentProjectAssets = await getProjectAssetList(currentProjectPath);
       event.reply('project-channel', {
         action: 'UPDATE_ASSET_LIST',

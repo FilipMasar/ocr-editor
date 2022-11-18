@@ -11,4 +11,5 @@ export type ProjectContextValues = {
   openProject: (projectPath?: string) => void;
   addImages: () => void;
   addAltos: () => void;
+  removeAsset: (directory: 'images' | 'altos', name: string) => void;
 };

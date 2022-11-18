@@ -125,6 +125,20 @@ export const addAltosToProject = async (
   });
 };
 
+export const removeAssetFromProject = async (
+  projectPath: string | undefined,
+  directory: 'images' | 'altos',
+  name: string
+) => {
+  if (projectPath === undefined) {
+    console.error('projectPath is not defined');
+    return;
+  }
+
+  const filePath = path.join(projectPath, directory, name);
+  fs.unlinkSync(filePath);
+};
+
 export const getProjectAssetList = async (
   projectPath: string | undefined
 ): Promise<ProjectAssetList> => {
