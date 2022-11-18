@@ -1,5 +1,4 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import 'tailwindcss/tailwind.css';
 import ProjectProvider from './context/ProjectContext';
 import Project from './pages/Project';
 import ProjectAssetsList from './pages/ProjectAssetsList';
