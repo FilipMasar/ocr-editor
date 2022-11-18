@@ -68,7 +68,7 @@ ipcMain.on('project-channel', async (event, data) => {
 
           event.reply('project-channel', {
             action: 'UPDATE_ASSET_LIST',
-            payload: currentProjectPath,
+            payload: currentProjectAssets,
           });
         }
       } catch (error) {

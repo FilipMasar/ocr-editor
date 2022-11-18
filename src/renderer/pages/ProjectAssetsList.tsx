@@ -10,7 +10,6 @@ const ProjectAssetsList: FC = () => {
   return (
     <div>
       <h1>List</h1>
-      <p>{JSON.stringify(projectAssets)}</p>
       <table>
         <thead>
           <tr>
