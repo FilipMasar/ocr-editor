@@ -24,6 +24,7 @@ import {
   removeAssetFromProject,
 } from './project';
 import { getRecentProjects } from './configData';
+import { getPageAssets } from './editor';
 
 class AppUpdater {
   constructor() {
@@ -118,6 +119,30 @@ ipcMain.on('config-channel', async (event, data) => {
       break;
     default:
       console.log('No function found');
+  }
+});
+
+ipcMain.on('editor-channel', async (event, data) => {
+  if (currentProjectPath === undefined)
+    throw new Error("Project path isn't defined");
+
+  try {
+    switch (data.action) {
+      case 'GET_PAGE_ASSETS':
+        event.reply('editor-channel', {
+          action: 'PAGE_ASSETS',
+          payload: await getPageAssets(currentProjectPath, data.payload),
+        });
+        break;
+      default:
+        console.log('No function found');
+    }
+  } catch (error: any) {
+    console.error(error);
+    event.reply('editor-channel', {
+      action: 'ERROR',
+      payload: error?.message || 'Something went wrong',
+    });
   }
 });
 

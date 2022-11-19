@@ -1,6 +1,8 @@
 import { Dialog, Notification } from '@mantine/core';
 import { X } from 'react-feather';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import AltoProvider from './context/AltoContext';
+import EditorProvider from './context/EditorContext';
 import { useProject } from './context/ProjectContext';
 import Editor from './pages/Editor';
 import ProjectAssetsList from './pages/ProjectAssetsList';
@@ -15,7 +17,16 @@ export default function AppRoutes() {
         <Routes>
           <Route path="/" element={<StartingPage />} />
           <Route path="/project" element={<ProjectAssetsList />} />
-          <Route path="/editor" element={<Editor />} />
+          <Route
+            path="/editor"
+            element={
+              <AltoProvider>
+                <EditorProvider>
+                  <Editor />
+                </EditorProvider>
+              </AltoProvider>
+            }
+          />
         </Routes>
       </Router>
       <Dialog opened={errorMessage !== undefined} p={0}>

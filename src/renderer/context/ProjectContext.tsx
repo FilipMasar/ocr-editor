@@ -13,8 +13,7 @@ import { ProjectAssets, ProjectContextValues } from 'renderer/types/project';
 const ProjectContext = createContext({} as ProjectContextValues);
 
 // useContext
-export const useProject = (): ProjectContextValues =>
-  useContext(ProjectContext);
+export const useProject = () => useContext(ProjectContext);
 
 // Provider
 const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
