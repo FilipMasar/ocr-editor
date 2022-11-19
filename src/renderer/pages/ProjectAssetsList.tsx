@@ -26,7 +26,7 @@ const ProjectAssetsList: FC = () => {
         <tbody>
           {projectAssets.map(({ image, alto }, index) => (
             <AssetsListRow
-              key={image}
+              key={image + alto}
               image={image}
               alto={alto}
               index={index}

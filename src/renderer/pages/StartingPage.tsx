@@ -25,7 +25,7 @@ const StartingPage: FC = () => {
 
   useEffect(() => {
     if (projectAssets !== undefined) {
-      navigate('/project/list');
+      navigate('/project');
     }
   }, [navigate, projectAssets]);
 

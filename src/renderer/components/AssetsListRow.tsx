@@ -2,6 +2,7 @@ import { ActionIcon, Text, Group } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { FC, MouseEvent } from 'react';
 import { Trash } from 'react-feather';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useProject } from 'renderer/context/ProjectContext';
 
 interface Props {
@@ -12,11 +13,23 @@ interface Props {
 
 const AssetsListRow: FC<Props> = ({ image, alto, index }) => {
   const { removeAsset } = useProject();
+  const navigate = useNavigate();
   const hoverImage = useHover();
   const hoverAlto = useHover();
 
   const openEditor = () => {
-    console.log('open editor', index);
+    if (image === '' || alto === '') {
+      alert('Image or ALTO file is missing for this page');
+      return;
+    }
+    navigate({
+      pathname: '/editor',
+      search: `?${createSearchParams({
+        index: index.toString(),
+        image,
+        alto,
+      })}`,
+    });
   };
 
   return (
