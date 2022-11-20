@@ -1,6 +1,7 @@
 import { Title } from '@mantine/core';
-import { ChangeEvent, FC, useEffect } from 'react';
+import { FC, useEffect, MouseEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import EditorOverlay from 'renderer/components/EditorOverlay';
 import Viewer from 'renderer/components/Viewer';
 import { useAlto } from 'renderer/context/AltoContext';
 import { useEditor } from 'renderer/context/EditorContext';
@@ -14,9 +15,20 @@ const Editor: FC = () => {
   const { imageSrc, requestPageAssets, settings, setSettings } = useEditor();
   const { pageDimensions } = useAlto();
 
-  const updateZoom = (e: ChangeEvent<HTMLInputElement>) => {
+  const alignCenter = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setSettings((old) => ({ ...old, zoom: parseFloat(e.target.value) }));
+
+    console.log('center');
+
+    // TODO continue
+    const ratio = (window.innerHeight - 40) / pageDimensions.height;
+    const newZoom =
+      ratio < 1 ? Math.floor(ratio * 10) / 10 : Math.ceil(ratio * 10) / 10;
+    const xCenter =
+      (2 * pageDimensions.width + 40) / 2 -
+      (pageDimensions.width * newZoom) / 2;
+    window.scrollTo({ left: xCenter, top: 0 });
+    setSettings((old) => ({ ...old, zoom: newZoom }));
   };
 
   useEffect(() => {
@@ -55,29 +67,7 @@ const Editor: FC = () => {
           <Viewer />
         </div>
       </div>
-      <div
-        style={{
-          backgroundColor: 'white',
-          width: 150,
-          height: 60,
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          zIndex: 100,
-        }}
-      >
-        <label htmlFor="zoomInput">Zoom: {settings.zoom}</label>
-        <input
-          id="zoomInput"
-          className="w-full"
-          type="range"
-          min={0.1}
-          max={2}
-          step={0.1}
-          value={settings.zoom}
-          onChange={updateZoom}
-        />
-      </div>
+      <EditorOverlay alignCenter={alignCenter} />
     </>
   );
 };
