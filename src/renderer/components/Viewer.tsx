@@ -73,14 +73,7 @@ const Viewer: FC = () => {
   }
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        margin: 16,
-        transform: `scale(${zoom})`,
-        transformOrigin: '0% 0% 0px',
-      }}
-    >
+    <>
       {imageSrc && (
         <img
           src={imageSrc}
@@ -143,7 +136,7 @@ const Viewer: FC = () => {
           metadata={string.metadata}
         />
       ))}
-    </div>
+    </>
   );
 };
 

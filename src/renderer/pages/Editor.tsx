@@ -1,5 +1,5 @@
 import { Title } from '@mantine/core';
-import { FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Viewer from 'renderer/components/Viewer';
 import { useAlto } from 'renderer/context/AltoContext';
@@ -11,32 +11,19 @@ const Editor: FC = () => {
   const imageFileName = urlSearchParams.get('image');
   const altoFileName = urlSearchParams.get('alto');
 
-  const { imageSrc, setImageSrc } = useEditor();
-  const { alto, setAlto } = useAlto();
+  const { imageSrc, requestPageAssets, settings, setSettings } = useEditor();
+  const { pageDimensions } = useAlto();
+
+  const updateZoom = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSettings((old) => ({ ...old, zoom: parseFloat(e.target.value) }));
+  };
 
   useEffect(() => {
     if (imageFileName && altoFileName) {
-      window.electron.ipcRenderer.sendMessage('editor-channel', {
-        action: 'GET_PAGE_ASSETS',
-        payload: { imageFileName, altoFileName },
-      });
+      requestPageAssets(imageFileName, altoFileName);
     }
-
-    window.electron.ipcRenderer.on('editor-channel', (data) => {
-      console.log('editor-channel', data);
-      switch (data.action) {
-        case 'PAGE_ASSETS':
-          setImageSrc(data.payload.imageUri);
-          setAlto(data.payload.altoJson);
-          break;
-        case 'ERROR':
-          console.log(String(data.payload));
-          break;
-        default:
-          console.log('Unhandled action:', data.action);
-      }
-    });
-  }, [altoFileName, imageFileName, index]);
+  }, [imageFileName, altoFileName, requestPageAssets]);
 
   if (imageSrc === undefined)
     return (
@@ -46,16 +33,52 @@ const Editor: FC = () => {
     );
 
   return (
-    <div style={{ display: 'flex', position: 'relative' }}>
-      <div style={{ height: '100vh', width: '100vh', overflow: 'scroll' }}>
-        <Viewer />
-      </div>
-      {/* {panelOpened && (
-        <div style={{ height }} className="w-1/3 bg-indigo-100 overflow-scroll">
-          <Panel />
+    <>
+      <div
+        style={{
+          minHeight: '100vh',
+          minWidth: '100vw',
+          width: 2 * pageDimensions.width + 40,
+          height: 2 * pageDimensions.height + 40,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            margin: 20,
+            transform: `scale(${settings.zoom})`,
+            transformOrigin: 'center top',
+          }}
+        >
+          <Viewer />
         </div>
-      )} */}
-    </div>
+      </div>
+      <div
+        style={{
+          backgroundColor: 'white',
+          width: 150,
+          height: 60,
+          position: 'fixed',
+          bottom: 0,
+          right: 0,
+          zIndex: 100,
+        }}
+      >
+        <label htmlFor="zoomInput">Zoom: {settings.zoom}</label>
+        <input
+          id="zoomInput"
+          className="w-full"
+          type="range"
+          min={0.1}
+          max={2}
+          step={0.1}
+          value={settings.zoom}
+          onChange={updateZoom}
+        />
+      </div>
+    </>
   );
 };
 

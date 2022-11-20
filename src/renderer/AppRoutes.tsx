@@ -7,7 +7,6 @@ import { useProject } from './context/ProjectContext';
 import Editor from './pages/Editor';
 import ProjectAssetsList from './pages/ProjectAssetsList';
 import StartingPage from './pages/StartingPage';
-import Test from './pages/Test';
 
 export default function AppRoutes() {
   const { errorMessage, resetErrorMessage } = useProject();
@@ -17,7 +16,7 @@ export default function AppRoutes() {
       <Router>
         <Routes>
           <Route path="/" element={<StartingPage />} />
-          <Route path="/project" element={<Test />} />
+          <Route path="/project" element={<ProjectAssetsList />} />
           <Route
             path="/editor"
             element={

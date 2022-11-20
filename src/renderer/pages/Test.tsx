@@ -40,16 +40,39 @@ const Test: FC = () => {
     );
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        minHeight: '100vh',
-        minWidth: '100vw',
-        backgroundColor: 'yellow',
-      }}
-    >
+    <>
+      <div
+        style={{
+          minHeight: '100vh',
+          minWidth: '100vw',
+          width: 2040,
+          height: 4040,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            margin: 20,
+
+            transform: `scale(${zoom})`,
+            transformOrigin: 'center top',
+          }}
+        >
+          <img width={1000} height={2000} src={imageSrc} alt="" />
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: 1000,
+              height: 2000,
+              border: '1px black solid',
+            }}
+          />
+        </div>
+      </div>
       <div
         style={{
           backgroundColor: 'white',
@@ -73,33 +96,7 @@ const Test: FC = () => {
           onChange={updateZoom}
         />
       </div>
-      <div
-        style={{
-          backgroundColor: 'blue',
-          width: 2000,
-          height: 4000,
-          overflow: 'scroll',
-          transform: `scale(${zoom})`,
-          transformOrigin: 'center top',
-        }}
-      >
-        <Center>
-          <div style={{ position: 'relative', margin: 20 }}>
-            <img width={1000} height={2000} src={imageSrc} alt="" />
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: 1000,
-                height: 2000,
-                border: '1px black solid',
-              }}
-            />
-          </div>
-        </Center>
-      </div>
-    </div>
+    </>
   );
 };
 
