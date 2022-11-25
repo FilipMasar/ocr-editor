@@ -4,7 +4,7 @@ import { AlignCenter, Minus, Plus } from 'react-feather';
 import { useEditor } from 'renderer/context/EditorContext';
 
 interface Props {
-  alignCenter: (e: MouseEvent<HTMLButtonElement>) => void;
+  alignCenter: () => void;
 }
 
 const EditorOverlay: FC<Props> = ({ alignCenter }) => {
@@ -25,7 +25,10 @@ const EditorOverlay: FC<Props> = ({ alignCenter }) => {
             size={18}
             variant="subtle"
             disabled={settings.zoom <= 0.1}
-            onClick={alignCenter}
+            onClick={(e: MouseEvent<HTMLButtonElement>) => {
+              e.stopPropagation();
+              alignCenter();
+            }}
           >
             <AlignCenter />
           </ActionIcon>

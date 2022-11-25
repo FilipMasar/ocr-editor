@@ -1,5 +1,5 @@
 import { Title } from '@mantine/core';
-import { FC, useEffect, MouseEvent } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import EditorOverlay from 'renderer/components/EditorOverlay';
 import Viewer from 'renderer/components/Viewer';
@@ -15,21 +15,18 @@ const Editor: FC = () => {
   const { imageSrc, requestPageAssets, settings, setSettings } = useEditor();
   const { pageDimensions } = useAlto();
 
-  const alignCenter = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    console.log('center');
-
-    // TODO continue
+  const alignCenter = useCallback(() => {
     const ratio = (window.innerHeight - 40) / pageDimensions.height;
     const newZoom =
       ratio < 1 ? Math.floor(ratio * 10) / 10 : Math.ceil(ratio * 10) / 10;
-    const xCenter =
-      (2 * pageDimensions.width + 40) / 2 -
-      (pageDimensions.width * newZoom) / 2;
+    const xCenter = (2 * pageDimensions.width + 40) / 2 - window.innerWidth / 2;
     window.scrollTo({ left: xCenter, top: 0 });
     setSettings((old) => ({ ...old, zoom: newZoom }));
-  };
+  }, [pageDimensions, setSettings]);
+
+  useEffect(() => {
+    alignCenter();
+  }, [alignCenter]);
 
   useEffect(() => {
     if (imageFileName && altoFileName) {
