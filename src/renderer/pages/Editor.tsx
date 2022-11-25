@@ -1,4 +1,4 @@
-import { Title } from '@mantine/core';
+import { Center, Loader, Title } from '@mantine/core';
 import { FC, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import EditorOverlay from 'renderer/components/EditorOverlay';
@@ -36,9 +36,12 @@ const Editor: FC = () => {
 
   if (imageSrc === undefined)
     return (
-      <div>
-        <Title>Loading...</Title>
-      </div>
+      <Center mt={120}>
+        <Loader />
+        <Title order={2} ml="sm">
+          Loading...
+        </Title>
+      </Center>
     );
 
   return (

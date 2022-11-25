@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-restricted-syntax */
+import { Title } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
 import { useAlto } from '../context/AltoContext';
 import { useEditor } from '../context/EditorContext';
@@ -22,7 +23,7 @@ const Viewer: FC = () => {
     textBlocks,
   } = useAlto();
   const { settings, imageSrc } = useEditor();
-  const { zoom, imageOpacity, show } = settings;
+  const { imageOpacity, show } = settings;
 
   useEffect(() => {
     setTextLines([]);
@@ -69,7 +70,7 @@ const Viewer: FC = () => {
   }, [textLines]);
 
   if (printSpace === undefined) {
-    return <h1>No or wrong xml</h1>;
+    return <Title>No or wrong xml</Title>;
   }
 
   return (
