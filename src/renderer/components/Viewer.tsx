@@ -69,7 +69,7 @@ const Viewer: FC = () => {
     }
   }, [textLines]);
 
-  if (printSpace === undefined) {
+  if (!pageDimensions.height || !pageDimensions.width) {
     return <Title>No or wrong xml</Title>;
   }
 

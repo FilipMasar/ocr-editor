@@ -67,7 +67,10 @@ const Editor: FC = () => {
           <Viewer />
         </div>
       </div>
-      <EditorOverlay alignCenter={alignCenter} />
+      <EditorOverlay
+        alignCenter={alignCenter}
+        pageNumber={parseInt(index || '0', 10)}
+      />
     </>
   );
 };
