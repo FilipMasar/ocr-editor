@@ -22,7 +22,7 @@ interface EditorProviderValue {
 
 const defaultSettings: Settings = {
   zoom: 1,
-  imageOpacity: 1,
+  imageOpacity: 100,
   show: {
     printSpace: true,
     illustrations: true,

@@ -81,7 +81,7 @@ const Viewer: FC = () => {
           alt="page scan"
           width={pageDimensions.width}
           height={pageDimensions.height}
-          style={{ opacity: imageOpacity, maxWidth: 'none' }}
+          style={{ opacity: imageOpacity / 100, maxWidth: 'none' }}
         />
       )}
 

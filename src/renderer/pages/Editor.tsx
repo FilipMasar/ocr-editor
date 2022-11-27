@@ -1,7 +1,7 @@
 import { Center, Loader, Title } from '@mantine/core';
 import { FC, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import EditorOverlay from 'renderer/components/EditorOverlay';
+import EditorOverlay from 'renderer/components/editorOverlay/EditorOverlay';
 import Viewer from 'renderer/components/Viewer';
 import { useAlto } from 'renderer/context/AltoContext';
 import { useEditor } from 'renderer/context/EditorContext';
@@ -33,6 +33,8 @@ const Editor: FC = () => {
       requestPageAssets(imageFileName, altoFileName);
     }
   }, [imageFileName, altoFileName, requestPageAssets]);
+
+  console.log('render Editor');
 
   if (imageSrc === undefined)
     return (

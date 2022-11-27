@@ -54,7 +54,6 @@ const String: FC<StringProps> = ({ element, metadata }) => {
             border: '1px solid green',
             backgroundColor: hovered ? 'green' : 'transparent',
             opacity: hovered ? 0.5 : 1,
-            cursor: 'pointer',
           }}
           // TODO className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}
         />
@@ -63,8 +62,10 @@ const String: FC<StringProps> = ({ element, metadata }) => {
       {/* Text Fit */}
       {show.textFit && (
         <div
-          className="flex items-start justify-between"
           style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
             position: 'absolute',
             top,
             left,
@@ -73,6 +74,7 @@ const String: FC<StringProps> = ({ element, metadata }) => {
             fontFamily: textStyle.fontFamily,
             fontSize: `calc(${textStyle.fontSize}pt / 0.2645833333)`,
             lineHeight: `${height}px`,
+            color: 'black',
           }}
         >
           {text.split('').map((char: string, index: number) => (
@@ -84,8 +86,10 @@ const String: FC<StringProps> = ({ element, metadata }) => {
       {/* Text Above */}
       {show.textAbove && (
         <div
-          className="flex items-start justify-around"
           style={{
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'flex-start',
             position: 'absolute',
             top: metadata.lineVPos - 20,
             left,
@@ -93,7 +97,9 @@ const String: FC<StringProps> = ({ element, metadata }) => {
           }}
         >
           {text.split('').map((char: string, index: number) => (
-            <span key={index}>{char}</span>
+            <span key={index} style={{ color: 'black' }}>
+              {char}
+            </span>
           ))}
         </div>
       )}
