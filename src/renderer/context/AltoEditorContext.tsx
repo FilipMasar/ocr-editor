@@ -1,4 +1,5 @@
 import { Modal } from '@mantine/core';
+import ReactJson from '@microlink/react-json-view';
 import {
   createContext,
   FC,
@@ -6,7 +7,6 @@ import {
   useContext,
   useState,
 } from 'react';
-import ReactJson from 'react-json-view';
 
 interface AltoEditorProviderValue {
   openAltoEditor: (altoElement: any, onUpdate: any) => void;

@@ -87,6 +87,7 @@
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^5.8.0",
     "@mantine/hooks": "^5.8.0",
+    "@microlink/react-json-view": "^1.22.2",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^5.2.3",
@@ -94,7 +95,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
-    "react-json-view": "^1.21.3",
     "react-router-dom": "^6.4.3"
   },
   "devDependencies": {
