@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-restricted-syntax */
+import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
 import { useAlto } from '../../context/AltoContext';
 import { useEditor } from '../../context/EditorContext';
@@ -17,6 +18,7 @@ interface StringProps {
 }
 
 const String: FC<StringProps> = ({ element, metadata }) => {
+  const { ref, hovered } = useHover();
   const { styles } = useAlto();
   const { settings } = useEditor();
   const { show } = settings;
@@ -50,8 +52,11 @@ const String: FC<StringProps> = ({ element, metadata }) => {
             width,
             height,
             border: '1px solid green',
+            backgroundColor: hovered ? 'green' : 'transparent',
+            opacity: hovered ? 0.5 : 1,
+            cursor: 'pointer',
           }}
-          // className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}
+          // TODO className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}
         />
       )}
 

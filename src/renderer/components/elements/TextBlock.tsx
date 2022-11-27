@@ -1,7 +1,10 @@
-import { FC, useEffect, useRef } from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { useHover } from '@mantine/hooks';
+import { FC, useEffect } from 'react';
+import { useAltoEditor } from 'renderer/context/AltoEditorContext';
+import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
 import { useAlto } from '../../context/AltoContext';
-// import { useAltoEditorContext } from '../../context/altoEditorContext';
-// import { useTextEditorContext } from '../../context/textEditorContext';
 import { toNumber } from '../../utils/alto';
 
 interface TextBlockProps {
@@ -10,37 +13,45 @@ interface TextBlockProps {
 }
 
 const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const { ref, hovered } = useHover();
+
   const { updateTextBlock } = useAlto();
-  // const { openAltoEditor } = useAltoEditorContext();
-  // const { openTextEditor } = useTextEditorContext();
+  const { openAltoEditor } = useAltoEditor();
+  const { openTextEditor } = useTextEditor();
 
   const top = toNumber(element['@_VPOS']);
   const left = toNumber(element['@_HPOS']);
   const width = toNumber(element['@_WIDTH']);
   const height = toNumber(element['@_HEIGHT']);
 
-  // useEffect(() => {
-  //   const handleClick = (event: MouseEvent) => {
-  //     if (event.altKey) {
-  //       openAltoEditor(
-  //         element,
-  //         () => (updated: any) => updateTextBlock(updated, metadata.index)
-  //       );
-  //     } else {
-  //       openTextEditor('TEXTBLOCK', { element, metadata });
-  //     }
-  //   };
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (event.altKey) {
+        openAltoEditor(
+          element,
+          () => (updated: any) => updateTextBlock(updated, metadata.index)
+        );
+      } else {
+        openTextEditor('TEXTBLOCK', { element, metadata });
+      }
+    };
 
-  //   const div = ref.current;
-  //   if (div === null) return;
+    const div = ref.current;
 
-  //   div.addEventListener('click', handleClick);
+    div.addEventListener('click', handleClick);
 
-  //   return () => {
-  //     div.removeEventListener('click', handleClick);
-  //   };
-  // }, []);
+    return () => {
+      div.removeEventListener('click', handleClick);
+    };
+  }, [
+    element,
+    metadata,
+    metadata.index,
+    openAltoEditor,
+    openTextEditor,
+    ref,
+    updateTextBlock,
+  ]);
 
   return (
     <div
@@ -52,8 +63,10 @@ const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
         width,
         height,
         border: '1px solid red',
+        backgroundColor: hovered ? 'red' : 'transparent',
+        opacity: hovered ? 0.5 : 1,
+        cursor: 'pointer',
       }}
-      // className="border border-red-500 hover:bg-red-500 hover:opacity-10"
     />
   );
 };

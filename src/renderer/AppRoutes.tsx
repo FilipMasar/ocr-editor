@@ -2,8 +2,10 @@ import { Dialog, Notification } from '@mantine/core';
 import { X } from 'react-feather';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import AltoProvider from './context/AltoContext';
+import AltoEditorProvider from './context/AltoEditorContext';
 import EditorProvider from './context/EditorContext';
 import { useProject } from './context/ProjectContext';
+import TextEditorProvider from './context/AltoTextEditorContext';
 import Editor from './pages/Editor';
 import ProjectAssetsList from './pages/ProjectAssetsList';
 import StartingPage from './pages/StartingPage';
@@ -22,7 +24,11 @@ export default function AppRoutes() {
             element={
               <AltoProvider>
                 <EditorProvider>
-                  <Editor />
+                  <AltoEditorProvider>
+                    <TextEditorProvider>
+                      <Editor />
+                    </TextEditorProvider>
+                  </AltoEditorProvider>
                 </EditorProvider>
               </AltoProvider>
             }

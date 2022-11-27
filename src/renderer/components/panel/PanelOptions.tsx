@@ -4,7 +4,7 @@ import { Trash, Upload } from "react-feather"
 import { useAltoContext } from "../../context/altoContext"
 import { useAltoEditorContext } from "../../context/altoEditorContext"
 import { usePanelContext } from "../../context/panelContext"
-import { useTextEditorContext } from "../../context/textEditorContext"
+import { useTextEditorContext } from "../../context/AltoTextEditorContext"
 import { jsonToXml } from "../../utils/xmlConvertor"
 
 const fontColors = ["bg-blue-900 opacity-50", "bg-red-900 opacity-50", "bg-green-900 opacity-50", "bg-yellow-900 opacity-50"]
@@ -18,7 +18,7 @@ const PanelOptions:FC = () => {
 
 	const onExport = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault()
-		
+
 		if (alto) {
 			const xmlContent = jsonToXml(alto)
 			const file = new File([xmlContent], "updated.xml")
@@ -86,7 +86,7 @@ const PanelOptions:FC = () => {
 				max={2}
 				step={0.1}
 				value={zoom}
-				onChange={updateZoom} 
+				onChange={updateZoom}
 			/>
 
 			<label htmlFor="opacityInput">Image opacity: {imageOpacity}</label>
@@ -98,7 +98,7 @@ const PanelOptions:FC = () => {
 				max={1}
 				step={0.1}
 				value={imageOpacity}
-				onChange={updateOpacity} 
+				onChange={updateOpacity}
 			/>
 
 			<hr className="w-full h-0.5 bg-black my-2"/>
@@ -110,23 +110,23 @@ const PanelOptions:FC = () => {
 						<label>{key}</label>
 						<div className="flex gap-2">
 							{fontColors.map(color => (
-								<div 
+								<div
 									key={color}
 									className={`w-4 h-4 rounded-full ${color} cursor-pointer ${styles[key].color === color && "border-4 border-black"}`}
 									onClick={() => {
 										setStyles(old => ({...old, [key]: { ...old[key], color: old[key].color === color ? undefined : color }}))
 										setSettings(old => ({...old, show: {...old.show, strings: true}}))
 									}}
-								/>	
+								/>
 							))}
 						</div>
 					</div>
 					<div className="flex gap-4 ml-2">
 						<label>- FONTSIZE: </label>
-						<input 
-							type="number" 
+						<input
+							type="number"
 							className="w-20 pl-2"
-							value={styles[key].fontSize} 
+							value={styles[key].fontSize}
 							onChange={(e) => setStyles(old => ({...old, [key]: {...old[key], fontSize: parseInt(e.target.value)}}))}
 						/>
 					</div>
@@ -188,9 +188,9 @@ const PanelOptions:FC = () => {
 					<label>Text lines</label>
 				</div>
 				<div className="flex items-center gap-2">
-					<input 
-						type="checkbox" 
-						checked={settings.show.strings} 
+					<input
+						type="checkbox"
+						checked={settings.show.strings}
 						onChange={(e) => setSettings(old => ({...old, show: {...old.show, strings: e.target.checked}}))}
 					/>
 					<label>Strings</label>
@@ -214,8 +214,8 @@ const PanelOptions:FC = () => {
 			</div>
 
 			<hr className="w-full h-0.5 bg-black my-2"/>
-			
-			<button 
+
+			<button
 				className="w-full flex gap-2 justify-center items-center btn-primary mb-2"
 				onClick={onExport}
 				disabled={alto === undefined}
@@ -224,7 +224,7 @@ const PanelOptions:FC = () => {
 				<span>Export Updated XML</span>
 			</button>
 
-			<button 
+			<button
 				className="mx-auto flex gap-2 justify-center items-center btn-red"
 				onClick={onStartOver}
 			>

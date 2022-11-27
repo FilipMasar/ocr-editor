@@ -1,7 +1,8 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { useHover } from '@mantine/hooks';
+import { FC, useEffect, useState } from 'react';
+import { useAltoEditor } from 'renderer/context/AltoEditorContext';
+import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
 import { useAlto } from '../../context/AltoContext';
-// import { useAltoEditorContext } from '../../context/altoEditorContext';
-// import { useTextEditorContext } from '../../context/textEditorContext';
 import { getStringsFromLine, toNumber } from '../../utils/alto';
 
 interface TextLineProps {
@@ -10,11 +11,11 @@ interface TextLineProps {
 }
 
 const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const { ref, hovered } = useHover();
   const [text, setText] = useState<string>();
-  // const { updateTextLine } = useAlto();
-  // const { openAltoEditor } = useAltoEditorContext();
-  // const { openTextEditor } = useTextEditorContext();
+  const { updateTextLine } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
+  const { openTextEditor } = useTextEditor();
 
   const top = toNumber(element['@_VPOS']);
   const left = toNumber(element['@_HPOS']);
@@ -30,28 +31,27 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
     }
   }, [element]);
 
-  // useEffect(() => {
-  //   const handleClick = (event: MouseEvent) => {
-  //     if (event.altKey) {
-  //       openAltoEditor(
-  //         element,
-  //         () => (updated: any) =>
-  //           updateTextLine(updated, metadata.textBlockIndex, metadata.index)
-  //       );
-  //     } else {
-  //       openTextEditor('TEXTLINE', { element, metadata });
-  //     }
-  //   };
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (event.altKey) {
+        openAltoEditor(
+          element,
+          () => (updated: any) =>
+            updateTextLine(updated, metadata.textBlockIndex, metadata.index)
+        );
+      } else {
+        openTextEditor('TEXTLINE', { element, metadata });
+      }
+    };
 
-  //   const div = ref.current;
-  //   if (div === null) return;
+    const div = ref.current;
 
-  //   div.addEventListener('click', handleClick);
+    div.addEventListener('click', handleClick);
 
-  //   return () => {
-  //     div.removeEventListener('click', handleClick);
-  //   };
-  // }, []);
+    return () => {
+      div.removeEventListener('click', handleClick);
+    };
+  }, [element, metadata, openAltoEditor, openTextEditor, ref, updateTextLine]);
 
   return (
     <div
@@ -63,8 +63,10 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
         width,
         height,
         border: '1px solid orange',
+        backgroundColor: hovered ? 'orange' : 'transparent',
+        opacity: hovered ? 0.5 : 1,
+        cursor: 'pointer',
       }}
-      // className="border border-orange-500 hover:bg-red-500 hover:opacity-30"
       title={text}
     />
   );
