@@ -23,7 +23,7 @@ import {
   openProject,
   removeAssetFromProject,
 } from './project';
-import { getRecentProjects } from './configData';
+import { getRecentProjects, removeFromRecentProjects } from './configData';
 import { getPageAssets } from './editor';
 
 class AppUpdater {
@@ -112,6 +112,13 @@ ipcMain.on('project-channel', async (event, data) => {
 ipcMain.on('config-channel', async (event, data) => {
   switch (data.action) {
     case 'GET_RECENT_PROJECTS':
+      event.reply('config-channel', {
+        action: 'RECENT_PROJECTS',
+        payload: getRecentProjects(),
+      });
+      break;
+    case 'REMOVE_RECENT_PROJECT':
+      removeFromRecentProjects(data.payload);
       event.reply('config-channel', {
         action: 'RECENT_PROJECTS',
         payload: getRecentProjects(),

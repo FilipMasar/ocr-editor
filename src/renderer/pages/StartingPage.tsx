@@ -1,14 +1,29 @@
-import { Anchor, Group, Stack, Title, useMantineTheme } from '@mantine/core';
-import { FC, useEffect, useState } from 'react';
+import {
+  ActionIcon,
+  Anchor,
+  Group,
+  Stack,
+  Title,
+  useMantineTheme,
+} from '@mantine/core';
+import { FC, useEffect, useState, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProject } from 'renderer/context/ProjectContext';
-import { FilePlus, Folder } from 'react-feather';
+import { FilePlus, Folder, X } from 'react-feather';
+import './StartingPage.css';
 
 const StartingPage: FC = () => {
   const { projectAssets, createProject, openProject } = useProject();
   const navigate = useNavigate();
   const [recentProjects, setRecentProjects] = useState<string[]>([]);
   const theme = useMantineTheme();
+
+  const removeRecentProject = (project: string) => {
+    window.electron.ipcRenderer.sendMessage('config-channel', {
+      action: 'REMOVE_RECENT_PROJECT',
+      payload: project,
+    });
+  };
 
   useEffect(() => {
     window.electron.ipcRenderer.sendMessage('config-channel', {
@@ -58,14 +73,31 @@ const StartingPage: FC = () => {
         <Stack spacing="xs" mt="xl" align="start">
           <Title order={3}>Recent</Title>
           {recentProjects.map((project) => (
-            <Anchor
+            <Group
               key={project}
-              component="button"
-              type="button"
-              onClick={() => openProject(project)}
+              spacing={4}
+              className="recent-project-container"
             >
-              {project}
-            </Anchor>
+              <Anchor
+                component="button"
+                type="button"
+                onClick={() => openProject(project)}
+              >
+                {project}
+              </Anchor>
+              <ActionIcon
+                variant="subtle"
+                size={18}
+                ml="xs"
+                className="recent-project-delete"
+                onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  removeRecentProject(project);
+                }}
+              >
+                <X />
+              </ActionIcon>
+            </Group>
           ))}
         </Stack>
       )}
