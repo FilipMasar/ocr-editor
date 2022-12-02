@@ -33,6 +33,10 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const closeProject = () => {
+    setProjectAssets(undefined);
+  };
+
   const addImages = () => {
     window.electron.ipcRenderer.sendMessage('project-channel', {
       action: 'ADD_IMAGES',
@@ -80,6 +84,7 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
         resetErrorMessage,
         createProject,
         openProject,
+        closeProject,
         addImages,
         addAltos,
         removeAsset,

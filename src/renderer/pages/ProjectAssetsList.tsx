@@ -1,17 +1,34 @@
 import { Table, Title, Text, Button } from '@mantine/core';
 import { FC } from 'react';
-import { PlusCircle } from 'react-feather';
+import { ArrowLeft, PlusCircle } from 'react-feather';
+import { useNavigate } from 'react-router-dom';
 import AssetsListRow from 'renderer/components/AssetsListRow';
 import { useProject } from 'renderer/context/ProjectContext';
 
 const ProjectAssetsList: FC = () => {
-  const { projectAssets, addImages, addAltos } = useProject();
+  const { projectAssets, closeProject, addImages, addAltos } = useProject();
+  const navigate = useNavigate();
+
+  const goBack = () => {
+    closeProject();
+    navigate('/');
+  };
 
   if (projectAssets === undefined) return <div>Something went wrong</div>;
 
   return (
     <div style={{ padding: 20 }}>
-      <Title order={2}>List of project assets</Title>
+      <Button
+        onClick={goBack}
+        leftIcon={<ArrowLeft size={20} />}
+        variant="subtle"
+      >
+        Go back
+      </Button>
+
+      <Title order={2} mt="lg">
+        List of project assets
+      </Title>
       <Table mt="xl" maw={600} withColumnBorders highlightOnHover>
         <thead>
           <tr>

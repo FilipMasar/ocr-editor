@@ -11,6 +11,7 @@ export type ProjectContextValues = {
   resetErrorMessage: () => void;
   createProject: () => void;
   openProject: (projectPath?: string) => void;
+  closeProject: () => void;
   addImages: () => void;
   addAltos: () => void;
   removeAsset: (directory: 'images' | 'altos', name: string) => void;
