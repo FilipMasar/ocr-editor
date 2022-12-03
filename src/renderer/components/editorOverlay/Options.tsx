@@ -1,18 +1,34 @@
 import {
   ActionIcon,
+  Button,
   Checkbox,
+  Divider,
   Menu,
   Paper,
   Slider,
   Stack,
   Text,
 } from '@mantine/core';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
+import { useAlto } from 'renderer/context/AltoContext';
+import { useAltoEditor } from 'renderer/context/AltoEditorContext';
+import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
 import { useEditor } from 'renderer/context/EditorContext';
 
 const Options: FC = () => {
   const { settings, setSettings } = useEditor();
+  const { alto, setAlto, textBlocks } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
+  const { openTextEditor } = useTextEditor();
+
+  const onEditWholeAlto = useCallback(() => {
+    openAltoEditor(alto, () => setAlto);
+  }, [alto, openAltoEditor, setAlto]);
+
+  const onEditWholeText = useCallback(() => {
+    openTextEditor('ALL', textBlocks);
+  }, [openTextEditor, textBlocks]);
 
   return (
     <div
@@ -143,6 +159,8 @@ const Options: FC = () => {
                     }))
                   }
                 />
+                <Divider my="sm" />
+                <Button onClick={onEditWholeAlto}>Edit ALTO</Button>
               </Paper>
             </Menu.Dropdown>
           </Menu>
@@ -187,6 +205,8 @@ const Options: FC = () => {
                     }))
                   }
                 />
+                <Divider my="sm" />
+                <Button onClick={onEditWholeText}>Edit Text</Button>
               </Paper>
             </Menu.Dropdown>
           </Menu>
