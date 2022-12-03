@@ -7,7 +7,7 @@ export default function App() {
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
-      theme={{ colorScheme: 'dark' }}
+      theme={{ colorScheme: 'light' }}
     >
       <ProjectProvider>
         <AppRoutes />

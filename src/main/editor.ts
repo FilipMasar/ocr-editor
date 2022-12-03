@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import path from 'path';
 import fs from 'fs';
-import { xmlToJson } from './utils/xmlConvertor';
+import { jsonToXml, xmlToJson } from './utils/xmlConvertor';
 
 export const getPageAssets = async (
   projectPath: string,
@@ -33,4 +33,16 @@ export const getPageAssets = async (
   const altoJson = xmlToJson(altoXml);
 
   return { imageUri, altoJson };
+};
+
+export const saveAlto = async (
+  projectPath: string,
+  fileName: string,
+  alto: any
+) => {
+  const altoPath = path.join(projectPath, 'altos', fileName);
+
+  const xmlContent = jsonToXml(alto);
+
+  fs.writeFileSync(altoPath, xmlContent);
 };

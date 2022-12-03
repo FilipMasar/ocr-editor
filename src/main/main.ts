@@ -24,7 +24,7 @@ import {
   removeAssetFromProject,
 } from './project';
 import { getRecentProjects, removeFromRecentProjects } from './configData';
-import { getPageAssets } from './editor';
+import { getPageAssets, saveAlto } from './editor';
 
 class AppUpdater {
   constructor() {
@@ -140,6 +140,14 @@ ipcMain.on('editor-channel', async (event, data) => {
           action: 'PAGE_ASSETS',
           payload: await getPageAssets(currentProjectPath, data.payload),
         });
+        break;
+      case 'SAVE_ALTO':
+        await saveAlto(
+          currentProjectPath,
+          data.payload.fileName,
+          data.payload.alto
+        );
+        event.reply('editor-channel', { action: 'ALTO_SAVED' });
         break;
       default:
         console.log('No function found');

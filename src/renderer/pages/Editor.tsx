@@ -12,7 +12,8 @@ const Editor: FC = () => {
   const imageFileName = urlSearchParams.get('image');
   const altoFileName = urlSearchParams.get('alto');
 
-  const { imageSrc, requestPageAssets, settings, setSettings } = useEditor();
+  const { imageSrc, requestPageAssets, settings, setSettings, saveAlto } =
+    useEditor();
   const { pageDimensions } = useAlto();
 
   const alignCenter = useCallback(() => {
@@ -24,6 +25,12 @@ const Editor: FC = () => {
     setSettings((old) => ({ ...old, zoom: newZoom }));
   }, [pageDimensions, setSettings]);
 
+  const onSave = useCallback(() => {
+    if (altoFileName) {
+      saveAlto(altoFileName);
+    }
+  }, [altoFileName, saveAlto]);
+
   useEffect(() => {
     alignCenter();
   }, [alignCenter]);
@@ -33,8 +40,6 @@ const Editor: FC = () => {
       requestPageAssets(imageFileName, altoFileName);
     }
   }, [imageFileName, altoFileName, requestPageAssets]);
-
-  console.log('render Editor');
 
   if (imageSrc === undefined)
     return (
@@ -72,6 +77,7 @@ const Editor: FC = () => {
       <EditorOverlay
         alignCenter={alignCenter}
         pageNumber={parseInt(index || '0', 10)}
+        onSave={onSave}
       />
     </>
   );

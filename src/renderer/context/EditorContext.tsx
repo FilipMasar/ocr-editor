@@ -18,6 +18,8 @@ interface EditorProviderValue {
   imageSrc: string | undefined;
   setImageSrc: Dispatch<SetStateAction<string | undefined>>;
   requestPageAssets: (imageFileName: string, altoFileName: string) => void;
+  saveAlto: (fileName: string) => void;
+  saving: boolean;
 }
 
 const defaultSettings: Settings = {
@@ -45,7 +47,8 @@ export const useEditor = () => useContext(EditorContext);
 const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [imageSrc, setImageSrc] = useState<string>();
-  const { setAlto } = useAlto();
+  const [saving, setSaving] = useState(false);
+  const { alto, setAlto } = useAlto();
 
   const requestPageAssets = useCallback(
     (imageFileName: string, altoFileName: string) => {
@@ -59,6 +62,17 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
     []
   );
 
+  const saveAlto = useCallback(
+    (fileName: string) => {
+      setSaving(true);
+      window.electron.ipcRenderer.sendMessage('editor-channel', {
+        action: 'SAVE_ALTO',
+        payload: { fileName, alto },
+      });
+    },
+    [alto]
+  );
+
   useEffect(() => {
     window.electron.ipcRenderer.on('editor-channel', (data) => {
       console.log('editor-channel', data);
@@ -66,6 +80,9 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         case 'PAGE_ASSETS':
           setImageSrc(data.payload.imageUri);
           setAlto(data.payload.altoJson);
+          break;
+        case 'ALTO_SAVED':
+          setSaving(false);
           break;
         case 'ERROR':
           console.log(String(data.payload));
@@ -84,6 +101,8 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         imageSrc,
         setImageSrc,
         requestPageAssets,
+        saveAlto,
+        saving,
       }}
     >
       {children}
