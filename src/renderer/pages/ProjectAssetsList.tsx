@@ -38,14 +38,18 @@ const ProjectAssetsList: FC = () => {
             <th>
               <Text size="lg">ALTO</Text>
             </th>
+            <th>
+              <Text size="lg">Done</Text>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {projectAssets.map(({ image, alto }, index) => (
+          {projectAssets.map(({ image, alto, done }, index) => (
             <AssetsListRow
               key={image + alto}
               image={image}
               alto={alto}
+              done={done}
               index={index}
             />
           ))}
@@ -68,6 +72,7 @@ const ProjectAssetsList: FC = () => {
                 Add altos
               </Button>
             </td>
+            <td />
           </tr>
         </tbody>
       </Table>

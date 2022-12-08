@@ -53,3 +53,56 @@ export const removeFromRecentProjects = (projectPath: string) => {
 
   writeConfigData('recentProjects', recentProjects);
 };
+
+export const getDonePages = (projectPath: string): number[] => {
+  const projects = readConfigData('projects') || {};
+  const project = projects[projectPath];
+
+  if (project && project.done) {
+    return project.done;
+  }
+  return [];
+};
+
+export const markAsDone = (projectPath: string, index: number) => {
+  const projects = readConfigData('projects') || {};
+  const project = projects[projectPath];
+
+  if (project) {
+    const done = project.done || [];
+    writeConfigData('projects', {
+      ...projects,
+      [projectPath]: { ...project, done: [...done, index] },
+    });
+  } else {
+    writeConfigData('projects', {
+      ...projects,
+      [projectPath]: { done: [index] },
+    });
+  }
+};
+
+export const removeFromDone = (projectPath: string, index: number) => {
+  const projects = readConfigData('projects') || {};
+  const project = projects[projectPath];
+
+  if (project && project.done && project.done.includes(index)) {
+    const done = project.done.filter((i: number) => i !== index);
+    writeConfigData('projects', {
+      ...projects,
+      [projectPath]: { ...project, done },
+    });
+  }
+};
+
+export const resetDoneProgress = (projectPath: string) => {
+  const projects = readConfigData('projects') || {};
+  const project = projects[projectPath];
+
+  if (project && project.done) {
+    writeConfigData('projects', {
+      ...projects,
+      [projectPath]: { ...project, done: [] },
+    });
+  }
+};

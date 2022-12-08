@@ -1,20 +1,15 @@
 import { BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { addToRecentProjects } from './configData';
+import { addToRecentProjects, getDonePages } from './configData';
 
-// TODO
-type PageData = {
-  image: string;
-  alto: any; // json
-};
-
-type PageFileNames = {
+type Page = {
   image: string;
   alto: string;
+  done: boolean;
 };
 
-export type ProjectAssetList = PageFileNames[];
+export type ProjectAssetList = Page[];
 
 export const createProject = async (
   mainWindow: BrowserWindow
@@ -71,10 +66,8 @@ export const openProject = async (
 
 export const addImagesToProject = async (
   mainWindow: BrowserWindow,
-  projectPath: string | undefined
+  projectPath: string
 ) => {
-  if (projectPath === undefined) throw new Error("Project path isn't defined");
-
   const { filePaths, canceled } = await dialog.showOpenDialog(mainWindow, {
     title: 'Pick images to add to your project',
     buttonLabel: 'Add',
@@ -92,10 +85,8 @@ export const addImagesToProject = async (
 
 export const addAltosToProject = async (
   mainWindow: BrowserWindow,
-  projectPath: string | undefined
+  projectPath: string
 ) => {
-  if (projectPath === undefined) throw new Error("Project path isn't defined");
-
   const { filePaths, canceled } = await dialog.showOpenDialog(mainWindow, {
     title: 'Pick alto files to add to your project',
     buttonLabel: 'Add',
@@ -112,12 +103,10 @@ export const addAltosToProject = async (
 };
 
 export const removeAssetFromProject = async (
-  projectPath: string | undefined,
+  projectPath: string,
   directory: 'images' | 'altos',
   name: string
 ) => {
-  if (projectPath === undefined) throw new Error("Project path isn't defined");
-
   const filePath = path.join(projectPath, directory, name);
   fs.unlinkSync(filePath);
 };
@@ -130,11 +119,14 @@ export const getProjectAssetList = async (
   const images = fs.readdirSync(path.join(projectPath, 'images'));
   const altos = fs.readdirSync(path.join(projectPath, 'altos'));
 
+  const donePages = getDonePages(projectPath);
+
   const assetList: ProjectAssetList = [];
   for (let i = 0; i < Math.max(images.length, altos.length); i += 1) {
     assetList.push({
       image: images[i] || '',
       alto: altos[i] || '',
+      done: donePages.includes(i),
     });
   }
 

@@ -23,7 +23,13 @@ import {
   openProject,
   removeAssetFromProject,
 } from './project';
-import { getRecentProjects, removeFromRecentProjects } from './configData';
+import {
+  getRecentProjects,
+  markAsDone,
+  removeFromDone,
+  removeFromRecentProjects,
+  resetDoneProgress,
+} from './configData';
 import { getPageAssets, saveAlto } from './editor';
 
 class AppUpdater {
@@ -68,7 +74,9 @@ ipcMain.on('project-channel', async (event, data) => {
         break;
 
       case 'ADD_IMAGES':
+        if (!currentProjectPath) throw new Error("Project path isn't defined");
         await addImagesToProject(mainWindow, currentProjectPath);
+        resetDoneProgress(currentProjectPath);
         currentProjectAssets = await getProjectAssetList(currentProjectPath);
         event.reply('project-channel', {
           action: 'UPDATE_ASSET_LIST',
@@ -77,7 +85,9 @@ ipcMain.on('project-channel', async (event, data) => {
         break;
 
       case 'ADD_ALTOS':
+        if (!currentProjectPath) throw new Error("Project path isn't defined");
         await addAltosToProject(mainWindow, currentProjectPath);
+        resetDoneProgress(currentProjectPath);
         currentProjectAssets = await getProjectAssetList(currentProjectPath);
         event.reply('project-channel', {
           action: 'UPDATE_ASSET_LIST',
@@ -86,16 +96,27 @@ ipcMain.on('project-channel', async (event, data) => {
         break;
 
       case 'REMOVE_ASSET':
+        if (!currentProjectPath) throw new Error("Project path isn't defined");
         await removeAssetFromProject(
           currentProjectPath,
           data.payload.directory,
           data.payload.name
         );
+        resetDoneProgress(currentProjectPath);
         currentProjectAssets = await getProjectAssetList(currentProjectPath);
         event.reply('project-channel', {
           action: 'UPDATE_ASSET_LIST',
           payload: currentProjectAssets,
         });
+        break;
+
+      case 'MARK_AS_DONE':
+        if (!currentProjectPath) throw new Error("Project path isn't defined");
+        markAsDone(currentProjectPath, data.payload);
+        break;
+      case 'REMOVE_FROM_DONE':
+        if (!currentProjectPath) throw new Error("Project path isn't defined");
+        removeFromDone(currentProjectPath, data.payload);
         break;
       default:
         console.log('No function found');

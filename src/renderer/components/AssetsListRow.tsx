@@ -1,6 +1,6 @@
-import { ActionIcon, Text, Group } from '@mantine/core';
+import { ActionIcon, Text, Group, Checkbox } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import { FC, MouseEvent } from 'react';
+import { ChangeEvent, FC, MouseEvent } from 'react';
 import { Trash } from 'react-feather';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useProject } from 'renderer/context/ProjectContext';
@@ -8,11 +8,12 @@ import { useProject } from 'renderer/context/ProjectContext';
 interface Props {
   image: string;
   alto: string;
+  done: boolean;
   index: number;
 }
 
-const AssetsListRow: FC<Props> = ({ image, alto, index }) => {
-  const { removeAsset } = useProject();
+const AssetsListRow: FC<Props> = ({ image, alto, done, index }) => {
+  const { removeAsset, updatePageDone } = useProject();
   const navigate = useNavigate();
   const hoverImage = useHover();
   const hoverAlto = useHover();
@@ -78,6 +79,16 @@ const AssetsListRow: FC<Props> = ({ image, alto, index }) => {
             <Trash />
           </ActionIcon>
         </Group>
+      </td>
+      <td>
+        <Checkbox
+          checked={done}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            e.stopPropagation();
+            updatePageDone(e.currentTarget.checked, index);
+          }}
+          onClick={(e: MouseEvent<HTMLInputElement>) => e.stopPropagation()}
+        />
       </td>
     </tr>
   );

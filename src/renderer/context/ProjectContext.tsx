@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { ProjectAssetList } from 'main/project';
 import {
   createContext,
   FC,
@@ -7,7 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { ProjectAssets, ProjectContextValues } from 'renderer/types/project';
+import { ProjectContextValues } from 'renderer/types/project';
 
 // Context
 const ProjectContext = createContext({} as ProjectContextValues);
@@ -17,7 +18,7 @@ export const useProject = () => useContext(ProjectContext);
 
 // Provider
 const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [projectAssets, setProjectAssets] = useState<ProjectAssets>();
+  const [projectAssets, setProjectAssets] = useState<ProjectAssetList>();
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const createProject = () => {
@@ -60,6 +61,23 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     setErrorMessage(undefined);
   };
 
+  const updatePageDone = (done: boolean, index: number) => {
+    setProjectAssets((prev) => {
+      const newState = prev?.map((page, i) => {
+        if (i === index) {
+          return { ...page, done };
+        }
+        return page;
+      });
+      return newState;
+    });
+
+    window.electron.ipcRenderer.sendMessage('project-channel', {
+      action: done ? 'MARK_AS_DONE' : 'REMOVE_FROM_DONE',
+      payload: index,
+    });
+  };
+
   useEffect(() => {
     window.electron.ipcRenderer.on('project-channel', (data) => {
       console.log('project-channel', data);
@@ -88,6 +106,7 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
         addImages,
         addAltos,
         removeAsset,
+        updatePageDone,
       }}
     >
       {children}

@@ -1,12 +1,7 @@
-export type ProjectAsset = {
-  image: string;
-  alto: string;
-};
-
-export type ProjectAssets = ProjectAsset[];
+import { ProjectAssetList } from 'main/project';
 
 export type ProjectContextValues = {
-  projectAssets: ProjectAssets | undefined;
+  projectAssets: ProjectAssetList | undefined;
   errorMessage: string | undefined;
   resetErrorMessage: () => void;
   createProject: () => void;
@@ -15,4 +10,5 @@ export type ProjectContextValues = {
   addImages: () => void;
   addAltos: () => void;
   removeAsset: (directory: 'images' | 'altos', name: string) => void;
+  updatePageDone: (done: boolean, index: number) => void;
 };
