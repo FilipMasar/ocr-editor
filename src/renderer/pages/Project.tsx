@@ -1,11 +1,12 @@
-import { Table, Title, Text, Button } from '@mantine/core';
-import { FC } from 'react';
+import { Table, Title, Text, Button, RingProgress } from '@mantine/core';
+import { FC, useEffect, useState } from 'react';
 import { ArrowLeft, PlusCircle } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import AssetsListRow from 'renderer/components/AssetsListRow';
 import { useProject } from 'renderer/context/ProjectContext';
 
-const ProjectAssetsList: FC = () => {
+const Project: FC = () => {
+  const [progress, setProgress] = useState<number>(0);
   const { projectAssets, closeProject, addImages, addAltos } = useProject();
   const navigate = useNavigate();
 
@@ -13,6 +14,16 @@ const ProjectAssetsList: FC = () => {
     closeProject();
     navigate('/');
   };
+
+  useEffect(() => {
+    if (projectAssets === undefined) return;
+
+    const prog = projectAssets.reduce((accumulator, object) => {
+      return accumulator + Number(object.done);
+    }, 0);
+
+    setProgress(prog);
+  }, [projectAssets]);
 
   if (projectAssets === undefined) return <div>Something went wrong</div>;
 
@@ -29,6 +40,19 @@ const ProjectAssetsList: FC = () => {
       <Title order={2} mt="lg">
         List of project assets
       </Title>
+
+      <RingProgress
+        sx={{ position: 'absolute', top: 0, right: 0 }}
+        sections={[
+          { value: (progress * 100) / projectAssets.length, color: 'blue' },
+        ]}
+        label={
+          <Text color="blue" weight={700} align="center" size="md">
+            {Math.round((progress * 100) / projectAssets.length)}% done
+          </Text>
+        }
+      />
+
       <Table mt="xl" maw={600} withColumnBorders highlightOnHover>
         <thead>
           <tr>
@@ -80,4 +104,4 @@ const ProjectAssetsList: FC = () => {
   );
 };
 
-export default ProjectAssetsList;
+export default Project;

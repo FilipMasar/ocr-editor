@@ -7,7 +7,7 @@ import EditorProvider from './context/EditorContext';
 import { useProject } from './context/ProjectContext';
 import TextEditorProvider from './context/AltoTextEditorContext';
 import Editor from './pages/Editor';
-import ProjectAssetsList from './pages/ProjectAssetsList';
+import Project from './pages/Project';
 import StartingPage from './pages/StartingPage';
 
 export default function AppRoutes() {
@@ -18,7 +18,7 @@ export default function AppRoutes() {
       <Router>
         <Routes>
           <Route path="/" element={<StartingPage />} />
-          <Route path="/project" element={<ProjectAssetsList />} />
+          <Route path="/project" element={<Project />} />
           <Route
             path="/editor"
             element={
