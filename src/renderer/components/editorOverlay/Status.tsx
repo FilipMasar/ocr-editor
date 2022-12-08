@@ -8,7 +8,7 @@ interface Props {
 }
 
 const Status: FC<Props> = ({ onSave }) => {
-  const { saving } = useEditor();
+  const { saving, unsavedChanges } = useEditor();
 
   return (
     <div
@@ -23,6 +23,7 @@ const Status: FC<Props> = ({ onSave }) => {
         <Group>
           <ActionIcon
             size={18}
+            color={unsavedChanges ? 'red' : 'gray'}
             variant="subtle"
             disabled={saving}
             onClick={(e: MouseEvent<HTMLButtonElement>) => {

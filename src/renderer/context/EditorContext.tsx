@@ -20,6 +20,8 @@ interface EditorProviderValue {
   requestPageAssets: (imageFileName: string, altoFileName: string) => void;
   saveAlto: (fileName: string) => void;
   saving: boolean;
+  unsavedChanges: boolean;
+  setIsFreshPage: Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultSettings: Settings = {
@@ -48,7 +50,20 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [imageSrc, setImageSrc] = useState<string>();
   const [saving, setSaving] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [isFreshPage, setIsFreshPage] = useState(true);
   const { alto, setAlto } = useAlto();
+
+  useEffect(() => {
+    if (alto !== undefined) {
+      if (isFreshPage) {
+        setIsFreshPage(false);
+      } else {
+        setUnsavedChanges(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alto]);
 
   const requestPageAssets = useCallback(
     (imageFileName: string, altoFileName: string) => {
@@ -80,9 +95,14 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         case 'PAGE_ASSETS':
           setImageSrc(data.payload.imageUri);
           setAlto(data.payload.altoJson);
+          setIsFreshPage(true);
+          setUnsavedChanges(false);
           break;
         case 'ALTO_SAVED':
-          setSaving(false);
+          setTimeout(() => {
+            setSaving(false);
+            setUnsavedChanges(false);
+          }, 1000); // to make sure that user sees the loader
           break;
         case 'ERROR':
           console.log(String(data.payload));
@@ -103,6 +123,8 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         requestPageAssets,
         saveAlto,
         saving,
+        unsavedChanges,
+        setIsFreshPage,
       }}
     >
       {children}

@@ -1,7 +1,8 @@
-import { ActionIcon, Group, Paper, Text } from '@mantine/core';
+import { ActionIcon, Button, Group, Paper, Text } from '@mantine/core';
 import { FC, MouseEvent } from 'react';
 import { ArrowLeft, ArrowRight } from 'react-feather';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useEditor } from 'renderer/context/EditorContext';
 import { useProject } from 'renderer/context/ProjectContext';
 
 interface Props {
@@ -10,7 +11,19 @@ interface Props {
 
 const Paging: FC<Props> = ({ pageNumber }) => {
   const { projectAssets } = useProject();
+  const { unsavedChanges } = useEditor();
   const navigate = useNavigate();
+
+  const toProject = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    if (unsavedChanges) {
+      // eslint-disable-next-line prettier/prettier
+      if(!window.confirm('You have unsaved changes. Are you sure you want to leave this page?')) return;
+    }
+
+    navigate('/project');
+  };
 
   const nextPage = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -19,6 +32,11 @@ const Paging: FC<Props> = ({ pageNumber }) => {
       return;
 
     const { alto, image } = projectAssets[pageNumber + 1];
+
+    if (unsavedChanges) {
+      // eslint-disable-next-line prettier/prettier
+      if(!window.confirm('You have unsaved changes. Are you sure you want to leave this page?')) return;
+    }
 
     navigate({
       pathname: '/editor',
@@ -36,6 +54,11 @@ const Paging: FC<Props> = ({ pageNumber }) => {
     if (projectAssets === undefined || pageNumber === 0) return;
 
     const { alto, image } = projectAssets[pageNumber - 1];
+
+    if (unsavedChanges) {
+      // eslint-disable-next-line prettier/prettier
+      if(!window.confirm('You have unsaved changes. Are you sure you want to leave this page?')) return;
+    }
 
     navigate({
       pathname: '/editor',
@@ -58,9 +81,9 @@ const Paging: FC<Props> = ({ pageNumber }) => {
     >
       <Paper withBorder px="sm" py={4}>
         <Group>
-          <Text size="sm">
-            <Link to="/project">List of pages</Link>
-          </Text>
+          <Button variant="subtle" onClick={toProject} size="xs">
+            List of pages
+          </Button>
           <ActionIcon
             size={18}
             variant="subtle"
