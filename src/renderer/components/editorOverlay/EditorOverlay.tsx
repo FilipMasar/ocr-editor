@@ -16,7 +16,7 @@ const EditorOverlay: FC<Props> = ({ alignCenter, pageNumber, onSave }) => {
       <Options />
       <Paging pageNumber={pageNumber} />
       <Zoom alignCenter={alignCenter} />
-      <Status onSave={onSave} />
+      <Status onSave={onSave} pageNumber={pageNumber} />
     </>
   );
 };
