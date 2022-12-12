@@ -1,6 +1,13 @@
-import { Table, Title, Text, Button, RingProgress } from '@mantine/core';
+import {
+  Table,
+  Title,
+  Text,
+  Button,
+  RingProgress,
+  Tooltip,
+} from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
-import { ArrowLeft, PlusCircle } from 'react-feather';
+import { ArrowLeft, HelpCircle, PlusCircle } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import AssetsListRow from 'renderer/components/AssetsListRow';
 import { useProject } from 'renderer/context/ProjectContext';
@@ -65,8 +72,11 @@ const Project: FC = () => {
             <th>
               <Text size="lg">Done</Text>
             </th>
-            <th>
+            <th style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Text size="lg">WER</Text>
+              <Tooltip label="Word error rate" withArrow>
+                <HelpCircle size={18} strokeWidth={1} />
+              </Tooltip>
             </th>
           </tr>
         </thead>
@@ -100,8 +110,6 @@ const Project: FC = () => {
                 Add altos
               </Button>
             </td>
-            <td />
-            <td />
           </tr>
         </tbody>
       </Table>
