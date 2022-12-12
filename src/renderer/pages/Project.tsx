@@ -48,17 +48,19 @@ const Project: FC = () => {
         List of project assets
       </Title>
 
-      <RingProgress
-        sx={{ position: 'absolute', top: 0, right: 0 }}
-        sections={[
-          { value: (progress * 100) / projectAssets.length, color: 'blue' },
-        ]}
-        label={
-          <Text color="blue" weight={700} align="center" size="md">
-            {Math.round((progress * 100) / projectAssets.length)}% done
-          </Text>
-        }
-      />
+      {progress !== 0 && (
+        <RingProgress
+          sx={{ position: 'absolute', top: 0, right: 0 }}
+          sections={[
+            { value: (progress * 100) / projectAssets.length, color: 'blue' },
+          ]}
+          label={
+            <Text color="blue" weight={700} align="center" size="md">
+              {Math.round((progress * 100) / projectAssets.length)}% done
+            </Text>
+          }
+        />
+      )}
 
       <Table mt="xl" maw={600} withColumnBorders highlightOnHover>
         <thead>
