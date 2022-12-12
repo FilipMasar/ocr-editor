@@ -9,10 +9,11 @@ interface Props {
   image: string;
   alto: string;
   done: boolean;
+  wer: number | undefined;
   index: number;
 }
 
-const AssetsListRow: FC<Props> = ({ image, alto, done, index }) => {
+const AssetsListRow: FC<Props> = ({ image, alto, done, wer, index }) => {
   const { removeAsset, updatePageDone } = useProject();
   const navigate = useNavigate();
   const hoverImage = useHover();
@@ -89,6 +90,9 @@ const AssetsListRow: FC<Props> = ({ image, alto, done, index }) => {
           }}
           onClick={(e: MouseEvent<HTMLInputElement>) => e.stopPropagation()}
         />
+      </td>
+      <td>
+        <Text>{wer}</Text>
       </td>
     </tr>
   );

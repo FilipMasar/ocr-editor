@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
 /**
@@ -24,13 +25,16 @@ import {
   removeAssetFromProject,
 } from './project';
 import {
+  getDonePages,
   getRecentProjects,
   markAsDone,
   removeFromDone,
   removeFromRecentProjects,
+  removeWerValues,
   resetDoneProgress,
 } from './configData';
 import { getPageAssets, saveAlto } from './editor';
+import calculateWer from './utils/wer';
 
 class AppUpdater {
   constructor() {
@@ -77,6 +81,7 @@ ipcMain.on('project-channel', async (event, data) => {
         if (!currentProjectPath) throw new Error("Project path isn't defined");
         await addImagesToProject(mainWindow, currentProjectPath);
         resetDoneProgress(currentProjectPath);
+        removeWerValues(currentProjectPath);
         currentProjectAssets = await getProjectAssetList(currentProjectPath);
         event.reply('project-channel', {
           action: 'UPDATE_ASSET_LIST',
@@ -88,6 +93,7 @@ ipcMain.on('project-channel', async (event, data) => {
         if (!currentProjectPath) throw new Error("Project path isn't defined");
         await addAltosToProject(mainWindow, currentProjectPath);
         resetDoneProgress(currentProjectPath);
+        removeWerValues(currentProjectPath);
         currentProjectAssets = await getProjectAssetList(currentProjectPath);
         event.reply('project-channel', {
           action: 'UPDATE_ASSET_LIST',
@@ -103,6 +109,7 @@ ipcMain.on('project-channel', async (event, data) => {
           data.payload.name
         );
         resetDoneProgress(currentProjectPath);
+        removeWerValues(currentProjectPath);
         currentProjectAssets = await getProjectAssetList(currentProjectPath);
         event.reply('project-channel', {
           action: 'UPDATE_ASSET_LIST',
@@ -112,11 +119,22 @@ ipcMain.on('project-channel', async (event, data) => {
 
       case 'MARK_AS_DONE':
         if (!currentProjectPath) throw new Error("Project path isn't defined");
-        markAsDone(currentProjectPath, data.payload);
+        markAsDone(currentProjectPath, data.payload.index);
+        event.reply('project-channel', {
+          action: 'WER_UPDATED',
+          payload: {
+            index: data.payload.index,
+            value: calculateWer(
+              currentProjectPath,
+              data.payload.fileName,
+              data.payload.index
+            ),
+          },
+        });
         break;
       case 'REMOVE_FROM_DONE':
         if (!currentProjectPath) throw new Error("Project path isn't defined");
-        removeFromDone(currentProjectPath, data.payload);
+        removeFromDone(currentProjectPath, data.payload.index);
         break;
       default:
         console.log('No function found');
@@ -168,6 +186,22 @@ ipcMain.on('editor-channel', async (event, data) => {
           data.payload.fileName,
           data.payload.alto
         );
+        // eslint-disable-next-line
+        const donePages = getDonePages(currentProjectPath);
+        if (donePages.includes(data.payload.index)) {
+          // recalculate WER
+          event.reply('project-channel', {
+            action: 'WER_UPDATED',
+            payload: {
+              index: data.payload.index,
+              value: calculateWer(
+                currentProjectPath,
+                data.payload.fileName,
+                data.payload.index
+              ),
+            },
+          });
+        }
         event.reply('editor-channel', { action: 'ALTO_SAVED' });
         break;
       default:
