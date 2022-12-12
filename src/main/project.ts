@@ -1,12 +1,13 @@
 import { BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { addToRecentProjects, getDonePages } from './configData';
+import { addToRecentProjects, getDonePages, getWerValues } from './configData';
 
 type Page = {
   image: string;
   alto: string;
   done: boolean;
+  wer?: number;
 };
 
 export type ProjectAssetList = Page[];
@@ -140,6 +141,7 @@ export const getProjectAssetList = async (
   const altos = fs.readdirSync(path.join(projectPath, 'altos'));
 
   const donePages = getDonePages(projectPath);
+  const werValues = getWerValues(projectPath);
 
   const assetList: ProjectAssetList = [];
   for (let i = 0; i < Math.max(images.length, altos.length); i += 1) {
@@ -147,6 +149,7 @@ export const getProjectAssetList = async (
       image: images[i] || '',
       alto: altos[i] || '',
       done: donePages.includes(i),
+      wer: donePages.includes(i) ? werValues[i] : undefined,
     });
   }
 

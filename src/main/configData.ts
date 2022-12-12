@@ -70,6 +70,7 @@ export const markAsDone = (projectPath: string, index: number) => {
 
   if (project) {
     const done = project.done || [];
+    if (done.includes(index)) return;
     writeConfigData('projects', {
       ...projects,
       [projectPath]: { ...project, done: [...done, index] },
@@ -103,6 +104,46 @@ export const resetDoneProgress = (projectPath: string) => {
     writeConfigData('projects', {
       ...projects,
       [projectPath]: { ...project, done: [] },
+    });
+  }
+};
+
+export const getWerValues = (projectPath: string): Record<string, number> => {
+  const projects = readConfigData('projects') || {};
+  const project = projects[projectPath];
+
+  if (project && project.wer) {
+    return project.wer;
+  }
+  return {};
+};
+
+export const updateWer = (projectPath: string, index: number, wer: number) => {
+  const projects = readConfigData('projects') || {};
+  const project = projects[projectPath];
+
+  if (project) {
+    const werValues = project.wer || {};
+    writeConfigData('projects', {
+      ...projects,
+      [projectPath]: { ...project, wer: { ...werValues, [index]: wer } },
+    });
+  } else {
+    writeConfigData('projects', {
+      ...projects,
+      [projectPath]: { wer: { [index]: wer } },
+    });
+  }
+};
+
+export const removeWerValues = (projectPath: string) => {
+  const projects = readConfigData('projects') || {};
+  const project = projects[projectPath];
+
+  if (project && project.wer) {
+    writeConfigData('projects', {
+      ...projects,
+      [projectPath]: { ...project, wer: {} },
     });
   }
 };

@@ -4,6 +4,7 @@ import {
   createContext,
   FC,
   PropsWithChildren,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -65,7 +66,11 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     setProjectAssets((prev) => {
       const newState = prev?.map((page, i) => {
         if (i === index) {
-          return { ...page, done };
+          return {
+            ...page,
+            done,
+            wer: done ? page.wer : undefined,
+          };
         }
         return page;
       });
@@ -74,9 +79,25 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
 
     window.electron.ipcRenderer.sendMessage('project-channel', {
       action: done ? 'MARK_AS_DONE' : 'REMOVE_FROM_DONE',
-      payload: index,
+      payload: {
+        fileName: projectAssets?.[index].alto,
+        index,
+      },
     });
   };
+
+  const updateWer = useCallback((index: number, wer: number | undefined) => {
+    console.log('updateWer', index, wer);
+    setProjectAssets((prev) => {
+      const newState = prev?.map((page, i) => {
+        if (i === index) {
+          return { ...page, wer };
+        }
+        return page;
+      });
+      return newState;
+    });
+  }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on('project-channel', (data) => {
@@ -84,6 +105,9 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
       switch (data.action) {
         case 'UPDATE_ASSET_LIST':
           setProjectAssets(data.payload);
+          break;
+        case 'WER_UPDATED':
+          updateWer(data.payload.index, data.payload.value);
           break;
         case 'ERROR':
           setErrorMessage(String(data.payload));

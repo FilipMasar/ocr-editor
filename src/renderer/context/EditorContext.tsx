@@ -18,7 +18,7 @@ interface EditorProviderValue {
   imageSrc: string | undefined;
   setImageSrc: Dispatch<SetStateAction<string | undefined>>;
   requestPageAssets: (imageFileName: string, altoFileName: string) => void;
-  saveAlto: (fileName: string) => void;
+  saveAlto: (fileName: string, index: number) => void;
   saving: boolean;
   unsavedChanges: boolean;
   setIsFreshPage: Dispatch<SetStateAction<boolean>>;
@@ -78,11 +78,11 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   const saveAlto = useCallback(
-    (fileName: string) => {
+    (fileName: string, index: number) => {
       setSaving(true);
       window.electron.ipcRenderer.sendMessage('editor-channel', {
         action: 'SAVE_ALTO',
-        payload: { fileName, alto },
+        payload: { fileName, alto, index },
       });
     },
     [alto]

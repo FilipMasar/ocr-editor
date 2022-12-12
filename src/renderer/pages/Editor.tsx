@@ -26,10 +26,10 @@ const Editor: FC = () => {
   }, [pageDimensions, setSettings]);
 
   const onSave = useCallback(() => {
-    if (altoFileName) {
-      saveAlto(altoFileName);
+    if (altoFileName && index) {
+      saveAlto(altoFileName, parseInt(index, 10));
     }
-  }, [altoFileName, saveAlto]);
+  }, [altoFileName, index, saveAlto]);
 
   useEffect(() => {
     alignCenter();
