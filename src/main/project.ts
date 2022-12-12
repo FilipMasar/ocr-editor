@@ -26,8 +26,10 @@ export const createProject = async (
 
   const imagesDir = path.join(filePath, 'images');
   const altosDir = path.join(filePath, 'altos');
+  const originalAltosDir = path.join(filePath, 'original-altos');
   fs.mkdirSync(imagesDir, { recursive: true });
   fs.mkdirSync(altosDir, { recursive: true });
+  fs.mkdirSync(originalAltosDir, { recursive: true });
 
   addToRecentProjects(filePath);
 
@@ -55,7 +57,13 @@ export const openProject = async (
   // validate project directory
   const imagesDir = path.join(projectPath, 'images');
   const altosDir = path.join(projectPath, 'altos');
-  if (!fs.existsSync(imagesDir) || !fs.existsSync(altosDir)) {
+  const originalAltosDir = path.join(projectPath, 'original-altos');
+
+  if (
+    !fs.existsSync(imagesDir) ||
+    !fs.existsSync(altosDir) ||
+    !fs.existsSync(originalAltosDir)
+  ) {
     throw new Error('Directory is not a valid project directory!');
   }
 
@@ -98,7 +106,13 @@ export const addAltosToProject = async (
 
   filePaths.forEach((filePath) => {
     const newPath = path.join(projectPath, 'altos', path.basename(filePath));
+    const newPath2 = path.join(
+      projectPath,
+      'original-altos',
+      path.basename(filePath)
+    );
     fs.copyFileSync(filePath, newPath);
+    fs.copyFileSync(filePath, newPath2);
   });
 };
 
@@ -109,6 +123,12 @@ export const removeAssetFromProject = async (
 ) => {
   const filePath = path.join(projectPath, directory, name);
   fs.unlinkSync(filePath);
+
+  if (directory === 'altos') {
+    // remove original alto file as well
+    const originalAltoPath = path.join(projectPath, 'original-altos', name);
+    fs.unlinkSync(originalAltoPath);
+  }
 };
 
 export const getProjectAssetList = async (
