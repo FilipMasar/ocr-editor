@@ -1,4 +1,10 @@
-import { ActionIcon, Text, Group, Checkbox } from '@mantine/core';
+import {
+  ActionIcon,
+  Text,
+  Group,
+  Checkbox,
+  DefaultMantineColor,
+} from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { ChangeEvent, FC, MouseEvent } from 'react';
 import { Trash } from 'react-feather';
@@ -12,6 +18,12 @@ interface Props {
   wer: number | undefined;
   index: number;
 }
+
+const getColorForWer = (wer: number): DefaultMantineColor => {
+  if (wer < 0.05) return 'green';
+  if (wer < 0.15) return 'yellow';
+  return 'red';
+};
 
 const AssetsListRow: FC<Props> = ({ image, alto, done, wer, index }) => {
   const { removeAsset, updatePageDone } = useProject();
@@ -92,7 +104,9 @@ const AssetsListRow: FC<Props> = ({ image, alto, done, wer, index }) => {
         />
       </td>
       <td>
-        <Text>{wer}</Text>
+        {wer !== undefined && (
+          <Text color={getColorForWer(wer)}>{Math.round(wer * 100) / 100}</Text>
+        )}
       </td>
     </tr>
   );
