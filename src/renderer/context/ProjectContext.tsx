@@ -116,7 +116,7 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
           console.log('Unhandled action:', data.action);
       }
     });
-  }, []);
+  }, [updateWer]);
 
   return (
     <ProjectContext.Provider

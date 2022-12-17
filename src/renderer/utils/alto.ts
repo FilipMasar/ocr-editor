@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+
 export const toNumber = (value: any) => {
   if (value === null || value === undefined) return value;
 
