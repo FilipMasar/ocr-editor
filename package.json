@@ -1,5 +1,7 @@
 {
+  "name": "ocr-editor",
   "description": "Editor for for ocr output in alto format",
+  "version": "0.1.0",
   "homepage": "https://github.com/FilipMasar/ocr-editor/tree/electron",
   "license": "MIT",
   "author": {
