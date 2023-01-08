@@ -1,6 +1,6 @@
 {
-  "description": "A foundation for scalable desktop apps",
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
+  "description": "Editor for for ocr output in alto format",
+  "homepage": "https://github.com/FilipMasar/ocr-editor/tree/electron",
   "license": "MIT",
   "author": {
     "name": "Filip Masar",
@@ -227,9 +227,6 @@
       "owner": "electron-react-boilerplate",
       "repo": "electron-react-boilerplate"
     }
-  },
-  "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
   "devEngines": {
     "node": ">=14.x",
