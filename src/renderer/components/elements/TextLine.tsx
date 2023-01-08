@@ -68,7 +68,20 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
         cursor: 'pointer',
       }}
       title={text}
-    />
+    >
+      {element.HYP && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: 10,
+            height,
+            backgroundColor: 'rgba(0,255,0,0.7)',
+          }}
+        />
+      )}
+    </div>
   );
 };
 
