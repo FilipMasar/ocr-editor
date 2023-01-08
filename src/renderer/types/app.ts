@@ -10,6 +10,7 @@ export type Settings = {
     strings: boolean;
     textFit: boolean;
     textAbove: boolean;
+    textNext: boolean;
   };
 };
 

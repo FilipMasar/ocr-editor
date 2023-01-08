@@ -4,9 +4,10 @@ import EditableLine from './EditableLine';
 
 interface TextBlockProps {
   textBlock: any;
+  showTextNext?: boolean;
 }
 
-const EditableBlock: FC<TextBlockProps> = ({ textBlock }) => {
+const EditableBlock: FC<TextBlockProps> = ({ textBlock, showTextNext }) => {
   const [textLines, setTextLines] = useState<any[]>([]);
 
   useEffect(() => {
@@ -24,12 +25,19 @@ const EditableBlock: FC<TextBlockProps> = ({ textBlock }) => {
   }, [textBlock]);
 
   return (
-    <div style={{ margin: 8, padding: 8, border: '1px solid black' }}>
+    <div
+      style={{
+        margin: 8,
+        padding: 8,
+        border: showTextNext ? '' : '1px solid black',
+      }}
+    >
       {textLines.map((textLine: any) => (
         <EditableLine
           key={`${textLine.metadata.textBlockindex}${textLine.metadata.index}`}
           text={getStringsFromLine(textLine.element)}
           textLine={textLine}
+          showTextNext={showTextNext}
         />
       ))}
     </div>

@@ -36,6 +36,7 @@ const defaultSettings: Settings = {
     strings: false,
     textFit: false,
     textAbove: false,
+    textNext: false,
   },
 };
 

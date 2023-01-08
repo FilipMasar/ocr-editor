@@ -21,9 +21,19 @@ const Editor: FC = () => {
     const newZoom =
       ratio < 1 ? Math.floor(ratio * 10) / 10 : Math.ceil(ratio * 10) / 10;
     const xCenter = (2 * pageDimensions.width + 40) / 2 - window.innerWidth / 2;
-    window.scrollTo({ left: xCenter, top: 0 });
+    window.scrollTo({
+      left: settings.show.textNext
+        ? xCenter + (pageDimensions.width * newZoom) / 2
+        : xCenter,
+      top: 0,
+    });
     setSettings((old) => ({ ...old, zoom: newZoom }));
-  }, [pageDimensions, setSettings]);
+  }, [
+    pageDimensions.height,
+    pageDimensions.width,
+    setSettings,
+    settings.show.textNext,
+  ]);
 
   const onSave = useCallback(() => {
     if (altoFileName && index) {

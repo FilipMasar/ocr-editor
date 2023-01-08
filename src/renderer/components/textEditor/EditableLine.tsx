@@ -1,13 +1,20 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { Text } from '@mantine/core';
+import { Dialog, Notification } from '@mantine/core';
+import { toNumber } from 'renderer/utils/alto';
+import { X } from 'react-feather';
 import { useAlto } from '../../context/AltoContext';
 
 interface EditableLineProps {
   text: string | string[];
   textLine: any;
+  showTextNext?: boolean;
 }
 
-const EditableLine: FC<EditableLineProps> = ({ text, textLine }) => {
+const EditableLine: FC<EditableLineProps> = ({
+  text,
+  textLine,
+  showTextNext,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const { updateString } = useAlto();
   const [error, setError] = useState<string>();
@@ -79,15 +86,29 @@ const EditableLine: FC<EditableLineProps> = ({ text, textLine }) => {
         contentEditable="true"
         suppressContentEditableWarning
         onBlur={(e) => onUpdate(e.currentTarget.textContent)}
-        style={error ? { border: '1px solid red' } : {}}
+        style={
+          showTextNext
+            ? {
+                position: 'absolute',
+                top: toNumber(textLine.element['@_VPOS']),
+                left: toNumber(textLine.element['@_HPOS']),
+                width: toNumber(textLine.element['@_WIDTH']),
+                height: toNumber(textLine.element['@_HEIGHT']),
+                fontSize: toNumber(textLine.element['@_HEIGHT']) * 0.8,
+                backgroundColor: error && 'rgba(255, 0, 0, 0.5)',
+              }
+            : {
+                border: error && '1px solid red',
+              }
+        }
       >
         {Array.isArray(text) ? text.join(' ') : text}
       </div>
-      {error && (
-        <Text color="red" size="xs">
+      <Dialog opened={error !== undefined} p={0}>
+        <Notification icon={<X size={18} />} color="red">
           {error}
-        </Text>
-      )}
+        </Notification>
+      </Dialog>
     </>
   );
 };

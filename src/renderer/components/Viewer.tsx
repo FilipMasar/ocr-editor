@@ -11,6 +11,7 @@ import PrintSpace from './elements/PrintSpace';
 import String from './elements/String';
 import TextBlock from './elements/TextBlock';
 import TextLine from './elements/TextLine';
+import EditableBlock from './textEditor/EditableBlock';
 
 const Viewer: FC = () => {
   const [textLines, setTextLines] = useState<any[]>([]);
@@ -137,6 +138,26 @@ const Viewer: FC = () => {
           metadata={string.metadata}
         />
       ))}
+
+      <div
+        style={{
+          position: 'absolute',
+          top: toNumber(printSpace['@_VPOS']),
+          left:
+            toNumber(printSpace['@_HPOS']) + toNumber(printSpace['@_WIDTH']),
+          width: toNumber(printSpace['@_WIDTH']),
+          height: toNumber(printSpace['@_HEIGHT']),
+        }}
+      >
+        {settings.show.textNext &&
+          textBlocks.map((textBlock: any) => (
+            <EditableBlock
+              key={textBlock.metadata.index}
+              textBlock={textBlock}
+              showTextNext
+            />
+          ))}
+      </div>
     </>
   );
 };

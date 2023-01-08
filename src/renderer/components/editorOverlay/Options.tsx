@@ -205,6 +205,19 @@ const Options: FC = () => {
                     }))
                   }
                 />
+                <Checkbox
+                  label="Text next to"
+                  checked={settings.show.textNext}
+                  onChange={(e) =>
+                    setSettings((old) => ({
+                      ...old,
+                      show: {
+                        ...old.show,
+                        textNext: e.target.checked,
+                      },
+                    }))
+                  }
+                />
                 <Divider my="sm" />
                 <Button onClick={onEditWholeText}>Edit Text</Button>
               </Paper>
