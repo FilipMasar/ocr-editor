@@ -52,6 +52,7 @@ const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
           name={null}
           displayDataTypes={false}
           collapsed={3}
+          onAdd={(edit) => update(edit.updated_src)}
           onEdit={(edit) => update(edit.updated_src)}
           onDelete={(edit) => update(edit.updated_src)}
           theme="shapeshifter"
