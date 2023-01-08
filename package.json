@@ -165,8 +165,8 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "OCR Editor",
+    "appId": "com.ocreditor",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -224,8 +224,8 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "FilipMasar",
+      "repo": "ocr-editor"
     }
   },
   "devEngines": {
