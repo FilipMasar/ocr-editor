@@ -24,7 +24,6 @@ const Zoom: FC<Props> = ({ alignCenter }) => {
           <ActionIcon
             size={18}
             variant="subtle"
-            disabled={settings.zoom <= 0.1}
             onClick={(e: MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               alignCenter();
