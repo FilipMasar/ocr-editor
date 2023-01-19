@@ -76,7 +76,7 @@ const Editor: FC = () => {
         <div
           style={{
             position: 'relative',
-            margin: 20,
+            margin: 56,
             transform: `scale(${settings.zoom})`,
             transformOrigin: 'center top',
           }}

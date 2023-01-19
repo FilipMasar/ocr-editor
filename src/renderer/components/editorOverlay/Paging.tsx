@@ -74,14 +74,19 @@ const Paging: FC<Props> = ({ pageNumber }) => {
     <div
       style={{
         position: 'fixed',
-        bottom: 8,
+        top: 8,
         left: 8,
         zIndex: 100,
       }}
     >
       <Paper withBorder px="sm" py={4}>
         <Group>
-          <Button variant="subtle" onClick={toProject} size="xs">
+          <Button
+            variant="subtle"
+            onClick={toProject}
+            size="xs"
+            leftIcon={<ArrowLeft size={20} />}
+          >
             List of pages
           </Button>
           <ActionIcon
