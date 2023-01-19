@@ -2,9 +2,11 @@ import { BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { addToRecentProjects, getDonePages, getWerValues } from './configData';
+import { getImageUri } from './utils/image';
 
 type Page = {
   image: string;
+  imageSrc: string;
   alto: string;
   done: boolean;
   wer?: number;
@@ -145,11 +147,16 @@ export const getProjectAssetList = async (
 
   const assetList: ProjectAssetList = [];
   for (let i = 0; i < Math.max(images.length, altos.length); i += 1) {
+    const imageSrc = images[i]
+      ? getImageUri(path.join(projectPath, 'images', images[i]))
+      : '';
+
     assetList.push({
       image: images[i] || '',
       alto: altos[i] || '',
       done: donePages.includes(i),
       wer: donePages.includes(i) ? werValues[i] : undefined,
+      imageSrc,
     });
   }
 

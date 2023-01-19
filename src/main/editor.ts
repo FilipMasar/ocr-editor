@@ -2,6 +2,7 @@
 import path from 'path';
 import fs from 'fs';
 import { jsonToXml, xmlToJson } from './utils/xmlConvertor';
+import { getImageUri } from './utils/image';
 
 export const getPageAssets = async (
   projectPath: string,
@@ -13,21 +14,7 @@ export const getPageAssets = async (
   const imagePath = path.join(projectPath, 'images', imageFileName);
   const altoPath = path.join(projectPath, 'altos', altoFileName);
 
-  let imgMimeType = '';
-  switch (imageFileName.split('.').pop()) {
-    case 'png':
-      imgMimeType = 'image/png';
-      break;
-    case 'jpg':
-      imgMimeType = 'image/jpeg';
-      break;
-    default:
-      throw new Error('Invalid image type');
-  }
-
-  const encoding = 'base64';
-  const imgBase64 = fs.readFileSync(imagePath).toString(encoding);
-  const imageUri = `data:${imgMimeType};${encoding},${imgBase64}`;
+  const imageUri = getImageUri(imagePath);
 
   const altoXml = fs.readFileSync(altoPath, 'utf8');
   const altoJson = xmlToJson(altoXml);

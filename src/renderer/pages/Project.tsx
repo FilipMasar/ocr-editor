@@ -1,15 +1,8 @@
-import {
-  Table,
-  Title,
-  Text,
-  Button,
-  RingProgress,
-  Tooltip,
-} from '@mantine/core';
+import { Title, Text, Button, RingProgress, Flex } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
-import { ArrowLeft, HelpCircle, PlusCircle } from 'react-feather';
+import { ArrowLeft, PlusCircle } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
-import AssetsListRow from 'renderer/components/AssetsListRow';
+import PageCard from 'renderer/components/PageCard';
 import { useProject } from 'renderer/context/ProjectContext';
 
 const Project: FC = () => {
@@ -45,7 +38,7 @@ const Project: FC = () => {
       </Button>
 
       <Title order={2} mt="lg">
-        List of project assets
+        List of pages
       </Title>
 
       {progress !== 0 && (
@@ -62,59 +55,36 @@ const Project: FC = () => {
         />
       )}
 
-      <Table mt="xl" maw={600} withColumnBorders highlightOnHover>
-        <thead>
-          <tr>
-            <th>
-              <Text size="lg">Image</Text>
-            </th>
-            <th>
-              <Text size="lg">ALTO</Text>
-            </th>
-            <th>
-              <Text size="lg">Done</Text>
-            </th>
-            <th style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Text size="lg">WER</Text>
-              <Tooltip label="Word error rate" withArrow>
-                <HelpCircle size={18} strokeWidth={1} />
-              </Tooltip>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {projectAssets.map(({ image, alto, done, wer }, index) => (
-            <AssetsListRow
-              key={image + alto}
-              image={image}
-              alto={alto}
-              done={done}
-              wer={wer}
-              index={index}
-            />
-          ))}
-          <tr>
-            <td>
-              <Button
-                variant="subtle"
-                leftIcon={<PlusCircle />}
-                onClick={addImages}
-              >
-                Add images
-              </Button>
-            </td>
-            <td>
-              <Button
-                variant="subtle"
-                leftIcon={<PlusCircle />}
-                onClick={addAltos}
-              >
-                Add altos
-              </Button>
-            </td>
-          </tr>
-        </tbody>
-      </Table>
+      <Button
+        variant="subtle"
+        size="lg"
+        leftIcon={<PlusCircle />}
+        onClick={addImages}
+      >
+        Add images
+      </Button>
+      <Button
+        variant="subtle"
+        size="lg"
+        leftIcon={<PlusCircle />}
+        onClick={addAltos}
+      >
+        Add altos
+      </Button>
+
+      <Flex wrap="wrap">
+        {projectAssets.map(({ image, imageSrc, alto, done, wer }, index) => (
+          <PageCard
+            key={image + alto}
+            image={image}
+            imageSrc={imageSrc}
+            alto={alto}
+            done={done}
+            wer={wer}
+            index={index}
+          />
+        ))}
+      </Flex>
     </div>
   );
 };
