@@ -2,6 +2,7 @@ import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
 import { useAltoEditor } from 'renderer/context/AltoEditorContext';
 import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
+import { useEditor } from 'renderer/context/EditorContext';
 import { useAlto } from '../../context/AltoContext';
 import { getStringsFromLine, toNumber } from '../../utils/alto';
 
@@ -14,6 +15,7 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
   const { ref, hovered } = useHover();
   const [text, setText] = useState<string>();
   const { updateTextLine } = useAlto();
+  const { settings } = useEditor();
   const { openAltoEditor } = useAltoEditor();
   const { openTextEditor } = useTextEditor();
 
@@ -69,7 +71,7 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
       }}
       title={text}
     >
-      {element.HYP && (
+      {element.HYP && settings.show.hyphens && (
         <div
           style={{
             position: 'absolute',

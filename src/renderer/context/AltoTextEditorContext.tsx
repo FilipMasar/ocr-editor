@@ -1,5 +1,6 @@
-import { Modal } from '@mantine/core';
+import { Checkbox, Modal } from '@mantine/core';
 import {
+  ChangeEvent,
   createContext,
   FC,
   PropsWithChildren,
@@ -9,6 +10,7 @@ import {
 import EditableBlock from 'renderer/components/textEditor/EditableBlock';
 import EditableLine from 'renderer/components/textEditor/EditableLine';
 import { getStringsFromLine } from 'renderer/utils/alto';
+import { useEditor } from './EditorContext';
 
 type ElementToEdit = 'ALL' | 'TEXTBLOCK' | 'TEXTLINE';
 
@@ -26,6 +28,7 @@ export const useTextEditor = () => useContext(AltoTextEditorContext);
 const TextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [elementType, setElementType] = useState<ElementToEdit>('ALL');
   const [altoElement, setAltoElement] = useState<any>();
+  const { settings, setSettings } = useEditor();
 
   const openTextEditor = (type: ElementToEdit, element: any) => {
     setElementType(type);
@@ -51,6 +54,18 @@ const TextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
         size="xl"
         overflow="inside"
       >
+        <Checkbox
+          label="Show and edit hyphens"
+          checked={settings.show.hyphens}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            e.stopPropagation();
+            setSettings((old) => ({
+              ...old,
+              show: { ...old.show, hyphens: e.target.checked },
+            }));
+          }}
+        />
+
         {elementType === 'ALL' &&
           altoElement !== undefined &&
           altoElement.map((textBlock: any) => (

@@ -218,6 +218,19 @@ const Options: FC = () => {
                     }))
                   }
                 />
+                <Checkbox
+                  label="Hyphens"
+                  checked={settings.show.hyphens}
+                  onChange={(e) =>
+                    setSettings((old) => ({
+                      ...old,
+                      show: {
+                        ...old.show,
+                        hyphens: e.target.checked,
+                      },
+                    }))
+                  }
+                />
                 <Divider my="sm" />
                 <Button onClick={onEditWholeText}>Edit Text</Button>
               </Paper>

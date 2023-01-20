@@ -11,6 +11,7 @@ export type Settings = {
     textFit: boolean;
     textAbove: boolean;
     textNext: boolean;
+    hyphens: boolean;
   };
 };
 

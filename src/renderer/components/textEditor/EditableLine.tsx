@@ -1,7 +1,8 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { Dialog, Notification } from '@mantine/core';
+import { Button, Dialog, Notification } from '@mantine/core';
 import { toNumber } from 'renderer/utils/alto';
-import { X } from 'react-feather';
+import { Minus, Plus, X } from 'react-feather';
+import { useEditor } from 'renderer/context/EditorContext';
 import { useAlto } from '../../context/AltoContext';
 
 interface EditableLineProps {
@@ -15,9 +16,11 @@ const EditableLine: FC<EditableLineProps> = ({
   textLine,
   showTextNext,
 }) => {
+  const [textLineElement, setTextLineElement] = useState(textLine.element);
   const ref = useRef<HTMLDivElement>(null);
-  const { updateString } = useAlto();
+  const { updateString, updateTextLine } = useAlto();
   const [error, setError] = useState<string>();
+  const { settings } = useEditor();
 
   const onUpdate = useCallback(
     (newText: string | null | undefined) => {
@@ -61,6 +64,33 @@ const EditableLine: FC<EditableLineProps> = ({
     [text, textLine.metadata, updateString]
   );
 
+  const onHyphenButtonClicked = useCallback(() => {
+    const { HYP, ...rest } = textLineElement;
+
+    if (HYP) {
+      updateTextLine(
+        rest,
+        textLine.metadata.textBlockIndex,
+        textLine.metadata.index
+      );
+
+      setTextLineElement(rest);
+    } else {
+      updateTextLine(
+        { ...rest, HYP: { '@_CONTENT': '172' } },
+        textLine.metadata.textBlockIndex,
+        textLine.metadata.index
+      );
+
+      setTextLineElement((old: any) => ({
+        ...old,
+        HYP: {
+          '@_CONTENT': '172',
+        },
+      }));
+    }
+  }, [textLine, textLineElement, updateTextLine]);
+
   const enterFunction = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
@@ -81,29 +111,50 @@ const EditableLine: FC<EditableLineProps> = ({
 
   return (
     <>
-      <div
-        ref={ref}
-        contentEditable="true"
-        suppressContentEditableWarning
-        onBlur={(e) => onUpdate(e.currentTarget.textContent)}
-        style={
-          showTextNext
-            ? {
-                position: 'absolute',
-                top: toNumber(textLine.element['@_VPOS']),
-                left: toNumber(textLine.element['@_HPOS']),
-                width: toNumber(textLine.element['@_WIDTH']),
-                height: toNumber(textLine.element['@_HEIGHT']),
-                fontSize: toNumber(textLine.element['@_HEIGHT']) * 0.8,
-                backgroundColor: error && 'rgba(255, 0, 0, 0.5)',
-              }
-            : {
-                border: error && '1px solid red',
-              }
-        }
-      >
-        {Array.isArray(text) ? text.join(' ') : text}
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex' }}>
+          <div
+            ref={ref}
+            contentEditable="true"
+            suppressContentEditableWarning
+            onBlur={(e) => onUpdate(e.currentTarget.textContent)}
+            style={
+              showTextNext
+                ? {
+                    position: 'absolute',
+                    top: toNumber(textLineElement['@_VPOS']),
+                    left: toNumber(textLineElement['@_HPOS']),
+                    width: toNumber(textLineElement['@_WIDTH']),
+                    height: toNumber(textLineElement['@_HEIGHT']),
+                    fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
+                    backgroundColor: error && 'rgba(255, 0, 0, 0.5)',
+                  }
+                : {
+                    border: error && '1px solid red',
+                  }
+            }
+          >
+            {Array.isArray(text) ? text.join(' ') : text}
+          </div>
+          {!showTextNext && textLineElement.HYP && settings.show.hyphens && (
+            <span style={{ backgroundColor: 'rgba(0,255,0,0.7)' }}>-</span>
+          )}
+        </div>
+        {!showTextNext && settings.show.hyphens && (
+          <Button
+            size="xs"
+            leftIcon={
+              textLineElement.HYP ? <Minus size={16} /> : <Plus size={16} />
+            }
+            variant="white"
+            color={textLineElement.HYP ? 'red' : 'green'}
+            onClick={onHyphenButtonClicked}
+          >
+            HYP
+          </Button>
+        )}
       </div>
+
       <Dialog opened={error !== undefined} p={0}>
         <Notification icon={<X size={18} />} color="red">
           {error}

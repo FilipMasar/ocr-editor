@@ -285,7 +285,7 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
         updateTextBlock(textBlock, textBlockIndex);
       }
     },
-    []
+    [printSpace]
   );
 
   const updateString = useCallback(
