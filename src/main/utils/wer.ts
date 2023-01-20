@@ -21,21 +21,28 @@ const getTextFromAlto = (altoJson: any) => {
         ? textBlock.TextLine
         : [textBlock.TextLine];
 
-      const lines = textLines.map((textLine: any) => {
-        if (textLine.String === undefined) return '';
+      let words = '';
+      for (let i = 0; i < textLines.length; i += 1) {
+        if (textLines[i].String === undefined) return '';
 
-        const strings = Array.isArray(textLine.String)
-          ? textLine.String
-          : [textLine.String];
+        const strings = Array.isArray(textLines[i].String)
+          ? textLines[i].String
+          : [textLines[i].String];
 
-        const words = strings.map((string: any) => {
-          return string['@_CONTENT'];
-        });
+        for (let j = 0; j < strings.length; j += 1) {
+          words += strings[j]['@_CONTENT'];
+          if (j !== strings.length - 1) words += ' ';
+        }
 
-        return words.join(' ');
-      });
+        // If the line ends with a hyphen, don't add a space
+        if (i !== textLines.length - 1) {
+          if (textLines[i].HYP === undefined) {
+            words += ' ';
+          }
+        }
+      }
 
-      return lines.join(' ');
+      return words;
     })
     .join(' ');
 
