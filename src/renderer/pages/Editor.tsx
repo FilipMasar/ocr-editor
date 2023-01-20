@@ -17,9 +17,21 @@ const Editor: FC = () => {
   const { pageDimensions } = useAlto();
 
   const alignCenter = useCallback(() => {
-    const ratio = (window.innerHeight - 40) / pageDimensions.height;
+    const availableWidth = window.innerWidth - 70 * 2;
+    const availableHeight = window.innerHeight - 56 * 2;
+
+    const contentWidth = settings.show.textNext
+      ? pageDimensions.width * 2
+      : pageDimensions.width;
+    const contentHeight = pageDimensions.height;
+
+    const scaleWidth = availableWidth / contentWidth;
+    const scaleHeight = availableHeight / contentHeight;
+
+    const ratio = Math.min(scaleWidth, scaleHeight);
     const newZoom =
-      ratio < 1 ? Math.floor(ratio * 10) / 10 : Math.ceil(ratio * 10) / 10;
+      ratio < 1 ? Math.floor(ratio * 100) / 100 : Math.ceil(ratio * 100) / 100;
+
     const xCenter = (2 * pageDimensions.width + 40) / 2 - window.innerWidth / 2;
     window.scrollTo({
       left: settings.show.textNext
