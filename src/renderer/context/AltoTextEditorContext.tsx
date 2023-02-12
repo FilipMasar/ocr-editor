@@ -10,7 +10,6 @@ import {
 import EditableBlock from 'renderer/components/textEditor/EditableBlock';
 import EditableLine from 'renderer/components/textEditor/EditableLine';
 import { getStringsFromLine } from 'renderer/utils/alto';
-import { useEditor } from './EditorContext';
 import { useSettings } from './SettingsContext';
 
 type ElementToEdit = 'ALL' | 'TEXTBLOCK' | 'TEXTLINE';

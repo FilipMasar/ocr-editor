@@ -26,7 +26,7 @@ const defaultSettings: Settings = {
     textFit: false,
     textAbove: false,
     textNext: false,
-    hyphens: false,
+    hyphens: true,
   },
 };
 
