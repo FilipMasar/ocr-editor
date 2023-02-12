@@ -140,23 +140,19 @@ const EditableLine: FC<EditableLineProps> = ({
           </div>
           {textLineElement.HYP && settings.show.hyphens && (
             <span
-              style={
-                showTextNext
-                  ? {
-                      position: 'absolute',
-                      top: toNumber(textLineElement['@_VPOS']),
-                      left:
-                        toNumber(textLineElement['@_HPOS']) +
-                        toNumber(textLineElement['@_WIDTH']),
-                      width: toNumber(textLineElement['@_HEIGHT']) * 0.3,
-                      height: toNumber(textLineElement['@_HEIGHT']),
-                      fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
-                      backgroundColor: 'rgba(0,255,0,0.7)',
-                    }
-                  : {
-                      backgroundColor: 'rgba(0,255,0,0.7)',
-                    }
-              }
+              style={{
+                backgroundColor: 'rgba(0,255,0,0.7)',
+                ...(showTextNext && {
+                  position: 'absolute',
+                  top: toNumber(textLineElement['@_VPOS']),
+                  left:
+                    toNumber(textLineElement['@_HPOS']) +
+                    toNumber(textLineElement['@_WIDTH']),
+                  width: toNumber(textLineElement['@_HEIGHT']) * 0.3,
+                  height: toNumber(textLineElement['@_HEIGHT']),
+                  fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
+                }),
+              }}
             >
               -
             </span>
