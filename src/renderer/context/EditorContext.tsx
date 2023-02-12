@@ -22,6 +22,7 @@ interface EditorProviderValue {
   saving: boolean;
   unsavedChanges: boolean;
   setIsFreshPage: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
 }
 
 const defaultSettings: Settings = {
@@ -54,6 +55,7 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isFreshPage, setIsFreshPage] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { alto, setAlto } = useAlto();
 
   useEffect(() => {
@@ -70,6 +72,7 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const requestPageAssets = useCallback(
     (imageFileName: string, altoFileName: string) => {
       if (imageFileName && altoFileName) {
+        setLoading(true);
         window.electron.ipcRenderer.sendMessage('editor-channel', {
           action: 'GET_PAGE_ASSETS',
           payload: { imageFileName, altoFileName },
@@ -99,6 +102,7 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
           setAlto(data.payload.altoJson);
           setIsFreshPage(true);
           setUnsavedChanges(false);
+          setTimeout(() => setLoading(false), 1000);
           break;
         case 'ALTO_SAVED':
           setTimeout(() => {
@@ -127,6 +131,7 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         saving,
         unsavedChanges,
         setIsFreshPage,
+        loading,
       }}
     >
       {children}

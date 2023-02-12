@@ -12,7 +12,7 @@ const Editor: FC = () => {
   const imageFileName = urlSearchParams.get('image');
   const altoFileName = urlSearchParams.get('alto');
 
-  const { imageSrc, requestPageAssets, settings, setSettings, saveAlto } =
+  const { loading, requestPageAssets, settings, setSettings, saveAlto } =
     useEditor();
   const { pageDimensions } = useAlto();
 
@@ -54,8 +54,8 @@ const Editor: FC = () => {
   }, [altoFileName, index, saveAlto]);
 
   useEffect(() => {
-    alignCenter();
-  }, [alignCenter]);
+    if (!loading) alignCenter();
+  }, [alignCenter, loading]);
 
   useEffect(() => {
     if (imageFileName && altoFileName) {
@@ -63,7 +63,7 @@ const Editor: FC = () => {
     }
   }, [imageFileName, altoFileName, requestPageAssets]);
 
-  if (imageSrc === undefined)
+  if (loading)
     return (
       <Center mt={120}>
         <Loader />
