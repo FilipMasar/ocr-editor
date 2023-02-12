@@ -1,5 +1,4 @@
 export type Settings = {
-  zoom: number;
   imageOpacity: number;
   show: {
     printSpace: boolean;

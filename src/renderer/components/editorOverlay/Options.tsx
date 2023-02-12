@@ -14,10 +14,10 @@ import { Layers, Sun, Type } from 'react-feather';
 import { useAlto } from 'renderer/context/AltoContext';
 import { useAltoEditor } from 'renderer/context/AltoEditorContext';
 import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
-import { useEditor } from 'renderer/context/EditorContext';
+import { useSettings } from 'renderer/context/SettingsContext';
 
 const Options: FC = () => {
-  const { settings, setSettings } = useEditor();
+  const { settings, setSettings } = useSettings();
   const { alto, setAlto, textBlocks } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const { openTextEditor } = useTextEditor();

@@ -2,8 +2,8 @@
 /* eslint-disable no-restricted-syntax */
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
+import { useSettings } from 'renderer/context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
-import { useEditor } from '../../context/EditorContext';
 import { TextStyle } from '../../types/app';
 import { toNumber } from '../../utils/alto';
 
@@ -20,7 +20,7 @@ interface StringProps {
 const String: FC<StringProps> = ({ element, metadata }) => {
   const { ref, hovered } = useHover();
   const { styles } = useAlto();
-  const { settings } = useEditor();
+  const { settings } = useSettings();
   const { show } = settings;
   const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle);
 

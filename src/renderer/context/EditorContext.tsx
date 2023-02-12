@@ -9,12 +9,11 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { Settings } from '../types/app';
 import { useAlto } from './AltoContext';
 
 interface EditorProviderValue {
-  settings: Settings;
-  setSettings: Dispatch<SetStateAction<Settings>>;
+  zoom: number;
+  setZoom: Dispatch<SetStateAction<number>>;
   imageSrc: string | undefined;
   setImageSrc: Dispatch<SetStateAction<string | undefined>>;
   requestPageAssets: (imageFileName: string, altoFileName: string) => void;
@@ -25,23 +24,6 @@ interface EditorProviderValue {
   loading: boolean;
 }
 
-const defaultSettings: Settings = {
-  zoom: 1,
-  imageOpacity: 100,
-  show: {
-    printSpace: true,
-    illustrations: true,
-    graphicalElements: true,
-    textBlocks: true,
-    textLines: true,
-    strings: false,
-    textFit: false,
-    textAbove: false,
-    textNext: false,
-    hyphens: false,
-  },
-};
-
 // Context
 const EditorContext = createContext({} as EditorProviderValue);
 
@@ -50,7 +32,7 @@ export const useEditor = () => useContext(EditorContext);
 
 // Provider
 const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [zoom, setZoom] = useState<number>(1);
   const [imageSrc, setImageSrc] = useState<string>();
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -122,8 +104,8 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <EditorContext.Provider
       value={{
-        settings,
-        setSettings,
+        zoom,
+        setZoom,
         imageSrc,
         setImageSrc,
         requestPageAssets,

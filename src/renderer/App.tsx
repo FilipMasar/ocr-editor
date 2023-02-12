@@ -1,6 +1,7 @@
 import { MantineProvider } from '@mantine/core';
 import AppRoutes from './AppRoutes';
 import ProjectProvider from './context/ProjectContext';
+import SettingsProvider from './context/SettingsContext';
 
 export default function App() {
   return (
@@ -10,7 +11,9 @@ export default function App() {
       theme={{ colorScheme: 'light' }}
     >
       <ProjectProvider>
-        <AppRoutes />
+        <SettingsProvider>
+          <AppRoutes />
+        </SettingsProvider>
       </ProjectProvider>
     </MantineProvider>
   );

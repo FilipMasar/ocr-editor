@@ -5,6 +5,7 @@ import EditorOverlay from 'renderer/components/editorOverlay/EditorOverlay';
 import Viewer from 'renderer/components/Viewer';
 import { useAlto } from 'renderer/context/AltoContext';
 import { useEditor } from 'renderer/context/EditorContext';
+import { useSettings } from 'renderer/context/SettingsContext';
 
 const Editor: FC = () => {
   const [urlSearchParams] = useSearchParams();
@@ -12,8 +13,8 @@ const Editor: FC = () => {
   const imageFileName = urlSearchParams.get('image');
   const altoFileName = urlSearchParams.get('alto');
 
-  const { loading, requestPageAssets, settings, setSettings, saveAlto } =
-    useEditor();
+  const { settings } = useSettings();
+  const { loading, requestPageAssets, zoom, setZoom, saveAlto } = useEditor();
   const { pageDimensions } = useAlto();
 
   const alignCenter = useCallback(() => {
@@ -39,11 +40,11 @@ const Editor: FC = () => {
         : xCenter,
       top: 0,
     });
-    setSettings((old) => ({ ...old, zoom: newZoom }));
+    setZoom(newZoom);
   }, [
     pageDimensions.height,
     pageDimensions.width,
-    setSettings,
+    setZoom,
     settings.show.textNext,
   ]);
 
@@ -89,7 +90,7 @@ const Editor: FC = () => {
           style={{
             position: 'relative',
             margin: 56,
-            transform: `scale(${settings.zoom})`,
+            transform: `scale(${zoom})`,
             transformOrigin: 'center top',
           }}
         >

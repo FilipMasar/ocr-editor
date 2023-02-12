@@ -2,6 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 import { Title } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
+import { useSettings } from 'renderer/context/SettingsContext';
 import { useAlto } from '../context/AltoContext';
 import { useEditor } from '../context/EditorContext';
 import { addMetadata, toNumber } from '../utils/alto';
@@ -23,7 +24,8 @@ const Viewer: FC = () => {
     graphicalElements,
     textBlocks,
   } = useAlto();
-  const { settings, imageSrc } = useEditor();
+  const { settings } = useSettings();
+  const { imageSrc } = useEditor();
   const { imageOpacity, show } = settings;
 
   useEffect(() => {

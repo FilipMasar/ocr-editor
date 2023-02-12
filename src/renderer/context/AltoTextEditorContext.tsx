@@ -11,6 +11,7 @@ import EditableBlock from 'renderer/components/textEditor/EditableBlock';
 import EditableLine from 'renderer/components/textEditor/EditableLine';
 import { getStringsFromLine } from 'renderer/utils/alto';
 import { useEditor } from './EditorContext';
+import { useSettings } from './SettingsContext';
 
 type ElementToEdit = 'ALL' | 'TEXTBLOCK' | 'TEXTLINE';
 
@@ -28,7 +29,7 @@ export const useTextEditor = () => useContext(AltoTextEditorContext);
 const TextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [elementType, setElementType] = useState<ElementToEdit>('ALL');
   const [altoElement, setAltoElement] = useState<any>();
-  const { settings, setSettings } = useEditor();
+  const { settings, setSettings } = useSettings();
 
   const openTextEditor = (type: ElementToEdit, element: any) => {
     setElementType(type);

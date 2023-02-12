@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Dialog, Notification } from '@mantine/core';
 import { toNumber } from 'renderer/utils/alto';
 import { Minus, Plus, X } from 'react-feather';
-import { useEditor } from 'renderer/context/EditorContext';
+import { useSettings } from 'renderer/context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
 
 interface EditableLineProps {
@@ -20,7 +20,7 @@ const EditableLine: FC<EditableLineProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const { updateString, updateTextLine } = useAlto();
   const [error, setError] = useState<string>();
-  const { settings } = useEditor();
+  const { settings } = useSettings();
 
   const onUpdate = useCallback(
     (newText: string | null | undefined) => {

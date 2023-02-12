@@ -8,7 +8,7 @@ interface Props {
 }
 
 const Zoom: FC<Props> = ({ alignCenter }) => {
-  const { settings, setSettings } = useEditor();
+  const { zoom, setZoom } = useEditor();
 
   return (
     <div
@@ -34,29 +34,23 @@ const Zoom: FC<Props> = ({ alignCenter }) => {
 
           <ActionIcon
             variant="subtle"
-            disabled={settings.zoom <= 0.1}
+            disabled={zoom <= 0.1}
             onClick={(e: MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
-              setSettings((old) => ({
-                ...old,
-                zoom: Math.round((old.zoom - 0.1) * 10) / 10,
-              }));
+              setZoom((old) => Math.round((old - 0.1) * 10) / 10);
             }}
           >
             <Minus />
           </ActionIcon>
           <Text size="xs" w={32} align="center">
-            {Math.round(settings.zoom * 100)}%
+            {Math.round(zoom * 100)}%
           </Text>
           <ActionIcon
             variant="subtle"
-            disabled={settings.zoom >= 2}
+            disabled={zoom >= 2}
             onClick={(e: MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
-              setSettings((old) => ({
-                ...old,
-                zoom: Math.round((old.zoom + 0.1) * 10) / 10,
-              }));
+              setZoom((old) => Math.round((old + 0.1) * 10) / 10);
             }}
           >
             <Plus />
