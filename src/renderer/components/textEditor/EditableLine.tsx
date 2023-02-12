@@ -128,6 +128,8 @@ const EditableLine: FC<EditableLineProps> = ({
                     height: toNumber(textLineElement['@_HEIGHT']),
                     fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
                     backgroundColor: error && 'rgba(255, 0, 0, 0.5)',
+                    textAlign: 'justify',
+                    textAlignLast: 'justify',
                   }
                 : {
                     border: error && '1px solid red',
@@ -136,8 +138,28 @@ const EditableLine: FC<EditableLineProps> = ({
           >
             {Array.isArray(text) ? text.join(' ') : text}
           </div>
-          {!showTextNext && textLineElement.HYP && settings.show.hyphens && (
-            <span style={{ backgroundColor: 'rgba(0,255,0,0.7)' }}>-</span>
+          {textLineElement.HYP && settings.show.hyphens && (
+            <span
+              style={
+                showTextNext
+                  ? {
+                      position: 'absolute',
+                      top: toNumber(textLineElement['@_VPOS']),
+                      left:
+                        toNumber(textLineElement['@_HPOS']) +
+                        toNumber(textLineElement['@_WIDTH']),
+                      width: toNumber(textLineElement['@_HEIGHT']) * 0.3,
+                      height: toNumber(textLineElement['@_HEIGHT']),
+                      fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
+                      backgroundColor: 'rgba(0,255,0,0.7)',
+                    }
+                  : {
+                      backgroundColor: 'rgba(0,255,0,0.7)',
+                    }
+              }
+            >
+              -
+            </span>
           )}
         </div>
         {!showTextNext && settings.show.hyphens && (
