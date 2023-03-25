@@ -1,9 +1,9 @@
-name: Test
+name: Make
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  make:
     runs-on: ${{ matrix.os }}
 
     strategy:
