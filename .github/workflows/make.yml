@@ -1,30 +1,32 @@
-name: Make and Publish
+name: Test
 
-on:
-  push:
-    branches: [ electron-forge ]
+on: [push, pull_request]
 
 jobs:
-  build-and-publish:
+  test:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
-     steps:
-      - name: Checkout 🛎️
+    steps:
+      - name: Check out Git repository
         uses: actions/checkout@v3
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-          cache: 'yarn'
-          cache-dependency-path: './yarn.lock'
+          node-version: 16
+          cache: npm
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: npm install
+        run: |
+          npm install
 
-      - name: Build 🔧
-        run: yarn make
+      - name: npm test
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm run lint
+          npm run package
