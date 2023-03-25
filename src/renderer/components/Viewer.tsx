@@ -1,8 +1,6 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-restricted-syntax */
 import { Title } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
-import { useSettings } from 'renderer/context/SettingsContext';
+import { useSettings } from '../context/SettingsContext';
 import { useAlto } from '../context/AltoContext';
 import { useEditor } from '../context/EditorContext';
 import { addMetadata, toNumber } from '../utils/alto';

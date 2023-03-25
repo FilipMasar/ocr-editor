@@ -7,9 +7,9 @@ import {
   useContext,
   useState,
 } from 'react';
-import EditableBlock from 'renderer/components/textEditor/EditableBlock';
-import EditableLine from 'renderer/components/textEditor/EditableLine';
-import { getStringsFromLine } from 'renderer/utils/alto';
+import EditableBlock from '../components/textEditor/EditableBlock';
+import EditableLine from '../components/textEditor/EditableLine';
+import { getStringsFromLine } from '../utils/alto';
 import { useSettings } from './SettingsContext';
 
 type ElementToEdit = 'ALL' | 'TEXTBLOCK' | 'TEXTLINE';

@@ -1,4 +1,4 @@
-import { ProjectAssetList } from 'main/project';
+import { ProjectAssetList } from '../../main/project';
 
 export type ProjectContextValues = {
   projectAssets: ProjectAssetList | undefined;

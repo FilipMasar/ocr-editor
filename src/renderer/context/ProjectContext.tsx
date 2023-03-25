@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ProjectAssetList } from 'main/project';
+import { ProjectAssetList } from '../../main/project';
 import {
   createContext,
   FC,
@@ -9,7 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { ProjectContextValues } from 'renderer/types/project';
+import { ProjectContextValues } from '../types/project';
 
 // Context
 const ProjectContext = createContext({} as ProjectContextValues);

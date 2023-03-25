@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-restricted-syntax */
 import {
   createContext,
   Dispatch,

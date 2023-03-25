@@ -1,8 +1,8 @@
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
-import { useAltoEditor } from 'renderer/context/AltoEditorContext';
-import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
-import { useSettings } from 'renderer/context/SettingsContext';
+import { useAltoEditor } from '../../context/AltoEditorContext';
+import { useTextEditor } from '../../context/AltoTextEditorContext';
+import { useSettings } from '../../context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
 import { getStringsFromLine, toNumber } from '../../utils/alto';
 

@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Dialog, Notification } from '@mantine/core';
-import { toNumber } from 'renderer/utils/alto';
+import { toNumber } from '../../utils/alto';
 import { Minus, Plus, X } from 'react-feather';
-import { useSettings } from 'renderer/context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
 
 interface EditableLineProps {

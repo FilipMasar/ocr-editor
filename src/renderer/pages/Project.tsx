@@ -2,8 +2,8 @@ import { Title, Text, Button, RingProgress, Flex } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
 import { ArrowLeft, PlusCircle } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
-import PageCard from 'renderer/components/PageCard';
-import { useProject } from 'renderer/context/ProjectContext';
+import PageCard from '../components/PageCard';
+import { useProject } from '../context/ProjectContext';
 
 const Project: FC = () => {
   const [progress, setProgress] = useState<number>(0);

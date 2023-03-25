@@ -1,9 +1,9 @@
 import { ActionIcon, Button, Group, Paper, Text } from '@mantine/core';
 import { FC, MouseEvent } from 'react';
 import { ArrowLeft, ArrowRight } from 'react-feather';
-import { createSearchParams, Link, useNavigate } from 'react-router-dom';
-import { useEditor } from 'renderer/context/EditorContext';
-import { useProject } from 'renderer/context/ProjectContext';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useEditor } from '../../context/EditorContext';
+import { useProject } from '../../context/ProjectContext';
 
 interface Props {
   pageNumber: number;
@@ -18,7 +18,6 @@ const Paging: FC<Props> = ({ pageNumber }) => {
     e.stopPropagation();
 
     if (unsavedChanges) {
-      // eslint-disable-next-line prettier/prettier
       if(!window.confirm('You have unsaved changes. Are you sure you want to leave this page?')) return;
     }
 
@@ -34,7 +33,6 @@ const Paging: FC<Props> = ({ pageNumber }) => {
     const { alto, image } = projectAssets[pageNumber + 1];
 
     if (unsavedChanges) {
-      // eslint-disable-next-line prettier/prettier
       if(!window.confirm('You have unsaved changes. Are you sure you want to leave this page?')) return;
     }
 
@@ -56,7 +54,6 @@ const Paging: FC<Props> = ({ pageNumber }) => {
     const { alto, image } = projectAssets[pageNumber - 1];
 
     if (unsavedChanges) {
-      // eslint-disable-next-line prettier/prettier
       if(!window.confirm('You have unsaved changes. Are you sure you want to leave this page?')) return;
     }
 

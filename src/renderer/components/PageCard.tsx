@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   ActionIcon,
   Text,
@@ -15,7 +13,7 @@ import { useHover } from '@mantine/hooks';
 import { ChangeEvent, FC, MouseEvent } from 'react';
 import { Image, Trash } from 'react-feather';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { useProject } from 'renderer/context/ProjectContext';
+import { useProject } from '../context/ProjectContext';
 
 interface Props {
   image: string;

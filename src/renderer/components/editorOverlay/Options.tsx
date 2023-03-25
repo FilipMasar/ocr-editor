@@ -11,10 +11,10 @@ import {
 } from '@mantine/core';
 import { FC, useCallback } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
-import { useAlto } from 'renderer/context/AltoContext';
-import { useAltoEditor } from 'renderer/context/AltoEditorContext';
-import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
-import { useSettings } from 'renderer/context/SettingsContext';
+import { useAlto } from '../../context/AltoContext';
+import { useAltoEditor } from '../../context/AltoEditorContext';
+import { useTextEditor } from '../../context/AltoTextEditorContext';
+import { useSettings } from '../../context/SettingsContext';
 
 const Options: FC = () => {
   const { settings, setSettings } = useSettings();

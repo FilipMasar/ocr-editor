@@ -8,8 +8,8 @@ import {
 } from '@mantine/core';
 import { ChangeEvent, FC, MouseEvent } from 'react';
 import { Save } from 'react-feather';
-import { useEditor } from 'renderer/context/EditorContext';
-import { useProject } from 'renderer/context/ProjectContext';
+import { useEditor } from '../../context/EditorContext';
+import { useProject } from '../../context/ProjectContext';
 
 interface Props {
   onSave: () => void;

@@ -1,8 +1,6 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-restricted-syntax */
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
-import { useSettings } from 'renderer/context/SettingsContext';
+import { useSettings } from '../../context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
 import { TextStyle } from '../../types/app';
 import { toNumber } from '../../utils/alto';

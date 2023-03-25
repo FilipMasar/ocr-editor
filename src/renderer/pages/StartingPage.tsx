@@ -8,7 +8,7 @@ import {
 } from '@mantine/core';
 import { FC, useEffect, useState, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useProject } from 'renderer/context/ProjectContext';
+import { useProject } from '../context/ProjectContext';
 import { FilePlus, Folder, X } from 'react-feather';
 import './StartingPage.css';
 

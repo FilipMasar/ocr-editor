@@ -1,11 +1,11 @@
 import { Center, Loader, Title } from '@mantine/core';
 import { FC, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import EditorOverlay from 'renderer/components/editorOverlay/EditorOverlay';
-import Viewer from 'renderer/components/Viewer';
-import { useAlto } from 'renderer/context/AltoContext';
-import { useEditor } from 'renderer/context/EditorContext';
-import { useSettings } from 'renderer/context/SettingsContext';
+import EditorOverlay from '../components/editorOverlay/EditorOverlay';
+import Viewer from '../components/Viewer';
+import { useAlto } from '../context/AltoContext';
+import { useEditor } from '../context/EditorContext';
+import { useSettings } from '../context/SettingsContext';
 
 const Editor: FC = () => {
   const [urlSearchParams] = useSearchParams();

@@ -1,9 +1,7 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect } from 'react';
-import { useAltoEditor } from 'renderer/context/AltoEditorContext';
-import { useTextEditor } from 'renderer/context/AltoTextEditorContext';
+import { useAltoEditor } from '../../context/AltoEditorContext';
+import { useTextEditor } from '../../context/AltoTextEditorContext';
 import { useAlto } from '../../context/AltoContext';
 import { toNumber } from '../../utils/alto';
 
