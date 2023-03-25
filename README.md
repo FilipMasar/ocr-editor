@@ -16,3 +16,18 @@ If you are on other platform you can do it by yourself. Just run:
 yarn          # install dependencies
 yarn make     # generate platform specific distributables
 ```
+
+## Versioning
+
+Do following steps when updating to new version:
+
+1. Update version number in [`package.json`](./package.json)
+2. Run following commands (replace `0.0.0` with correct version number):
+   ```
+   git add -A
+   git commit -m "New version 0.0.0"
+   git tag v0.0.0
+   git push origin v0.0.0
+   ```
+3. Github action will automatically create a new draft release with binaries for all platforms
+4. Publish the release
