@@ -11,22 +11,18 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
-      - name: Check out Git repository
+      - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
         with:
-          node-version: 16
-          cache: npm
+          node-version: '16.x'
+          cache: 'yarn'
+          cache-dependency-path: './yarn.lock'
 
-      - name: npm install
-        run: |
-          npm install
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
-      - name: npm test
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm run lint
-          npm run package
+      - name: Build 🔧
+        run: yarn make
