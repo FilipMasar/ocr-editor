@@ -20,6 +20,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.0.5",
     "@electron-forge/maker-deb": "^6.0.5",
+    "@electron-forge/maker-dmg": "^6.0.5",
     "@electron-forge/maker-rpm": "^6.0.5",
     "@electron-forge/maker-squirrel": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",
@@ -46,6 +47,7 @@
     "@mantine/core": "^5.10.3",
     "@mantine/hooks": "^5.10.3",
     "@microlink/react-json-view": "^1.22.2",
+    "dotenv": "^16.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "fast-xml-parser": "^4.1.2",
     "react": "^18.2.0",
