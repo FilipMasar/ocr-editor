@@ -30,6 +30,18 @@ const config: ForgeConfig = {
     new MakerDeb({}), 
     new MakerDMG({})
   ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'FilipMasar',
+          name: 'ocr-editor'
+        },
+        prerelease: true
+      }
+    }
+  ],
   plugins: [
     new WebpackPlugin({
       mainConfig,
