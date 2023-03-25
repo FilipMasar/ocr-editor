@@ -11,10 +11,6 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
-      - uses: actions/labeler@v4
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
@@ -29,4 +25,6 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build and Publish 🔧
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn run publish
