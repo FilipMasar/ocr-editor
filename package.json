@@ -1,7 +1,7 @@
 {
   "name": "ocr-editor",
   "productName": "ocr-editor",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
@@ -43,6 +43,7 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
+    "@electron-forge/publisher-github": "^6.0.5",
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^5.10.3",
     "@mantine/hooks": "^5.10.3",
