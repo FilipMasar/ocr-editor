@@ -94,7 +94,7 @@ const Paging: FC<Props> = ({ pageNumber }) => {
           >
             <ArrowLeft />
           </ActionIcon>
-          <Text size="xs">{pageNumber}</Text>
+          <Text size="xs">{pageNumber + 1}</Text>
           <ActionIcon
             size={18}
             variant="subtle"
