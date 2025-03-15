@@ -3,10 +3,18 @@ import { FC } from 'react';
 import { useAltoEditor } from '../../context/AltoEditorContext';
 import { useAlto } from '../../context/AltoContext';
 import { toNumber } from '../../utils/alto';
+import { AltoGraphicalElementJson } from '../../types/alto';
+
+interface GraphicalElementMetadata {
+  index: number;
+  source?: string;
+  isEditable?: boolean;
+  [key: string]: any; // Maintain compatibility with other properties
+}
 
 interface GraphicalElementProps {
-  element: any;
-  metadata: any;
+  element: AltoGraphicalElementJson;
+  metadata: GraphicalElementMetadata;
 }
 
 const GraphicalElement: FC<GraphicalElementProps> = ({ element, metadata }) => {
@@ -22,7 +30,7 @@ const GraphicalElement: FC<GraphicalElementProps> = ({ element, metadata }) => {
   const handleClick = () => {
     openAltoEditor(
       element,
-      () => (updated: any) => updateGraphicalElement(updated, metadata.index)
+      () => (updated: AltoGraphicalElementJson) => updateGraphicalElement(updated, metadata.index)
     );
   };
 

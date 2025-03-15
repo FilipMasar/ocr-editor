@@ -215,6 +215,8 @@ ipcMain.on('editor-channel', async (event, data) => {
     throw new Error("Project path isn't defined");
 
   try {
+    let saveResult;
+    
     switch (data.action) {
       case 'GET_PAGE_ASSETS':
         event.reply('editor-channel', {
@@ -223,11 +225,18 @@ ipcMain.on('editor-channel', async (event, data) => {
         });
         break;
       case 'SAVE_ALTO':
-        await saveAlto(
+        saveResult = await saveAlto(
           currentProjectPath,
           data.payload.fileName,
           data.payload.alto
         );
+        
+        // Return the save result including validation status
+        event.reply('editor-channel', {
+          action: 'ALTO_SAVED',
+          payload: saveResult
+        });
+        
         // eslint-disable-next-line
         const donePages = getDonePages(currentProjectPath);
         if (donePages.includes(data.payload.index)) {
@@ -244,7 +253,6 @@ ipcMain.on('editor-channel', async (event, data) => {
             },
           });
         }
-        event.reply('editor-channel', { action: 'ALTO_SAVED' });
         break;
       default:
         console.log('No function found');

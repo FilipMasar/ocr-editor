@@ -6,10 +6,35 @@ import {
   PropsWithChildren,
   useContext,
   useState,
+  Dispatch,
+  SetStateAction,
 } from 'react';
+import { 
+  AltoTextBlockJson, 
+  AltoTextLineJson, 
+  AltoStringJson,
+  AltoGraphicalElementJson,
+  AltoIllustrationJson,
+  AltoComposedBlockJson,
+  AltoJson 
+} from '../types/alto';
+
+// Union type of all possible ALTO elements
+type AltoElement = 
+  | AltoJson 
+  | AltoTextBlockJson 
+  | AltoTextLineJson 
+  | AltoStringJson 
+  | AltoGraphicalElementJson 
+  | AltoIllustrationJson 
+  | AltoComposedBlockJson;
+
+// Type for update callback function
+type UpdateCallback = (updatedElement: AltoElement) => void;
+type UpdateFactory = () => UpdateCallback;
 
 interface AltoEditorProviderValue {
-  openAltoEditor: (altoElement: any, onUpdate: any) => void;
+  openAltoEditor: (altoElement: AltoElement, onUpdate: UpdateFactory) => void;
 }
 
 // Context
@@ -20,12 +45,12 @@ export const useAltoEditor = () => useContext(AltoEditorContext);
 
 // Provider
 const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [alto, setAlto] = useState<any>();
-  const [update, setUpdate] = useState<any>();
+  const [alto, setAlto] = useState<AltoElement | undefined>();
+  const [update, setUpdate] = useState<UpdateCallback | undefined>();
 
-  const openAltoEditor = (altoElement: any, onUpdate: any) => {
+  const openAltoEditor = (altoElement: AltoElement, onUpdate: UpdateFactory) => {
     setAlto(altoElement);
-    setUpdate(onUpdate);
+    setUpdate(() => onUpdate());
   };
 
   const onClose = () => {
@@ -47,17 +72,19 @@ const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
         size="xl"
         overflow="inside"
       >
-        <ReactJson
-          src={alto}
-          name={null}
-          displayDataTypes={false}
-          collapsed={3}
-          onAdd={(edit) => update(edit.updated_src)}
-          onEdit={(edit) => update(edit.updated_src)}
-          onDelete={(edit) => update(edit.updated_src)}
-          theme="shapeshifter"
-          style={{ padding: 16 }}
-        />
+        {alto && update && (
+          <ReactJson
+            src={alto}
+            name={null}
+            displayDataTypes={false}
+            collapsed={3}
+            onAdd={(edit) => update(edit.updated_src as AltoElement)}
+            onEdit={(edit) => update(edit.updated_src as AltoElement)}
+            onDelete={(edit) => update(edit.updated_src as AltoElement)}
+            theme="shapeshifter"
+            style={{ padding: 16 }}
+          />
+        )}
       </Modal>
     </AltoEditorContext.Provider>
   );

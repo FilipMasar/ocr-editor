@@ -20,6 +20,7 @@ const defaultSettings: Settings = {
     printSpace: true,
     illustrations: true,
     graphicalElements: true,
+    composedBlocks: true,
     textBlocks: true,
     textLines: true,
     strings: false,

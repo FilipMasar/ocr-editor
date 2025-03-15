@@ -8,6 +8,8 @@ import {
   Slider,
   Stack,
   Text,
+  Badge,
+  Tooltip,
 } from '@mantine/core';
 import { FC, useCallback } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
@@ -18,7 +20,7 @@ import { useSettings } from '../../context/SettingsContext';
 
 const Options: FC = () => {
   const { settings, setSettings } = useSettings();
-  const { alto, setAlto, textBlocks } = useAlto();
+  const { alto, setAlto, textBlocks, altoVersion } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const { openTextEditor } = useTextEditor();
 
@@ -119,6 +121,29 @@ const Options: FC = () => {
                       },
                     }))
                   }
+                />
+                <Checkbox
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      Composed Block
+                      {altoVersion && !altoVersion.startsWith('3.') && (
+                        <Tooltip label="Requires ALTO v3+" position="right">
+                          <Badge color="orange" size="xs">v3+</Badge>
+                        </Tooltip>
+                      )}
+                    </div>
+                  }
+                  checked={settings.show.composedBlocks}
+                  onChange={(e) =>
+                    setSettings((old) => ({
+                      ...old,
+                      show: {
+                        ...old.show,
+                        composedBlocks: e.target.checked,
+                      },
+                    }))
+                  }
+                  disabled={altoVersion && !altoVersion.startsWith('3.')}
                 />
                 <Checkbox
                   label="Text Block"

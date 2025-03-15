@@ -11,11 +11,27 @@ import EditableBlock from '../components/textEditor/EditableBlock';
 import EditableLine from '../components/textEditor/EditableLine';
 import { getStringsFromLine } from '../utils/alto';
 import { useSettings } from './SettingsContext';
+import { AltoTextBlockJson, AltoTextLineJson } from '../types/alto';
 
 type ElementToEdit = 'ALL' | 'TEXTBLOCK' | 'TEXTLINE';
 
+// Define the element types that can be passed to the editor
+interface AltoElement<T> {
+  element: T;
+  metadata: {
+    index: number;
+    [key: string]: any;
+  };
+}
+
+type TextBlockElement = AltoElement<AltoTextBlockJson>;
+type TextLineElement = AltoElement<AltoTextLineJson>;
+
+// Union type of possible elements to edit
+type EditableElement = TextBlockElement[] | TextBlockElement | TextLineElement;
+
 interface TextEditorProviderValue {
-  openTextEditor: (type: ElementToEdit, element: any) => void;
+  openTextEditor: (type: ElementToEdit, element: EditableElement) => void;
 }
 
 // Context
@@ -27,10 +43,10 @@ export const useTextEditor = () => useContext(AltoTextEditorContext);
 // Provider
 const TextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [elementType, setElementType] = useState<ElementToEdit>('ALL');
-  const [altoElement, setAltoElement] = useState<any>();
+  const [altoElement, setAltoElement] = useState<EditableElement | undefined>();
   const { settings, setSettings } = useSettings();
 
-  const openTextEditor = (type: ElementToEdit, element: any) => {
+  const openTextEditor = (type: ElementToEdit, element: EditableElement) => {
     setElementType(type);
     setAltoElement(element);
   };
@@ -68,21 +84,22 @@ const TextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
 
         {elementType === 'ALL' &&
           altoElement !== undefined &&
-          altoElement.map((textBlock: any) => (
+          Array.isArray(altoElement) &&
+          altoElement.map((textBlock: TextBlockElement) => (
             <EditableBlock
               key={textBlock.metadata.index}
               textBlock={textBlock}
             />
           ))}
 
-        {elementType === 'TEXTBLOCK' && (
-          <EditableBlock textBlock={altoElement} />
+        {elementType === 'TEXTBLOCK' && altoElement && !Array.isArray(altoElement) && (
+          <EditableBlock textBlock={altoElement as TextBlockElement} />
         )}
 
-        {elementType === 'TEXTLINE' && (
+        {elementType === 'TEXTLINE' && altoElement && !Array.isArray(altoElement) && (
           <EditableLine
-            textLine={altoElement}
-            text={getStringsFromLine(altoElement.element)}
+            textLine={altoElement as TextLineElement}
+            text={getStringsFromLine((altoElement as TextLineElement).element)}
           />
         )}
       </Modal>

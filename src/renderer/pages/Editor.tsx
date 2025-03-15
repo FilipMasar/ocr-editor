@@ -1,8 +1,10 @@
-import { Center, Loader, Title } from '@mantine/core';
+import { Center, Loader, Title, Box } from '@mantine/core';
 import { FC, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import EditorOverlay from '../components/editorOverlay/EditorOverlay';
 import Viewer from '../components/Viewer';
+import ValidationWarning from '../components/ValidationWarning';
+import AltoVersionBadge from '../components/AltoVersionBadge';
 import { useAlto } from '../context/AltoContext';
 import { useEditor } from '../context/EditorContext';
 import { useSettings } from '../context/SettingsContext';
@@ -76,6 +78,23 @@ const Editor: FC = () => {
 
   return (
     <>
+      <Box 
+        style={{
+          position: 'fixed',
+          top: 70,
+          right: 20,
+          zIndex: 1000,
+          width: 300,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: 10,
+        }}
+      >
+        <AltoVersionBadge />
+        <ValidationWarning />
+      </Box>
+      
       <div
         style={{
           minHeight: '100vh',

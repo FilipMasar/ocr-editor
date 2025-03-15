@@ -7,6 +7,7 @@ export type Settings = {
     textBlocks: boolean;
     textLines: boolean;
     strings: boolean;
+    composedBlocks: boolean;
     textFit: boolean;
     textAbove: boolean;
     textNext: boolean;

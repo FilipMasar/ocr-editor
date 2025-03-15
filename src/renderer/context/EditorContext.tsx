@@ -9,6 +9,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { AltoJson } from '../types/alto';
 import { useAlto } from './AltoContext';
 
 interface EditorProviderValue {
@@ -33,23 +34,22 @@ export const useEditor = () => useContext(EditorContext);
 // Provider
 const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [zoom, setZoom] = useState<number>(1);
-  const [imageSrc, setImageSrc] = useState<string>();
+  const [imageSrc, setImageSrc] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [isFreshPage, setIsFreshPage] = useState(true);
+  const [isFreshPage, setIsFreshPage] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { alto, setAlto } = useAlto();
+  const { alto, setAlto, setAltoVersion, setValidationStatus } = useAlto();
 
   useEffect(() => {
-    if (alto !== undefined) {
+    if (setAlto !== undefined) {
       if (isFreshPage) {
         setIsFreshPage(false);
       } else {
         setUnsavedChanges(true);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [alto]);
+  }, [setAlto, isFreshPage, setUnsavedChanges, setIsFreshPage]);
 
   const requestPageAssets = useCallback(
     (imageFileName: string, altoFileName: string) => {
@@ -76,17 +76,33 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('editor-channel', (data) => {
+    // Store the unsubscribe function
+    const unsubscribe = window.electron.ipcRenderer.on('editor-channel', (data) => {
       console.log('editor-channel', data);
       switch (data.action) {
         case 'PAGE_ASSETS':
           setImageSrc(data.payload.imageUri);
           setAlto(data.payload.altoJson);
+          
+          // Set ALTO version and validation status if available
+          if (data.payload.altoVersion) {
+            setAltoVersion(data.payload.altoVersion);
+          }
+          
+          if (data.payload.validationStatus) {
+            setValidationStatus(data.payload.validationStatus);
+          }
+          
           setIsFreshPage(true);
           setUnsavedChanges(false);
           setTimeout(() => setLoading(false), 1000);
           break;
         case 'ALTO_SAVED':
+          // Update validation status if returned from save operation
+          if (data.payload && data.payload.validation) {
+            setValidationStatus(data.payload.validation);
+          }
+          
           setTimeout(() => {
             setSaving(false);
             setUnsavedChanges(false);
@@ -99,7 +115,21 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
           console.log('Unhandled action:', data.action);
       }
     });
-  }, [setAlto]);
+    
+    // Clean up the event listener using the returned unsubscribe function
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [
+    setAlto, 
+    setAltoVersion, 
+    setValidationStatus, 
+    setImageSrc, 
+    setIsFreshPage, 
+    setUnsavedChanges, 
+    setLoading,
+    setSaving
+  ]);
 
   return (
     <EditorContext.Provider

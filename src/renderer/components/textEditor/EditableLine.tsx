@@ -4,22 +4,40 @@ import { toNumber } from '../../utils/alto';
 import { Minus, Plus, X } from 'react-feather';
 import { useSettings } from '../../context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
+import { AltoTextLineJson, AltoStringJson, AltoHyphen } from '../../types/alto';
+
+interface AltoElement<T> {
+  element: T;
+  metadata: {
+    index: number;
+    source?: string;
+    isEditable?: boolean;
+    textBlockIndex?: number;
+    nestedTextBlockIndex?: number;
+    composedBlockIndex?: number;
+    [key: string]: any;
+  };
+}
 
 interface EditableLineProps {
   text: string | string[];
-  textLine: any;
+  textLine: AltoElement<AltoTextLineJson>;
   showTextNext?: boolean;
+  onUpdateTextLine?: (textLine: AltoTextLineJson) => void;
+  onUpdateString?: (stringIndex: number, value: string) => void;
 }
 
 const EditableLine: FC<EditableLineProps> = ({
   text,
   textLine,
   showTextNext,
+  onUpdateTextLine,
+  onUpdateString,
 }) => {
-  const [textLineElement, setTextLineElement] = useState(textLine.element);
+  const [textLineElement, setTextLineElement] = useState<AltoTextLineJson>(textLine.element);
   const ref = useRef<HTMLDivElement>(null);
   const { updateString, updateTextLine } = useAlto();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | undefined>();
   const { settings } = useSettings();
 
   const onUpdate = useCallback(
@@ -30,13 +48,44 @@ const EditableLine: FC<EditableLineProps> = ({
       }
 
       setError(undefined);
+      const source = textLine.metadata.source || 'textBlock';
+      
+      // Handle text from ComposedBlocks differently
+      if (source === 'composedBlock' && textLine.metadata.isEditable) {
+        if (onUpdateString) {
+          if (Array.isArray(text)) {
+            const textLength = text.length || 0;
+            if (newText.split(' ').length === textLength) {
+              // update each word
+              newText.split(' ').forEach((value: string, index: number) => {
+                onUpdateString(index, value);
+              });
+            } else {
+              setError(
+                'number of words is different. Firstly, add or delete node in alto editor'
+              );
+            }
+          } else if (newText.split(' ').length === 1) {
+            // update single string
+            onUpdateString(-1, newText);
+          } else {
+            setError(
+              'number of words is different. Firstly, add or delete node in alto editor'
+            );
+          }
+        } else {
+          setError('Cannot update text in this ComposedBlock');
+        }
+        return;
+      }
 
       if (Array.isArray(text)) {
-        if (newText.split(' ').length === text.length) {
+        const textLength = text.length || 0;
+        if (newText.split(' ').length === textLength) {
           // update
           newText.split(' ').forEach((value: string, index: number) => {
             updateString(
-              textLine.metadata.textBlockIndex,
+              textLine.metadata.textBlockIndex || -1,
               textLine.metadata.index,
               index,
               value
@@ -50,7 +99,7 @@ const EditableLine: FC<EditableLineProps> = ({
       } else if (newText.split(' ').length === 1) {
         // update
         updateString(
-          textLine.metadata.textBlockIndex,
+          textLine.metadata.textBlockIndex || -1,
           textLine.metadata.index,
           -1,
           newText
@@ -61,35 +110,47 @@ const EditableLine: FC<EditableLineProps> = ({
         );
       }
     },
-    [text, textLine.metadata, updateString]
+    [text, textLine.metadata, updateString, onUpdateString]
   );
 
   const onHyphenButtonClicked = useCallback(() => {
     const { HYP, ...rest } = textLineElement;
 
     if (HYP) {
-      updateTextLine(
-        rest,
-        textLine.metadata.textBlockIndex,
-        textLine.metadata.index
-      );
+      if (onUpdateTextLine) {
+        onUpdateTextLine(rest);
+      } else {
+        updateTextLine(
+          rest,
+          textLine.metadata.textBlockIndex || -1,
+          textLine.metadata.index
+        );
+      }
 
       setTextLineElement(rest);
     } else {
-      updateTextLine(
-        { ...rest, HYP: { '@_CONTENT': '172' } },
-        textLine.metadata.textBlockIndex,
-        textLine.metadata.index
-      );
+      const hyphen: AltoHyphen = { '@_CONTENT': '172' };
+      const updatedLine = { 
+        ...rest, 
+        HYP: hyphen 
+      };
+      
+      if (onUpdateTextLine) {
+        onUpdateTextLine(updatedLine);
+      } else {
+        updateTextLine(
+          updatedLine,
+          textLine.metadata.textBlockIndex || -1,
+          textLine.metadata.index
+        );
+      }
 
-      setTextLineElement((old: any) => ({
+      setTextLineElement((old) => ({
         ...old,
-        HYP: {
-          '@_CONTENT': '172',
-        },
+        HYP: hyphen,
       }));
     }
-  }, [textLine, textLineElement, updateTextLine]);
+  }, [textLine, textLineElement, updateTextLine, onUpdateTextLine]);
 
   const enterFunction = useCallback(
     (event: KeyboardEvent) => {
@@ -115,7 +176,7 @@ const EditableLine: FC<EditableLineProps> = ({
         <div style={{ display: 'flex' }}>
           <div
             ref={ref}
-            contentEditable="true"
+            contentEditable={textLine.metadata.source !== 'composedBlock'}
             suppressContentEditableWarning
             onBlur={(e) => onUpdate(e.currentTarget.textContent)}
             style={
@@ -127,16 +188,29 @@ const EditableLine: FC<EditableLineProps> = ({
                     width: toNumber(textLineElement['@_WIDTH']),
                     height: toNumber(textLineElement['@_HEIGHT']),
                     fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
-                    backgroundColor: error && 'rgba(255, 0, 0, 0.5)',
+                    backgroundColor: textLine.metadata.source === 'composedBlock' 
+                      ? 'rgba(128, 0, 128, 0.1)' // Light purple for composed block text
+                      : (error && 'rgba(255, 0, 0, 0.5)'),
                     textAlign: 'justify',
                     textAlignLast: 'justify',
                   }
                 : {
-                    border: error && '1px solid red',
+                    border: textLine.metadata.source === 'composedBlock'
+                      ? '1px dashed purple'
+                      : (error && '1px solid red'),
+                    padding: '4px',
+                    backgroundColor: textLine.metadata.source === 'composedBlock'
+                      ? 'rgba(128, 0, 128, 0.05)'
+                      : 'transparent',
                   }
             }
           >
             {Array.isArray(text) ? text.join(' ') : text}
+            {textLine.metadata.source === 'composedBlock' && (
+              <small style={{ fontSize: '0.7em', color: 'purple', marginLeft: '5px' }}>
+                (from ComposedBlock)
+              </small>
+            )}
           </div>
           {textLineElement.HYP && settings.show.hyphens && (
             <span

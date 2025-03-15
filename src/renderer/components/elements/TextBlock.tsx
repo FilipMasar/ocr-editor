@@ -4,10 +4,18 @@ import { useAltoEditor } from '../../context/AltoEditorContext';
 import { useTextEditor } from '../../context/AltoTextEditorContext';
 import { useAlto } from '../../context/AltoContext';
 import { toNumber } from '../../utils/alto';
+import { AltoTextBlockJson } from '../../types/alto';
+
+interface TextBlockMetadata {
+  index: number;
+  source?: string;
+  isEditable?: boolean;
+  [key: string]: any; // Maintain compatibility with other properties
+}
 
 interface TextBlockProps {
-  element: any;
-  metadata: any;
+  element: AltoTextBlockJson;
+  metadata: TextBlockMetadata;
 }
 
 const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
@@ -27,7 +35,7 @@ const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
       if (event.altKey) {
         openAltoEditor(
           element,
-          () => (updated: any) => updateTextBlock(updated, metadata.index)
+          () => (updated: AltoTextBlockJson) => updateTextBlock(updated, metadata.index)
         );
       } else {
         openTextEditor('TEXTBLOCK', { element, metadata });
@@ -36,11 +44,14 @@ const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
 
     const div = ref.current;
 
-    div.addEventListener('click', handleClick);
+    if (div) {
+      div.addEventListener('click', handleClick);
 
-    return () => {
-      div.removeEventListener('click', handleClick);
-    };
+      return () => {
+        div.removeEventListener('click', handleClick);
+      };
+    }
+    return undefined;
   }, [
     element,
     metadata,

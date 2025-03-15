@@ -3,10 +3,18 @@ import { FC } from 'react';
 import { useAltoEditor } from '../../context/AltoEditorContext';
 import { useAlto } from '../../context/AltoContext';
 import { toNumber } from '../../utils/alto';
+import { AltoIllustrationJson } from '../../types/alto';
+
+interface IllustrationMetadata {
+  index: number;
+  source?: string;
+  isEditable?: boolean;
+  [key: string]: any; // Maintain compatibility with other properties
+}
 
 interface IllustrationProps {
-  element: any;
-  metadata: any;
+  element: AltoIllustrationJson;
+  metadata: IllustrationMetadata;
 }
 
 const Illustration: FC<IllustrationProps> = ({ element, metadata }) => {
@@ -22,7 +30,7 @@ const Illustration: FC<IllustrationProps> = ({ element, metadata }) => {
   const handleClick = () => {
     openAltoEditor(
       element,
-      () => (updated: any) => updateIllustration(updated, metadata.index)
+      () => (updated: AltoIllustrationJson) => updateIllustration(updated, metadata.index)
     );
   };
 

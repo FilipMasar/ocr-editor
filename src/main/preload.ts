@@ -3,9 +3,22 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels = 'project-channel' | 'config-channel' | 'editor-channel';
+
+// Define possible payload types for better type safety
+export type ChannelPayload = 
+  | string 
+  | number 
+  | boolean 
+  | null 
+  | Record<string, unknown> 
+  | Array<unknown>
+  | { fileName: string; alto: unknown; index: number } // For SAVE_ALTO
+  | { imageFileName: string; altoFileName: string }    // For GET_PAGE_ASSETS
+  | undefined;
+
 export type ChannelData = {
   action: string;
-  payload?: any;
+  payload?: ChannelPayload;
 };
 
 contextBridge.exposeInMainWorld('electron', {

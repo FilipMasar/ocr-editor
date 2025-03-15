@@ -5,10 +5,19 @@ import { useTextEditor } from '../../context/AltoTextEditorContext';
 import { useSettings } from '../../context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
 import { getStringsFromLine, toNumber } from '../../utils/alto';
+import { AltoTextLineJson } from '../../types/alto';
+
+interface TextLineMetadata {
+  index: number;
+  textBlockIndex: number;
+  source?: string;
+  isEditable?: boolean;
+  [key: string]: any; // Maintain compatibility with other properties
+}
 
 interface TextLineProps {
-  element: any;
-  metadata: any;
+  element: AltoTextLineJson;
+  metadata: TextLineMetadata;
 }
 
 const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
@@ -38,7 +47,7 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
       if (event.altKey) {
         openAltoEditor(
           element,
-          () => (updated: any) =>
+          () => (updated: AltoTextLineJson) =>
             updateTextLine(updated, metadata.textBlockIndex, metadata.index)
         );
       } else {
@@ -48,11 +57,14 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
 
     const div = ref.current;
 
-    div.addEventListener('click', handleClick);
+    if (div) {
+      div.addEventListener('click', handleClick);
 
-    return () => {
-      div.removeEventListener('click', handleClick);
-    };
+      return () => {
+        div.removeEventListener('click', handleClick);
+      };
+    }
+    return undefined;
   }, [element, metadata, openAltoEditor, openTextEditor, ref, updateTextLine]);
 
   return (

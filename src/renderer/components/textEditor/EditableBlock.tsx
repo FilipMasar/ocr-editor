@@ -1,14 +1,33 @@
 import { FC, useEffect, useState } from 'react';
 import { addMetadata, getStringsFromLine } from '../../utils/alto';
 import EditableLine from './EditableLine';
+import { AltoTextBlockJson, AltoTextLineJson } from '../../types/alto';
+
+interface AltoElement<T> {
+  element: T;
+  metadata: {
+    index: number;
+    '@_STYLEREFS'?: string;
+    [key: string]: any;
+  };
+}
+
+interface TextLineElement extends AltoElement<AltoTextLineJson> {
+  metadata: {
+    index: number;
+    '@_STYLEREFS'?: string;
+    textBlockIndex?: number;
+    [key: string]: any;
+  };
+}
 
 interface TextBlockProps {
-  textBlock: any;
+  textBlock: AltoElement<AltoTextBlockJson>;
   showTextNext?: boolean;
 }
 
 const EditableBlock: FC<TextBlockProps> = ({ textBlock, showTextNext }) => {
-  const [textLines, setTextLines] = useState<any[]>([]);
+  const [textLines, setTextLines] = useState<TextLineElement[]>([]);
 
   useEffect(() => {
     setTextLines([]);
@@ -19,7 +38,7 @@ const EditableBlock: FC<TextBlockProps> = ({ textBlock, showTextNext }) => {
       };
 
       setTextLines(
-        addMetadata(textBlock.element.TextLine, parentStyleRefs, otherMetadata)
+        addMetadata(textBlock.element.TextLine, parentStyleRefs, otherMetadata) as TextLineElement[]
       );
     }
   }, [textBlock]);
@@ -32,9 +51,9 @@ const EditableBlock: FC<TextBlockProps> = ({ textBlock, showTextNext }) => {
         border: showTextNext ? '' : '1px solid black',
       }}
     >
-      {textLines.map((textLine: any) => (
+      {textLines.map((textLine: TextLineElement) => (
         <EditableLine
-          key={`${textLine.metadata.textBlockindex}${textLine.metadata.index}`}
+          key={`${textLine.metadata.textBlockIndex}-${textLine.metadata.index}`}
           text={getStringsFromLine(textLine.element)}
           textLine={textLine}
           showTextNext={showTextNext}

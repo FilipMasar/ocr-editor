@@ -4,15 +4,23 @@ import { useSettings } from '../../context/SettingsContext';
 import { useAlto } from '../../context/AltoContext';
 import { TextStyle } from '../../types/app';
 import { toNumber } from '../../utils/alto';
+import { AltoStringJson } from '../../types/alto';
 
 const defaultStyle: TextStyle = {
   fontSize: 16,
   fontFamily: 'Times New Roman',
 };
 
+interface StringMetadata {
+  index: number;
+  '@_STYLEREFS'?: string;
+  lineVPos?: number;
+  [key: string]: any; // Keeping this for compatibility with other properties
+}
+
 interface StringProps {
-  element: any;
-  metadata: any;
+  element: AltoStringJson;
+  metadata: StringMetadata;
 }
 
 const String: FC<StringProps> = ({ element, metadata }) => {
@@ -29,6 +37,10 @@ const String: FC<StringProps> = ({ element, metadata }) => {
   const text = element['@_CONTENT'];
 
   useEffect(() => {
+    if (!metadata['@_STYLEREFS']) {
+      return;
+    }
+    
     const styleRefsArray = metadata['@_STYLEREFS'].split(' ');
 
     for (const id of styleRefsArray) {
@@ -43,6 +55,7 @@ const String: FC<StringProps> = ({ element, metadata }) => {
       {/* Strings elements */}
       {show.strings && (
         <div
+          ref={ref}
           style={{
             position: 'absolute',
             top,
@@ -58,7 +71,7 @@ const String: FC<StringProps> = ({ element, metadata }) => {
       )}
 
       {/* Text Fit */}
-      {show.textFit && (
+      {show.textFit && text && (
         <div
           style={{
             display: 'flex',
@@ -82,7 +95,7 @@ const String: FC<StringProps> = ({ element, metadata }) => {
       )}
 
       {/* Text Above */}
-      {show.textAbove && (
+      {show.textAbove && text && metadata.lineVPos !== undefined && (
         <div
           style={{
             display: 'flex',
