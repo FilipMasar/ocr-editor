@@ -7,15 +7,20 @@ import {
   useContext,
   useState,
 } from 'react';
-import EditableBlock from '../components/textEditor/EditableBlock';
-import EditableLine from '../components/textEditor/EditableLine';
-import { getStringsFromLine } from '../utils/alto';
-import { useSettings } from './SettingsContext';
-import { AltoTextBlockJson, AltoTextLineJson } from '../types/alto';
+import EditableBlock from '../../components/textEditor/EditableBlock';
+import EditableLine from '../../components/textEditor/EditableLine';
+import { getStringsFromLine } from '../../utils/alto';
+import { useSettings } from '../app/SettingsContext';
+import { AltoTextBlockJson, AltoTextLineJson } from '../../types/alto';
 
+/**
+ * Types of elements that can be edited in the text editor
+ */
 type ElementToEdit = 'ALL' | 'TEXTBLOCK' | 'TEXTLINE';
 
-// Define the element types that can be passed to the editor
+/**
+ * Interface for an element that can be edited in the text editor
+ */
 interface AltoElement<T> {
   element: T;
   metadata: {
@@ -24,12 +29,16 @@ interface AltoElement<T> {
   };
 }
 
+// Element types for the text editor
 type TextBlockElement = AltoElement<AltoTextBlockJson>;
 type TextLineElement = AltoElement<AltoTextLineJson>;
 
 // Union type of possible elements to edit
 type EditableElement = TextBlockElement[] | TextBlockElement | TextLineElement;
 
+/**
+ * Text editor context value interface
+ */
 interface TextEditorProviderValue {
   openTextEditor: (type: ElementToEdit, element: EditableElement) => void;
 }
@@ -37,15 +46,22 @@ interface TextEditorProviderValue {
 // Context
 const AltoTextEditorContext = createContext({} as TextEditorProviderValue);
 
-// useContext
+/**
+ * Hook to access the text editor context
+ */
 export const useTextEditor = () => useContext(AltoTextEditorContext);
 
-// Provider
+/**
+ * Provider component for the text editor context
+ */
 const TextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [elementType, setElementType] = useState<ElementToEdit>('ALL');
   const [altoElement, setAltoElement] = useState<EditableElement | undefined>();
   const { settings, setSettings } = useSettings();
 
+  /**
+   * Open the text editor with the specified element type and element
+   */
   const openTextEditor = (type: ElementToEdit, element: EditableElement) => {
     setElementType(type);
     setAltoElement(element);
@@ -107,4 +123,4 @@ const TextEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default TextEditorProvider;
+export default TextEditorProvider; 

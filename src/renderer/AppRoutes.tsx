@@ -1,49 +1,72 @@
-import { Dialog, Notification } from '@mantine/core';
-import { X } from 'react-feather';
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import AltoProvider from './context/AltoContext';
-import AltoEditorProvider from './context/AltoEditorContext';
-import EditorProvider from './context/EditorContext';
-import { useProject } from './context/ProjectContext';
-import TextEditorProvider from './context/AltoTextEditorContext';
-import Editor from './pages/Editor';
-import Project from './pages/Project';
-import StartingPage from './pages/StartingPage';
+import { lazy, Suspense } from 'react';
+import { MemoryRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { 
+  AltoProvider,
+  AltoEditorProvider,
+  EditorProvider,
+  TextEditorProvider,
+  useProject
+} from './context';
+import { ErrorDialog } from './components/overlay';
+import { ErrorBoundary, Loader } from './components/common';
 
+// Lazy-loaded pages
+const StartingPage = lazy(() => import('./pages/StartingPage'));
+const Project = lazy(() => import('./pages/Project'));
+const Editor = lazy(() => import('./pages/Editor'));
+
+/**
+ * Application routes configuration
+ */
 export default function AppRoutes() {
   const { errorMessage, resetErrorMessage } = useProject();
 
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<StartingPage />} />
-          <Route path="/project" element={<Project />} />
-          <Route
-            path="/editor"
-            element={
-              <AltoProvider>
-                <EditorProvider>
-                  <AltoEditorProvider>
-                    <TextEditorProvider>
-                      <Editor />
-                    </TextEditorProvider>
-                  </AltoEditorProvider>
-                </EditorProvider>
-              </AltoProvider>
-            }
-          />
-        </Routes>
-      </Router>
-      <Dialog opened={errorMessage !== undefined} p={0}>
-        <Notification
-          icon={<X size={18} />}
-          color="red"
-          onClose={resetErrorMessage}
-        >
-          {errorMessage}
-        </Notification>
-      </Dialog>
+      <ErrorBoundary componentName="AppRoutes">
+        <Router>
+          <Suspense fallback={<Loader text="Loading..." fullHeight />}>
+            <Routes>
+              <Route path="/" element={
+                <ErrorBoundary componentName="StartingPage">
+                  <StartingPage />
+                </ErrorBoundary>
+              } />
+              <Route
+                path="/project"
+                element={
+                  <ErrorBoundary componentName="Project">
+                    <Project />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="/editor"
+                element={
+                  <ErrorBoundary componentName="Editor">
+                    <AltoProvider>
+                      <AltoEditorProvider>
+                        <EditorProvider>
+                          <TextEditorProvider>
+                            <Editor />
+                          </TextEditorProvider>
+                        </EditorProvider>
+                      </AltoEditorProvider>
+                    </AltoProvider>
+                  </ErrorBoundary>
+                }
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </ErrorBoundary>
+
+      <ErrorDialog 
+        message={errorMessage} 
+        opened={!!errorMessage} 
+        onClose={resetErrorMessage} 
+      />
     </>
   );
 }

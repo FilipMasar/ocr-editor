@@ -9,9 +9,12 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { AltoJson } from '../types/alto';
-import { useAlto } from './AltoContext';
+import { AltoJson } from '../../types/alto';
+import { useAlto } from '../app/AltoContext';
 
+/**
+ * Editor context for managing editor state and operations
+ */
 interface EditorProviderValue {
   zoom: number;
   setZoom: Dispatch<SetStateAction<number>>;
@@ -28,10 +31,14 @@ interface EditorProviderValue {
 // Context
 const EditorContext = createContext({} as EditorProviderValue);
 
-// useContext
+/**
+ * Hook to access the editor context
+ */
 export const useEditor = () => useContext(EditorContext);
 
-// Provider
+/**
+ * Provider component for the editor context
+ */
 const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [zoom, setZoom] = useState<number>(1);
   const [imageSrc, setImageSrc] = useState<string | undefined>();
@@ -55,10 +62,11 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
     (imageFileName: string, altoFileName: string) => {
       if (imageFileName && altoFileName) {
         setLoading(true);
-        window.electron.ipcRenderer.sendMessage('editor-channel', {
-          action: 'GET_PAGE_ASSETS',
-          payload: { imageFileName, altoFileName },
-        });
+        window.electron.ipc.send(
+          'editor-channel',
+          'GET_PAGE_ASSETS',
+          { imageFileName, altoFileName }
+        );
       }
     },
     []
@@ -67,58 +75,67 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const saveAlto = useCallback(
     (fileName: string, index: number) => {
       setSaving(true);
-      window.electron.ipcRenderer.sendMessage('editor-channel', {
-        action: 'SAVE_ALTO',
-        payload: { fileName, alto, index },
-      });
+      window.electron.ipc.send(
+        'editor-channel',
+        'SAVE_ALTO',
+        { fileName, alto, index }
+      );
     },
     [alto]
   );
 
   useEffect(() => {
-    // Store the unsubscribe function
-    const unsubscribe = window.electron.ipcRenderer.on('editor-channel', (data) => {
-      console.log('editor-channel', data);
-      switch (data.action) {
-        case 'PAGE_ASSETS':
-          setImageSrc(data.payload.imageUri);
-          setAlto(data.payload.altoJson);
-          
-          // Set ALTO version and validation status if available
-          if (data.payload.altoVersion) {
-            setAltoVersion(data.payload.altoVersion);
-          }
-          
-          if (data.payload.validationStatus) {
-            setValidationStatus(data.payload.validationStatus);
-          }
-          
-          setIsFreshPage(true);
-          setUnsavedChanges(false);
-          setTimeout(() => setLoading(false), 1000);
-          break;
-        case 'ALTO_SAVED':
-          // Update validation status if returned from save operation
-          if (data.payload && data.payload.validation) {
-            setValidationStatus(data.payload.validation);
-          }
-          
-          setTimeout(() => {
-            setSaving(false);
-            setUnsavedChanges(false);
-          }, 1000); // to make sure that user sees the loader
-          break;
-        case 'ERROR':
-          console.log(String(data.payload));
-          break;
-        default:
-          console.log('Unhandled action:', data.action);
+    // Register handlers with typed payloads
+    const unsubscribePageAssets = window.electron.ipc.on(
+      'editor-channel',
+      'PAGE_ASSETS',
+      (payload) => {
+        setImageSrc(payload.imageUri);
+        setAlto(payload.altoJson);
+        
+        // Set ALTO version and validation status if available
+        if (payload.altoVersion) {
+          setAltoVersion(payload.altoVersion);
+        }
+        
+        if (payload.validationStatus) {
+          setValidationStatus(payload.validationStatus);
+        }
+        
+        setIsFreshPage(true);
+        setUnsavedChanges(false);
+        setTimeout(() => setLoading(false), 1000);
       }
+    );
+    
+    const unsubscribeAltoSaved = window.electron.ipc.on(
+      'editor-channel',
+      'ALTO_SAVED',
+      (payload) => {
+        // Update validation status if returned from save operation
+        if (payload?.validation) {
+          setValidationStatus(payload.validation);
+        }
+        
+        setTimeout(() => {
+          setSaving(false);
+          setUnsavedChanges(false);
+        }, 1000); // to make sure that user sees the loader
+      }
+    );
+    
+    // Register error handler
+    const unsubscribeError = window.electron.ipc.onError((message) => {
+      console.error('Editor IPC error:', message);
+      setLoading(false);
+      setSaving(false);
     });
     
-    // Clean up the event listener using the returned unsubscribe function
+    // Clean up the event listeners
     return () => {
-      if (unsubscribe) unsubscribe();
+      unsubscribePageAssets();
+      unsubscribeAltoSaved();
+      unsubscribeError();
     };
   }, [
     setAlto, 
@@ -151,4 +168,4 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default EditorProvider;
+export default EditorProvider; 

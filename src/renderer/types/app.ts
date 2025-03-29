@@ -23,5 +23,5 @@ export type TextStyle = {
 
 export type PageDimensions = {
   width: number;
-  height: number;
+  height: number | null;
 };

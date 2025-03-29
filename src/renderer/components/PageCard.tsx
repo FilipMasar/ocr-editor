@@ -13,7 +13,7 @@ import { useHover } from '@mantine/hooks';
 import { ChangeEvent, FC, MouseEvent } from 'react';
 import { Image, Trash } from 'react-feather';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { useProject } from '../context/ProjectContext';
+import { useProject } from '../context';
 
 interface Props {
   image: string;

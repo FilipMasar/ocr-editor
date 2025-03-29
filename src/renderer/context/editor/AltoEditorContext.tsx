@@ -17,9 +17,11 @@ import {
   AltoIllustrationJson,
   AltoComposedBlockJson,
   AltoJson 
-} from '../types/alto';
+} from '../../types/alto';
 
-// Union type of all possible ALTO elements
+/**
+ * Union type of all possible ALTO elements that can be edited
+ */
 type AltoElement = 
   | AltoJson 
   | AltoTextBlockJson 
@@ -33,6 +35,9 @@ type AltoElement =
 type UpdateCallback = (updatedElement: AltoElement) => void;
 type UpdateFactory = () => UpdateCallback;
 
+/**
+ * Alto Editor context value interface
+ */
 interface AltoEditorProviderValue {
   openAltoEditor: (altoElement: AltoElement, onUpdate: UpdateFactory) => void;
 }
@@ -40,14 +45,21 @@ interface AltoEditorProviderValue {
 // Context
 const AltoEditorContext = createContext({} as AltoEditorProviderValue);
 
-// useContext
+/**
+ * Hook to access the ALTO editor context
+ */
 export const useAltoEditor = () => useContext(AltoEditorContext);
 
-// Provider
+/**
+ * Provider component for the ALTO editor context
+ */
 const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [alto, setAlto] = useState<AltoElement | undefined>();
   const [update, setUpdate] = useState<UpdateCallback | undefined>();
 
+  /**
+   * Open the ALTO editor with the specified element and update callback
+   */
   const openAltoEditor = (altoElement: AltoElement, onUpdate: UpdateFactory) => {
     setAlto(altoElement);
     setUpdate(() => onUpdate());
@@ -90,4 +102,4 @@ const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default AltoEditorProvider;
+export default AltoEditorProvider; 

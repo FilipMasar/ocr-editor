@@ -1,7 +1,7 @@
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
-import { useSettings } from '../../context/SettingsContext';
-import { useAlto } from '../../context/AltoContext';
+import { useSettings } from '../../context/app/SettingsContext';
+import { useAlto } from '../../context/app/AltoContext';
 import { TextStyle } from '../../types/app';
 import { toNumber } from '../../utils/alto';
 import { AltoStringJson } from '../../types/alto';

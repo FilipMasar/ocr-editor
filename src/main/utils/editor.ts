@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
-import { jsonToXml, parseAndValidateAlto } from './utils/xmlConvertor';
-import { getImageUri } from './utils/image';
-import { AltoJson } from '../renderer/types/alto';
+import { jsonToXml, parseAndValidateAlto } from './xmlConvertor';
+import { getImageUri } from './image';
+import { AltoJson } from '../../renderer/types/alto';
 
 interface AssetRequestParams {
   imageFileName: string;

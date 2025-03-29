@@ -3,7 +3,7 @@ import { Badge, Stack, Title } from '@mantine/core';
 import { addMetadata, getStringsFromLine } from '../../utils/alto';
 import { getTextBlocksFromComposedBlock } from '../../utils/composedBlockUtils';
 import EditableLine from './EditableLine';
-import { useAlto } from '../../context/AltoContext';
+import { useAlto } from '../../context/app/AltoContext';
 import { AltoComposedBlockJson, AltoTextBlockJson, AltoTextLineJson } from '../../types/alto';
 
 interface AltoElement<T> {

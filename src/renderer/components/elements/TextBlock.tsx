@@ -1,8 +1,8 @@
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect } from 'react';
-import { useAltoEditor } from '../../context/AltoEditorContext';
-import { useTextEditor } from '../../context/AltoTextEditorContext';
-import { useAlto } from '../../context/AltoContext';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
+import { useTextEditor } from '../../context/editor/AltoTextEditorContext';
+import { useAlto } from '../../context/app/AltoContext';
 import { toNumber } from '../../utils/alto';
 import { AltoTextBlockJson } from '../../types/alto';
 

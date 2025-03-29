@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Alert, Badge, Text, Group, Collapse } from '@mantine/core';
 import { AlertTriangle, Info } from 'react-feather';
-import { useAlto } from '../context/AltoContext';
+import { useAlto } from '../context/app/AltoContext';
 import { useDisclosure } from '@mantine/hooks';
 
 const ValidationWarning: FC = () => {
@@ -9,7 +9,7 @@ const ValidationWarning: FC = () => {
   const [opened, { toggle }] = useDisclosure(false);
   
   // If no validation status or it's valid, don't show anything
-  if (!validationStatus || validationStatus.valid) {
+  if (!validationStatus || validationStatus.isValid) {
     return null;
   }
 

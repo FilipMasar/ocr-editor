@@ -3,6 +3,8 @@ import Options from './Options';
 import Paging from './Paging';
 import Status from './Status';
 import Zoom from './Zoom';
+import { useEditor } from '../../context/editor/EditorContext';
+import { useProject } from '../../context/project/ProjectContext';
 
 interface Props {
   alignCenter: () => void;

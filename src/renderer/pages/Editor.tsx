@@ -5,9 +5,11 @@ import EditorOverlay from '../components/editorOverlay/EditorOverlay';
 import Viewer from '../components/Viewer';
 import ValidationWarning from '../components/ValidationWarning';
 import AltoVersionBadge from '../components/AltoVersionBadge';
-import { useAlto } from '../context/AltoContext';
-import { useEditor } from '../context/EditorContext';
-import { useSettings } from '../context/SettingsContext';
+import { useAlto } from '../context/app/AltoContext';
+import { useEditor } from '../context/editor/EditorContext';
+import { useSettings } from '../context/app/SettingsContext';
+import { ErrorBoundary } from '../components/common';
+import { logger } from '../utils/logger';
 
 const Editor: FC = () => {
   const [urlSearchParams] = useSearchParams();
@@ -26,7 +28,7 @@ const Editor: FC = () => {
     const contentWidth = settings.show.textNext
       ? pageDimensions.width * 2
       : pageDimensions.width;
-    const contentHeight = pageDimensions.height;
+    const contentHeight = pageDimensions.height || 0;
 
     const scaleWidth = availableWidth / contentWidth;
     const scaleHeight = availableHeight / contentHeight;
@@ -52,6 +54,7 @@ const Editor: FC = () => {
 
   const onSave = useCallback(() => {
     if (altoFileName && index) {
+      logger.info('Editor', `Saving ALTO file: ${altoFileName} with index ${index}`);
       saveAlto(altoFileName, parseInt(index, 10));
     }
   }, [altoFileName, index, saveAlto]);
@@ -62,6 +65,7 @@ const Editor: FC = () => {
 
   useEffect(() => {
     if (imageFileName && altoFileName) {
+      logger.info('Editor', `Loading page assets: ${imageFileName}, ${altoFileName}`);
       requestPageAssets(imageFileName, altoFileName);
     }
   }, [imageFileName, altoFileName, requestPageAssets]);
@@ -78,22 +82,24 @@ const Editor: FC = () => {
 
   return (
     <>
-      <Box 
-        style={{
-          position: 'fixed',
-          top: 70,
-          right: 20,
-          zIndex: 1000,
-          width: 300,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          gap: 10,
-        }}
-      >
-        <AltoVersionBadge />
-        <ValidationWarning />
-      </Box>
+      <ErrorBoundary componentName="EditorStatusBar">
+        <Box 
+          style={{
+            position: 'fixed',
+            top: 70,
+            right: 20,
+            zIndex: 1000,
+            width: 300,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: 10,
+          }}
+        >
+          <AltoVersionBadge />
+          <ValidationWarning />
+        </Box>
+      </ErrorBoundary>
       
       <div
         style={{
@@ -113,14 +119,19 @@ const Editor: FC = () => {
             transformOrigin: 'center top',
           }}
         >
-          <Viewer />
+          <ErrorBoundary componentName="Viewer">
+            <Viewer />
+          </ErrorBoundary>
         </div>
       </div>
-      <EditorOverlay
-        alignCenter={alignCenter}
-        pageNumber={parseInt(index || '0', 10)}
-        onSave={onSave}
-      />
+      
+      <ErrorBoundary componentName="EditorOverlay">
+        <EditorOverlay
+          alignCenter={alignCenter}
+          pageNumber={parseInt(index || '0', 10)}
+          onSave={onSave}
+        />
+      </ErrorBoundary>
     </>
   );
 };

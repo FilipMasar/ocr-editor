@@ -1,15 +1,22 @@
+import { ChangeEvent, FC, MouseEvent, useEffect, useState } from 'react';
 import {
-  ActionIcon,
-  Checkbox,
+  Box,
+  Card,
+  Center,
   Group,
+  Text,
+  Checkbox,
+  Stack,
+  DefaultMantineColor,
+  SegmentedControl,
+  ActionIcon,
   Loader,
   Paper,
   Tooltip,
 } from '@mantine/core';
-import { ChangeEvent, FC, MouseEvent } from 'react';
-import { Save } from 'react-feather';
-import { useEditor } from '../../context/EditorContext';
-import { useProject } from '../../context/ProjectContext';
+import { ToggleLeft, Save } from 'react-feather';
+import { useEditor } from '../../context/editor/EditorContext';
+import { useProject } from '../../context/project/ProjectContext';
 
 interface Props {
   onSave: () => void;

@@ -1,7 +1,7 @@
 import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
-import { useAltoEditor } from '../../context/AltoEditorContext';
-import { useAlto } from '../../context/AltoContext';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
+import { useAlto } from '../../context/app/AltoContext';
 import { toNumber } from '../../utils/alto';
 import { AltoGraphicalElementJson } from '../../types/alto';
 

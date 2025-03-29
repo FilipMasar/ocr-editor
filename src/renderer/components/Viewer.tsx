@@ -1,8 +1,8 @@
 import { Title } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
-import { useSettings } from '../context/SettingsContext';
-import { useAlto } from '../context/AltoContext';
-import { useEditor } from '../context/EditorContext';
+import { useSettings } from '../context/app/SettingsContext';
+import { useAlto } from '../context/app/AltoContext';
+import { useEditor } from '../context/editor/EditorContext';
 import { addMetadata, toNumber } from '../utils/alto';
 import { getTextBlocksFromComposedBlock } from '../utils/composedBlockUtils';
 import GraphicalElement from './elements/GraphicalElement';
@@ -52,6 +52,7 @@ const Viewer: FC = () => {
     graphicalElements,
     textBlocks,
     composedBlocks,
+    alto,
   } = useAlto();
   const { settings } = useSettings();
   const { imageSrc } = useEditor();
@@ -138,8 +139,18 @@ const Viewer: FC = () => {
   }, [textLines]);
 
   // Check for valid page dimensions - provide a better error message
+  if (pageDimensions.height === null) {
+    return (
+      <Title order={2} style={{ textAlign: 'center', marginTop: '2rem' }}>
+        Loading page dimensions...
+      </Title>
+    );
+  }
+  
   if (!pageDimensions.height || !pageDimensions.width) {
     console.error("Invalid page dimensions:", pageDimensions);
+    console.error("Current ALTO structure:", alto);
+    
     return (
       <Title order={2} style={{ textAlign: 'center', marginTop: '2rem', color: 'red' }}>
         Error: Missing page dimensions
@@ -149,6 +160,11 @@ const Viewer: FC = () => {
             <li>In the &lt;Page&gt; element, or</li>
             <li>In the &lt;PrintSpace&gt; element</li>
           </ul>
+          <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#555' }}>
+            Try opening the ALTO file in a text editor and ensure it includes:<br/>
+            <code>&lt;Page WIDTH="1234" HEIGHT="5678"&gt;</code> or<br/>
+            <code>&lt;PrintSpace WIDTH="1234" HEIGHT="5678"&gt;</code>
+          </div>
         </div>
       </Title>
     );

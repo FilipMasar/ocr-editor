@@ -1,7 +1,7 @@
 import { ActionIcon, Group, Paper, Text } from '@mantine/core';
 import { FC, MouseEvent } from 'react';
 import { AlignCenter, Minus, Plus } from 'react-feather';
-import { useEditor } from '../../context/EditorContext';
+import { useEditor } from '../../context/editor/EditorContext';
 
 interface Props {
   alignCenter: () => void;

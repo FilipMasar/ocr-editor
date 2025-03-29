@@ -2,8 +2,8 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Dialog, Notification } from '@mantine/core';
 import { toNumber } from '../../utils/alto';
 import { Minus, Plus, X } from 'react-feather';
-import { useSettings } from '../../context/SettingsContext';
-import { useAlto } from '../../context/AltoContext';
+import { useSettings } from '../../context/app/SettingsContext';
+import { useAlto } from '../../context/app/AltoContext';
 import { AltoTextLineJson, AltoStringJson, AltoHyphen } from '../../types/alto';
 
 interface AltoElement<T> {

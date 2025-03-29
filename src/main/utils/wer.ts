@@ -6,7 +6,7 @@ import {
 } from 'word-error-rate';
 import path from 'path';
 import fs from 'fs';
-import { updateWer } from '../configData';
+import { updateWer } from './configData';
 import { xmlToJson } from './xmlConvertor';
 import { AltoJson, AltoTextBlockJson, AltoStringJson, AltoTextLineJson, AltoPrintSpaceJson, AltoPageJson } from '../../renderer/types/alto';
 
