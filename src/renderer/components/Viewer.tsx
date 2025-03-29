@@ -58,6 +58,8 @@ const Viewer: FC = () => {
   const { imageSrc } = useEditor();
   const { imageOpacity, show } = settings;
 
+  console.log(alto);
+
   useEffect(() => {
     setTextLines([]);
     let uniqueIdCounter = 0; // Add a counter for generating unique IDs

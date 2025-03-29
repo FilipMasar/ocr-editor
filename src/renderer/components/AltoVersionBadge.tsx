@@ -8,6 +8,7 @@ interface AltoVersionBadgeProps {
 
 const AltoVersionBadge: FC<AltoVersionBadgeProps> = ({ showTooltip = true }) => {
   const { altoVersion } = useAlto();
+  console.log(altoVersion);
   
   if (!altoVersion) {
     return null;
@@ -40,6 +41,8 @@ const AltoVersionBadge: FC<AltoVersionBadgeProps> = ({ showTooltip = true }) => 
   if (!showTooltip) {
     return badge;
   }
+
+  console.log(altoVersion);
   
   return (
     <Tooltip

@@ -46,17 +46,23 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isFreshPage, setIsFreshPage] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [initialAlto, setInitialAlto] = useState<AltoJson | null>(null);
   const { alto, setAlto, setAltoVersion, setValidationStatus } = useAlto();
 
   useEffect(() => {
-    if (setAlto !== undefined) {
+    if (alto && initialAlto) {
       if (isFreshPage) {
         setIsFreshPage(false);
       } else {
-        setUnsavedChanges(true);
+        // Only set unsavedChanges true if alto is different from initialAlto
+        const currentJSON = JSON.stringify(alto);
+        const initialJSON = JSON.stringify(initialAlto);
+        if (currentJSON !== initialJSON) {
+          setUnsavedChanges(true);
+        }
       }
     }
-  }, [setAlto, isFreshPage, setUnsavedChanges, setIsFreshPage]);
+  }, [alto, initialAlto, isFreshPage, setUnsavedChanges, setIsFreshPage]);
 
   const requestPageAssets = useCallback(
     (imageFileName: string, altoFileName: string) => {
@@ -92,6 +98,7 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
       (payload) => {
         setImageSrc(payload.imageUri);
         setAlto(payload.altoJson);
+        setInitialAlto(JSON.parse(JSON.stringify(payload.altoJson))); // Make a deep copy
         
         // Set ALTO version and validation status if available
         if (payload.altoVersion) {
@@ -116,6 +123,9 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         if (payload?.validation) {
           setValidationStatus(payload.validation);
         }
+        
+        // Update initialAlto to current alto state
+        setInitialAlto(JSON.parse(JSON.stringify(alto)));
         
         setTimeout(() => {
           setSaving(false);
@@ -145,7 +155,9 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
     setIsFreshPage, 
     setUnsavedChanges, 
     setLoading,
-    setSaving
+    setSaving,
+    setInitialAlto,
+    alto
   ]);
 
   return (
