@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { useSettings } from '../context/app/SettingsContext';
 import { useAlto } from '../context/app/AltoContext';
 import { useEditor } from '../context/editor/EditorContext';
-import { addMetadata, toNumber } from '../utils/alto';
+import { addMetadata, convertToPixels } from '../utils/alto';
 import { getTextBlocksFromComposedBlock } from '../utils/composedBlockUtils';
 import GraphicalElement from './elements/GraphicalElement';
 import Illustration from './elements/Illustration';
@@ -53,6 +53,7 @@ const Viewer: FC = () => {
     textBlocks,
     composedBlocks,
     alto,
+    measurementUnit,
   } = useAlto();
   const { settings } = useSettings();
   const { imageSrc } = useEditor();
@@ -124,7 +125,7 @@ const Viewer: FC = () => {
         const otherMetadata = {
           ...textLine.metadata,
           textLineIndex: textLine.metadata.index,
-          lineVPos: toNumber(textLine.element['@_VPOS']),
+          lineVPos: convertToPixels(textLine.element['@_VPOS'], measurementUnit),
           uniqueId: uniqueIdCounter++, // Add a unique ID to each string's metadata
         };
 
@@ -138,7 +139,7 @@ const Viewer: FC = () => {
         ]);
       }
     }
-  }, [textLines]);
+  }, [textLines, measurementUnit]);
 
   // Check for valid page dimensions - provide a better error message
   if (pageDimensions.height === null) {
@@ -214,10 +215,10 @@ const Viewer: FC = () => {
 
       {show.printSpace && printSpace && (
         <PrintSpace
-          top={toNumber(printSpace['@_VPOS'])}
-          left={toNumber(printSpace['@_HPOS'])}
-          width={toNumber(printSpace['@_WIDTH'])}
-          height={toNumber(printSpace['@_HEIGHT'])}
+          top={convertToPixels(printSpace['@_VPOS'], measurementUnit)}
+          left={convertToPixels(printSpace['@_HPOS'], measurementUnit)}
+          width={convertToPixels(printSpace['@_WIDTH'], measurementUnit)}
+          height={convertToPixels(printSpace['@_HEIGHT'], measurementUnit)}
         />
       )}
 
@@ -309,11 +310,11 @@ const Viewer: FC = () => {
         <div
           style={{
             position: 'absolute',
-            top: toNumber(printSpace['@_VPOS']),
+            top: convertToPixels(printSpace['@_VPOS'], measurementUnit),
             left:
-              toNumber(printSpace['@_HPOS']) + toNumber(printSpace['@_WIDTH']),
-            width: toNumber(printSpace['@_WIDTH']),
-            height: toNumber(printSpace['@_HEIGHT']),
+              convertToPixels(printSpace['@_HPOS'], measurementUnit) + convertToPixels(printSpace['@_WIDTH'], measurementUnit),
+            width: convertToPixels(printSpace['@_WIDTH'], measurementUnit),
+            height: convertToPixels(printSpace['@_HEIGHT'], measurementUnit),
           }}
         >
           {settings.show.textNext && renderEditableBlocks()}

@@ -11,14 +11,49 @@ import {
 } from '../types/alto';
 
 /**
- * Converts a string value to a number
- * Returns 0 if conversion is not possible
+ * Type for ALTO measurement units
  */
-export const toNumber = (value: any): number => {
-  if (value === null || value === undefined) return 0;
+export type MeasurementUnit = 'pixel' | 'mm10' | 'inch1200';
 
+/**
+ * Gets the measurement unit from the ALTO document
+ * Falls back to 'pixel' if not specified
+ */
+export const getMeasurementUnit = (altoJson: AltoJson): MeasurementUnit => {
+  try {
+    const unit = altoJson?.alto?.Description?.MeasurementUnit?.['#text'] as MeasurementUnit;
+    if (unit === 'mm10' || unit === 'inch1200') {
+      return unit;
+    }
+    return 'pixel';
+  } catch (e) {
+    return 'pixel';
+  }
+};
+
+/**
+ * Converts a value from the document's measurement unit to pixels
+ * - mm10: 1/10 of a millimeter (1mm = 3.779528px, so 1mm10 = 0.3779528px)
+ * - inch1200: 1/1200 of an inch (1inch = 96px, so 1inch1200 = 0.08px)
+ * - pixel: no conversion needed
+ */
+export const convertToPixels = (value: any, unit: MeasurementUnit): number => {
+  if (value === null || value === undefined) return 0;
+  
   const n = Number(value);
-  return isNaN(n) ? 0 : n;
+  if (isNaN(n)) return 0;
+  
+  switch (unit) {
+    case 'mm10':
+      // 1mm = 3.779528px, so 1mm10 = 0.3779528px
+      return n * 0.3779528;
+    case 'inch1200':
+      // 1inch = 96px, so 1inch1200 = 0.08px
+      return n * 0.08;
+    case 'pixel':
+    default:
+      return n;
+  }
 };
 
 /**

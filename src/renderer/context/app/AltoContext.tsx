@@ -10,20 +10,21 @@ import {
   useState,
 } from 'react';
 import { PageDimensions, TextStyle } from '../../types/app';
-import { addMetadata, toNumber, getFirstPage } from '../../utils/alto';
-import { updateComposedBlockInAlto } from '../../utils/composedBlockUtils';
+import { 
+  getFirstPage, 
+  getMeasurementUnit, 
+  convertToPixels,
+  MeasurementUnit 
+} from '../../utils/alto';
 import { 
   AltoJson, 
   AltoTextBlockJson, 
   AltoTextLineJson, 
-  AltoStringJson, 
   AltoGraphicalElementJson, 
   AltoIllustrationJson,
   AltoComposedBlockJson,
   AltoPrintSpaceJson,
-  AltoPageJson,
   AltoTextStyleJson,
-  AltoDocumentJson
 } from '../../types/alto';
 import { ValidationStatus } from '../../../shared/ipc/editor-channel';
 
@@ -56,6 +57,7 @@ interface AltoProviderValue {
   setAltoVersion: Dispatch<SetStateAction<string | undefined>>;
   validationStatus?: ValidationStatus;
   setValidationStatus: Dispatch<SetStateAction<ValidationStatus | undefined>>;
+  measurementUnit: MeasurementUnit;
   updateGraphicalElement: (graphicalElement: AltoGraphicalElementJson, index: number) => void;
   updateIllustration: (illustration: AltoIllustrationJson, index: number) => void;
   updateTextBlock: (textBlock: AltoTextBlockJson, index: number) => void;
@@ -115,6 +117,7 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
   const [composedBlocks, setComposedBlocks] = useState<AltoElement<AltoComposedBlockJson>[]>([]);
   const [altoVersion, setAltoVersion] = useState<string | undefined>();
   const [validationStatus, setValidationStatus] = useState<ValidationStatus | undefined>();
+  const [measurementUnit, setMeasurementUnit] = useState<MeasurementUnit>('pixel');
 
   // Process ALTO document when it changes
   useEffect(() => {
@@ -130,18 +133,22 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     try {
+      // Determine measurement unit from the document
+      const unit = getMeasurementUnit(alto);
+      setMeasurementUnit(unit);
+
       const page = getFirstPage(alto);
       if (!page) return;
 
       // Extract dimensions with fallback logic
       // Try to get dimensions from Page element first
-      let width = toNumber(page['@_WIDTH']);
-      let height = toNumber(page['@_HEIGHT']);
+      let width = convertToPixels(page['@_WIDTH'], unit);
+      let height = convertToPixels(page['@_HEIGHT'], unit);
       
       // If page dimensions are missing, try to get from PrintSpace
       if ((width === 0 || height === 0) && page.PrintSpace) {
-        width = toNumber(page.PrintSpace['@_WIDTH']) || width;
-        height = toNumber(page.PrintSpace['@_HEIGHT']) || height;
+        width = convertToPixels(page.PrintSpace['@_WIDTH'], unit) || width;
+        height = convertToPixels(page.PrintSpace['@_HEIGHT'], unit) || height;
       }
       
       // Last resort: If dimensions are still missing, try to calculate from TextBlocks
@@ -154,8 +161,8 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
         let maxBottom = 0;
         
         blocks.forEach(block => {
-          const blockRight = toNumber(block['@_HPOS']) + toNumber(block['@_WIDTH']);
-          const blockBottom = toNumber(block['@_VPOS']) + toNumber(block['@_HEIGHT']);
+          const blockRight = convertToPixels(block['@_HPOS'], unit) + convertToPixels(block['@_WIDTH'], unit);
+          const blockBottom = convertToPixels(block['@_VPOS'], unit) + convertToPixels(block['@_HEIGHT'], unit);
           
           maxRight = Math.max(maxRight, blockRight);
           maxBottom = Math.max(maxBottom, blockBottom);
@@ -623,6 +630,7 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
         setAltoVersion,
         validationStatus,
         setValidationStatus,
+        measurementUnit,
         updateGraphicalElement,
         updateIllustration,
         updateTextBlock,

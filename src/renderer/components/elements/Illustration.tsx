@@ -2,7 +2,7 @@ import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
 import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useAlto } from '../../context/app/AltoContext';
-import { toNumber } from '../../utils/alto';
+import { convertToPixels } from '../../utils/alto';
 import { AltoIllustrationJson } from '../../types/alto';
 
 interface IllustrationMetadata {
@@ -19,13 +19,13 @@ interface IllustrationProps {
 
 const Illustration: FC<IllustrationProps> = ({ element, metadata }) => {
   const { ref, hovered } = useHover();
-  const { updateIllustration } = useAlto();
+  const { updateIllustration, measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
 
   const handleClick = () => {
     openAltoEditor(

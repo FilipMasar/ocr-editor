@@ -3,7 +3,8 @@ import { FC, useEffect, useState } from 'react';
 import { useSettings } from '../../context/app/SettingsContext';
 import { useAlto } from '../../context/app/AltoContext';
 import { TextStyle } from '../../types/app';
-import { toNumber } from '../../utils/alto';
+import { convertToPixels } from '../../utils/alto';
+import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoStringJson } from '../../types/alto';
 
 const defaultStyle: TextStyle = {
@@ -25,15 +26,16 @@ interface StringProps {
 
 const String: FC<StringProps> = ({ element, metadata }) => {
   const { ref, hovered } = useHover();
-  const { styles } = useAlto();
+  const { styles, measurementUnit } = useAlto();
   const { settings } = useSettings();
   const { show } = settings;
   const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle);
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
+  // Convert coordinates using the current measurement unit
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
   const text = element['@_CONTENT'];
 
   useEffect(() => {
@@ -102,7 +104,7 @@ const String: FC<StringProps> = ({ element, metadata }) => {
             justifyContent: 'space-around',
             alignItems: 'flex-start',
             position: 'absolute',
-            top: metadata.lineVPos - 20,
+            top: convertToPixels(metadata.lineVPos, measurementUnit) - 20,
             left,
             width,
           }}
@@ -118,4 +120,4 @@ const String: FC<StringProps> = ({ element, metadata }) => {
   );
 };
 
-export default String;
+export default withErrorBoundary(String, 'String');

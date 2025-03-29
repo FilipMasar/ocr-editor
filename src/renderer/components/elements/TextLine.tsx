@@ -4,7 +4,8 @@ import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useTextEditor } from '../../context/editor/AltoTextEditorContext';
 import { useSettings } from '../../context/app/SettingsContext';
 import { useAlto } from '../../context/app/AltoContext';
-import { getStringsFromLine, toNumber } from '../../utils/alto';
+import { getStringsFromLine, convertToPixels } from '../../utils/alto';
+import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextLineJson } from '../../types/alto';
 
 interface TextLineMetadata {
@@ -23,15 +24,16 @@ interface TextLineProps {
 const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
   const { ref, hovered } = useHover();
   const [text, setText] = useState<string>();
-  const { updateTextLine } = useAlto();
+  const { updateTextLine, measurementUnit } = useAlto();
   const { settings } = useSettings();
   const { openAltoEditor } = useAltoEditor();
   const { openTextEditor } = useTextEditor();
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
+  // Convert coordinates using the current measurement unit
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
 
   useEffect(() => {
     const strings = getStringsFromLine(element);
@@ -99,4 +101,4 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
   );
 };
 
-export default TextLine;
+export default withErrorBoundary(TextLine, 'TextLine');

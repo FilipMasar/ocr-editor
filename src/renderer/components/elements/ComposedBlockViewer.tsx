@@ -7,8 +7,9 @@ import {
   getGraphicalElementsFromComposedBlock, 
   getTextFromComposedBlock
 } from '../../utils/composedBlockUtils';
-import { ensureArray, toNumber } from '../../utils/alto';
+import { convertToPixels, ensureArray } from '../../utils/alto';
 import { ChevronDown, ChevronRight, Edit, Eye, Type } from 'react-feather';
+import { useAlto } from '../../context/app/AltoContext';
 
 interface ComposedBlockViewerProps {
   composedBlock: AltoComposedBlockJson;
@@ -27,6 +28,7 @@ const ComposedBlockViewer: FC<ComposedBlockViewerProps> = ({
   onClose,
   onEditElement 
 }) => {
+  const { measurementUnit } = useAlto();
   const [expandedBlock, setExpandedBlock] = useState<string | null>(null);
   
   // Extract information from the ComposedBlock
@@ -38,8 +40,8 @@ const ComposedBlockViewer: FC<ComposedBlockViewerProps> = ({
   // Format basic info about the ComposedBlock
   const type = composedBlock['@_TYPE'] || 'Unknown';
   const id = composedBlock['@_ID'] || 'No ID';
-  const width = toNumber(composedBlock['@_WIDTH']);
-  const height = toNumber(composedBlock['@_HEIGHT']);
+  const width = convertToPixels(composedBlock['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(composedBlock['@_HEIGHT'], measurementUnit);
   const stylerefs = composedBlock['@_STYLEREFS'] || 'None';
   
   // Function to render a nested ComposedBlock
@@ -68,7 +70,6 @@ const ComposedBlockViewer: FC<ComposedBlockViewerProps> = ({
         <Accordion.Panel>
           <Stack spacing="xs">
             <Group position="apart">
-              <Text size="sm">Dimensions: {toNumber(nestedBlock['@_WIDTH'])}×{toNumber(nestedBlock['@_HEIGHT'])}</Text>
               {onEditElement && (
                 <Button 
                   size="xs" 

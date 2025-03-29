@@ -1,4 +1,7 @@
 import { FC } from 'react';
+import { useAlto } from '../../context/app/AltoContext';
+import { convertToPixels } from '../../utils/alto';
+import { withErrorBoundary } from '../../utils/withErrorBoundary';
 
 interface PrintSpaceProps {
   top: number;
@@ -8,6 +11,7 @@ interface PrintSpaceProps {
 }
 
 const PrintSpace: FC<PrintSpaceProps> = ({ top, left, width, height }) => {
+  // PrintSpace coordinates are already converted in Viewer.tsx
   return (
     <div
       style={{
@@ -16,10 +20,10 @@ const PrintSpace: FC<PrintSpaceProps> = ({ top, left, width, height }) => {
         left,
         width,
         height,
-        border: '1px black solid',
+        border: '1px solid blue',
       }}
     />
   );
 };
 
-export default PrintSpace;
+export default withErrorBoundary(PrintSpace, 'PrintSpace');

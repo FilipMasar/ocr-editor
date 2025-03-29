@@ -1,10 +1,10 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Dialog, Notification } from '@mantine/core';
-import { toNumber } from '../../utils/alto';
+import { convertToPixels } from '../../utils/alto';
 import { Minus, Plus, X } from 'react-feather';
 import { useSettings } from '../../context/app/SettingsContext';
 import { useAlto } from '../../context/app/AltoContext';
-import { AltoTextLineJson, AltoStringJson, AltoHyphen } from '../../types/alto';
+import { AltoTextLineJson, AltoHyphen } from '../../types/alto';
 
 interface AltoElement<T> {
   element: T;
@@ -36,7 +36,7 @@ const EditableLine: FC<EditableLineProps> = ({
 }) => {
   const [textLineElement, setTextLineElement] = useState<AltoTextLineJson>(textLine.element);
   const ref = useRef<HTMLDivElement>(null);
-  const { updateString, updateTextLine } = useAlto();
+  const { updateString, updateTextLine, measurementUnit } = useAlto();
   const [error, setError] = useState<string | undefined>();
   const { settings } = useSettings();
 
@@ -183,11 +183,11 @@ const EditableLine: FC<EditableLineProps> = ({
               showTextNext
                 ? {
                     position: 'absolute',
-                    top: toNumber(textLineElement['@_VPOS']),
-                    left: toNumber(textLineElement['@_HPOS']),
-                    width: toNumber(textLineElement['@_WIDTH']),
-                    height: toNumber(textLineElement['@_HEIGHT']),
-                    fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
+                    top: convertToPixels(textLineElement['@_VPOS'], measurementUnit),
+                    left: convertToPixels(textLineElement['@_HPOS'], measurementUnit),
+                    width: convertToPixels(textLineElement['@_WIDTH'], measurementUnit),
+                    height: convertToPixels(textLineElement['@_HEIGHT'], measurementUnit),
+                    fontSize: convertToPixels(textLineElement['@_HEIGHT'], measurementUnit) * 0.8,
                     backgroundColor: textLine.metadata.source === 'composedBlock' 
                       ? 'rgba(128, 0, 128, 0.1)' // Light purple for composed block text
                       : (error && 'rgba(255, 0, 0, 0.5)'),
@@ -218,13 +218,13 @@ const EditableLine: FC<EditableLineProps> = ({
                 backgroundColor: 'rgba(0,255,0,0.7)',
                 ...(showTextNext && {
                   position: 'absolute',
-                  top: toNumber(textLineElement['@_VPOS']),
+                  top: convertToPixels(textLineElement['@_VPOS'], measurementUnit),
                   left:
-                    toNumber(textLineElement['@_HPOS']) +
-                    toNumber(textLineElement['@_WIDTH']),
-                  width: toNumber(textLineElement['@_HEIGHT']) * 0.3,
-                  height: toNumber(textLineElement['@_HEIGHT']),
-                  fontSize: toNumber(textLineElement['@_HEIGHT']) * 0.8,
+                    convertToPixels(textLineElement['@_HPOS'], measurementUnit) +
+                    convertToPixels(textLineElement['@_WIDTH'], measurementUnit),
+                  width: convertToPixels(textLineElement['@_HEIGHT'], measurementUnit) * 0.3,
+                  height: convertToPixels(textLineElement['@_HEIGHT'], measurementUnit),
+                  fontSize: convertToPixels(textLineElement['@_HEIGHT'], measurementUnit) * 0.8,
                 }),
               }}
             >

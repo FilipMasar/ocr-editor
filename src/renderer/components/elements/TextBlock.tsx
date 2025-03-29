@@ -3,7 +3,8 @@ import { FC, useEffect } from 'react';
 import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useTextEditor } from '../../context/editor/AltoTextEditorContext';
 import { useAlto } from '../../context/app/AltoContext';
-import { toNumber } from '../../utils/alto';
+import { convertToPixels } from '../../utils/alto';
+import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextBlockJson } from '../../types/alto';
 
 interface TextBlockMetadata {
@@ -21,14 +22,15 @@ interface TextBlockProps {
 const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
   const { ref, hovered } = useHover();
 
-  const { updateTextBlock } = useAlto();
+  const { updateTextBlock, measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const { openTextEditor } = useTextEditor();
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
+  // Convert coordinates using the current measurement unit
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -80,4 +82,4 @@ const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
   );
 };
 
-export default TextBlock;
+export default withErrorBoundary(TextBlock, 'TextBlock');

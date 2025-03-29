@@ -2,7 +2,7 @@ import { useHover } from '@mantine/hooks';
 import { FC, useCallback, useState, useEffect } from 'react';
 import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useAlto } from '../../context/app/AltoContext';
-import { toNumber } from '../../utils/alto';
+import { convertToPixels } from '../../utils/alto';
 import ComposedBlockDetails from './ComposedBlockDetails';
 import ComposedBlockViewer from './ComposedBlockViewer';
 import { 
@@ -30,14 +30,14 @@ interface ComposedBlockProps {
 
 const ComposedBlock: FC<ComposedBlockProps> = ({ element, metadata }) => {
   const { ref, hovered } = useHover();
-  const { updateComposedBlock } = useAlto();
+  const { updateComposedBlock, measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const [viewerOpen, setViewerOpen] = useState(false);
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
   const type = element['@_TYPE'] || 'Unknown';
 
   const handleClick = useCallback((event: MouseEvent) => {
