@@ -14,7 +14,14 @@ import {
   getFirstPage, 
   getMeasurementUnit, 
   convertToPixels,
-  MeasurementUnit 
+  MeasurementUnit, 
+  getAllIllustrations,
+  getAllGraphicalElements,
+  getAllTextBlocks,
+  getAllComposedBlocks,
+  getAllTextLines,
+  getAllStrings,
+  getAllMargins
 } from '../../utils/alto';
 import { 
   AltoJson, 
@@ -25,10 +32,14 @@ import {
   AltoComposedBlockJson,
   AltoPrintSpaceJson,
   AltoTextStyleJson,
+  AltoStringJson,
+  AltoPageJson,
+  AltoMarginJson,
 } from '../../types/alto';
 import { ValidationStatus } from '../../../shared/ipc/editor-channel';
 
 /**
+ * TODO remove
  * Represents an ALTO element with its metadata
  */
 interface AltoElement<T> {
@@ -48,11 +59,15 @@ interface AltoProviderValue {
   styles: Record<string, TextStyle>;
   setStyles: Dispatch<SetStateAction<Record<string, TextStyle>>>;
   pageDimensions: PageDimensions;
+  page: AltoPageJson | undefined;
+  margins: AltoMarginJson[];
   printSpace: AltoPrintSpaceJson | undefined;
-  illustrations: AltoElement<AltoIllustrationJson>[];
-  graphicalElements: AltoElement<AltoGraphicalElementJson>[];
-  textBlocks: AltoElement<AltoTextBlockJson>[];
-  composedBlocks: AltoElement<AltoComposedBlockJson>[];
+  illustrations: AltoIllustrationJson[];
+  graphicalElements: AltoGraphicalElementJson[];
+  textBlocks: AltoTextBlockJson[];
+  composedBlocks: AltoComposedBlockJson[];
+  textLines: AltoTextLineJson[];
+  textStrings: AltoStringJson[];
   altoVersion?: string;
   setAltoVersion: Dispatch<SetStateAction<string | undefined>>;
   validationStatus?: ValidationStatus;
@@ -100,24 +115,26 @@ export const useAlto = () => useContext(AltoContext);
  * Provider component for the ALTO context
  */
 const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [alto, setAlto] = useState<AltoJson>({ 
-    alto: { 
-      Layout: {} // Adding required Layout property
-    } 
-  });
+  const [alto, setAlto] = useState<AltoJson>();
   const [styles, setStyles] = useState<Record<string, TextStyle>>({});
   const [pageDimensions, setPageDimensions] = useState<PageDimensions>({
     width: 0,
     height: null,
   });
-  const [printSpace, setPrintSpace] = useState<AltoPrintSpaceJson | undefined>();
-  const [illustrations, setIllustrations] = useState<AltoElement<AltoIllustrationJson>[]>([]);
-  const [graphicalElements, setGraphicalElements] = useState<AltoElement<AltoGraphicalElementJson>[]>([]);
-  const [textBlocks, setTextBlocks] = useState<AltoElement<AltoTextBlockJson>[]>([]);
-  const [composedBlocks, setComposedBlocks] = useState<AltoElement<AltoComposedBlockJson>[]>([]);
   const [altoVersion, setAltoVersion] = useState<string | undefined>();
   const [validationStatus, setValidationStatus] = useState<ValidationStatus | undefined>();
   const [measurementUnit, setMeasurementUnit] = useState<MeasurementUnit>('pixel');
+
+  // Elements
+  const [page, setPage] = useState<AltoPageJson | undefined>();
+  const [margins, setMargins] = useState<AltoMarginJson[]>([]);
+  const [printSpace, setPrintSpace] = useState<AltoPrintSpaceJson | undefined>();
+  const [illustrations, setIllustrations] = useState<AltoIllustrationJson[]>([]);
+  const [graphicalElements, setGraphicalElements] = useState<AltoGraphicalElementJson[]>([]);
+  const [textBlocks, setTextBlocks] = useState<AltoTextBlockJson[]>([]);
+  const [composedBlocks, setComposedBlocks] = useState<AltoComposedBlockJson[]>([]);
+  const [textLines, setTextLines] = useState<AltoTextLineJson[]>([]);
+  const [textStrings, setTextStrings] = useState<AltoStringJson[]>([]);
 
   // Process ALTO document when it changes
   useEffect(() => {
@@ -138,18 +155,20 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
       const unit = getMeasurementUnit(alto);
       setMeasurementUnit(unit);
 
-      const page = getFirstPage(alto);
-      if (!page) return;
+      const firstPage = getFirstPage(alto);
+      if (!firstPage) return;
+
+      setPage(firstPage);
 
       // Extract dimensions with fallback logic
       // Try to get dimensions from Page element first
-      let width = convertToPixels(page['@_WIDTH'], unit);
-      let height = convertToPixels(page['@_HEIGHT'], unit);
+      let width = convertToPixels(firstPage['@_WIDTH'], unit);
+      let height = convertToPixels(firstPage['@_HEIGHT'], unit);
       
       // If page dimensions are missing, try to get from PrintSpace
-      if ((width === 0 || height === 0) && page.PrintSpace) {
-        width = convertToPixels(page.PrintSpace['@_WIDTH'], unit);
-        height = convertToPixels(page.PrintSpace['@_HEIGHT'], unit);
+      if ((width === 0 || height === 0) && firstPage.PrintSpace) {
+        width = convertToPixels(firstPage.PrintSpace['@_WIDTH'], unit);
+        height = convertToPixels(firstPage.PrintSpace['@_HEIGHT'], unit);
       }
       
       // TODO remove
@@ -179,71 +198,14 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
         setPageDimensions({ width, height });
       }
 
-      // Set print space
-      setPrintSpace(page.PrintSpace);
-
-      // Extract and process page elements
-      // Illustrations
-      const illustrations = page.PrintSpace?.Illustration || [];
-      const illus = Array.isArray(illustrations) 
-        ? illustrations.map((item: AltoIllustrationJson, index: number) => ({
-            element: item,
-            metadata: { index },
-          }))
-        : [{ element: illustrations, metadata: { index: 0 } }];
-      setIllustrations(illus);
-
-      // Graphical elements
-      const graphicalElements = page.PrintSpace?.GraphicalElement || [];
-      const graphicals = Array.isArray(graphicalElements)
-        ? graphicalElements.map((item: AltoGraphicalElementJson, index: number) => ({
-            element: item,
-            metadata: { index },
-          }))
-        : [{ element: graphicalElements, metadata: { index: 0 } }];
-      setGraphicalElements(graphicals);
-
-      // Text blocks
-      const textBlocks = page.PrintSpace?.TextBlock || [];
-      if (Array.isArray(textBlocks)) {
-        const processedBlocks = textBlocks.map((item, index) => ({
-          element: item,
-          metadata: { 
-            index, 
-            '@_STYLEREFS': item['@_STYLEREFS'] 
-          },
-        }));
-        setTextBlocks(processedBlocks);
-      } else {
-        setTextBlocks([{
-          element: textBlocks,
-          metadata: { 
-            index: 0, 
-            '@_STYLEREFS': textBlocks['@_STYLEREFS'] 
-          },
-        }]);
-      }
-
-      // Composed blocks
-      const composedBlocks = page.PrintSpace?.ComposedBlock || [];
-      if (Array.isArray(composedBlocks)) {
-        const processedBlocks = composedBlocks.map((item, index) => ({
-          element: item,
-          metadata: { 
-            index, 
-            '@_STYLEREFS': item['@_STYLEREFS'] 
-          },
-        }));
-        setComposedBlocks(processedBlocks);
-      } else {
-        setComposedBlocks([{
-          element: composedBlocks,
-          metadata: { 
-            index: 0, 
-            '@_STYLEREFS': composedBlocks['@_STYLEREFS'] 
-          },
-        }]);
-      }
+      setPrintSpace(firstPage.PrintSpace);
+      setMargins(getAllMargins(alto));
+      setIllustrations(getAllIllustrations(alto));
+      setGraphicalElements(getAllGraphicalElements(alto));
+      setTextBlocks(getAllTextBlocks(alto));
+      setComposedBlocks(getAllComposedBlocks(alto));
+      setTextLines(getAllTextLines(alto));
+      setTextStrings(getAllStrings(alto));
 
       // Extract styles
       const stylesMap: Record<string, TextStyle> = {};
@@ -623,11 +585,15 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
         styles,
         setStyles,
         pageDimensions,
+        page,
+        margins,
         printSpace,
         illustrations,
         graphicalElements,
         textBlocks,
         composedBlocks,
+        textLines,
+        textStrings,
         altoVersion,
         setAltoVersion,
         validationStatus,

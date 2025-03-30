@@ -1,14 +1,14 @@
 import { FC } from 'react';
 import { useAlto } from '../../context/app/AltoContext';
 import { convertToPixels } from '../../utils/alto';
-import { AltoPrintSpaceJson } from '../../types/alto';
+import { AltoMarginJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
 
-interface PrintSpaceProps {
-  element: AltoPrintSpaceJson;
+interface MarginProps {
+  element: AltoMarginJson;
 }
 
-const PrintSpace: FC<PrintSpaceProps> = ({ element }) => {
+const Margin: FC<MarginProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
 
@@ -26,8 +26,8 @@ const PrintSpace: FC<PrintSpaceProps> = ({ element }) => {
         left,
         width,
         height,
-        border: '1px solid blue',
-        backgroundColor: hovered ? 'blue' : 'transparent',
+        border: '1px solid teal',
+        backgroundColor: hovered ? 'teal' : 'transparent',
         opacity: hovered ? 0.5 : 1,
         cursor: 'pointer',
       }}
@@ -35,4 +35,4 @@ const PrintSpace: FC<PrintSpaceProps> = ({ element }) => {
   );
 };
 
-export default PrintSpace;
+export default Margin;

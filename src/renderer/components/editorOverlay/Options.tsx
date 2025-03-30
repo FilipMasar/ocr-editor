@@ -84,6 +84,32 @@ const Options: FC = () => {
               <Paper p="sm">
                 <Text mb="xs">Display elements:</Text>
                 <Checkbox
+                  label="Page"
+                  checked={settings.show.page}
+                  onChange={(e) =>
+                    setSettings((old) => ({
+                      ...old,
+                      show: {
+                        ...old.show,
+                        page: e.target.checked,
+                      },
+                    }))
+                  }
+                />
+                <Checkbox
+                  label="Margins"
+                  checked={settings.show.margins}
+                  onChange={(e) =>
+                    setSettings((old) => ({
+                      ...old,
+                      show: {
+                        ...old.show,
+                        margins: e.target.checked,
+                      },
+                    }))
+                  }
+                />
+                <Checkbox
                   label="Print Space"
                   checked={settings.show.printSpace}
                   onChange={(e) =>

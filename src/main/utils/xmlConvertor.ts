@@ -44,12 +44,6 @@ export const xmlToJson = (xml: string): AltoJson => {
           Page: {
             '@_WIDTH': '0',
             '@_HEIGHT': '0',
-            PrintSpace: {
-              '@_HPOS': '0',
-              '@_VPOS': '0',
-              '@_WIDTH': '0',
-              '@_HEIGHT': '0'
-            }
           }
         }
       }
@@ -171,6 +165,33 @@ export const validateAltoV3 = (xml: string): ValidationResult => {
   }
 };
 
+function addCustomId(json: any): any {
+  // Check if json is an array
+  if (Array.isArray(json)) {
+    json.forEach((item) => addCustomId(item));
+  } else if (json && typeof json === 'object') {
+    // Add a new unique ID to the current object
+    json['@_CUSTOM_ID'] = generateUniqueId();
+
+    // Iterate over each key (skip the newly added ID to avoid recursion on it)
+    Object.keys(json).forEach((key) => {
+      if (key !== '@_CUSTOM_ID') {
+        addCustomId(json[key]);
+      }
+    });
+  }
+  return json;
+}
+
+/**
+ * Generates a unique ID
+ * TODO: consider using a more robust method. Eg. using a UUID
+ * @returns {string} A unique ID
+ */
+function generateUniqueId(): string {
+  return '_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+}
+
 /**
  * Parse and validate ALTO XML
  * Returns the parsed JSON and validation info
@@ -179,7 +200,8 @@ export const parseAndValidateAlto = (xml: string): ParseAndValidateResult => {
   try {
     const version = detectAltoVersion(xml);
     const json = xmlToJson(xml);
-    
+    const jsonWithCustomIds = addCustomId(json);
+
     // Validate if it's version 3
     let validation: ValidationResult = { valid: true };
     if (version && version.startsWith('3.')) {
@@ -190,7 +212,7 @@ export const parseAndValidateAlto = (xml: string): ParseAndValidateResult => {
     }
     
     return {
-      json,
+      json: jsonWithCustomIds,
       validation,
       version
     };

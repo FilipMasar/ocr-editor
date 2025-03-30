@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Dialog, Notification } from '../common';
+import { Notification } from './common';
+import { Dialog } from '@mantine/core';
 
 interface ErrorDialogProps {
   /**
@@ -21,18 +22,23 @@ interface ErrorDialogProps {
 /**
  * Error dialog component for displaying error messages
  */
-const ErrorDialog: FC<ErrorDialogProps> = ({ message, opened, onClose }) => {
+export const ErrorDialog: FC<ErrorDialogProps> = ({ message, opened, onClose }) => {
   return (
-    <Dialog opened={opened} onClose={onClose}>
+    <Dialog
+      opened={opened}
+      p={0}
+      shadow='0'
+      withBorder={false}
+      position={{ top: 20, right: 20 }}
+    >
       <Notification
         type="error"
         title="Error"
-        disableClose
+        px="md"
+        onClose={onClose}
       >
         {message || 'An unknown error occurred.'}
       </Notification>
     </Dialog>
   );
 };
-
-export default ErrorDialog; 

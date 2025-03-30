@@ -1,6 +1,8 @@
 export type Settings = {
   imageOpacity: number;
   show: {
+    page: boolean;
+    margins: boolean;
     printSpace: boolean;
     illustrations: boolean;
     graphicalElements: boolean;

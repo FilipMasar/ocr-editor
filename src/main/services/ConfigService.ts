@@ -22,6 +22,8 @@ import {
 const defaultSettings: Settings = {
   imageOpacity: 100,
   show: {
+    page: true,
+    margins: true,
     printSpace: true,
     illustrations: true,
     graphicalElements: true,

@@ -7,19 +7,11 @@ import { convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextBlockJson } from '../../types/alto';
 
-interface TextBlockMetadata {
-  index: number;
-  source?: string;
-  isEditable?: boolean;
-  [key: string]: any; // Maintain compatibility with other properties
-}
-
 interface TextBlockProps {
   element: AltoTextBlockJson;
-  metadata: TextBlockMetadata;
 }
 
-const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
+const TextBlock: FC<TextBlockProps> = ({ element }) => {
   const { ref, hovered } = useHover();
 
   const { updateTextBlock, measurementUnit } = useAlto();
@@ -37,10 +29,10 @@ const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
       if (event.altKey) {
         openAltoEditor(
           element,
-          () => (updated: AltoTextBlockJson) => updateTextBlock(updated, metadata.index)
+          () => (updated: AltoTextBlockJson) => updateTextBlock(updated, 0)
         );
       } else {
-        openTextEditor('TEXTBLOCK', { element, metadata });
+        openTextEditor('TEXTBLOCK', { element });
       }
     };
 
@@ -56,8 +48,6 @@ const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
     return undefined;
   }, [
     element,
-    metadata,
-    metadata.index,
     openAltoEditor,
     openTextEditor,
     ref,

@@ -7,7 +7,7 @@ import {
   TextEditorProvider,
   useProject
 } from './context';
-import { ErrorDialog } from './components/overlay';
+import { ErrorDialog } from './components/ErrorDialog';
 import { ErrorBoundary, Loader } from './components/common';
 
 // Lazy-loaded pages

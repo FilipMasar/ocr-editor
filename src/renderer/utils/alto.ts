@@ -8,6 +8,8 @@ import {
   AltoPageJson,
   AltoStringJson,
   AltoComposedBlockJson,
+  AltoSpaceJson,
+  AltoMarginJson,
 } from '../types/alto';
 
 /**
@@ -149,8 +151,85 @@ export const getFirstPage = (altoJson: AltoJson): AltoPageJson | undefined => {
 };
 
 /**
+ * Helper function to extract elements from page containers (PrintSpace and margins)
+ * Reduces repetitive code across element extraction functions
+ */
+const extractElementsFromContainers = <T>(
+  page: AltoPageJson,
+  elementType: string,
+  results: T[]
+): void => {
+  // Extract from PrintSpace
+  const printSpace = page.PrintSpace;
+  if (printSpace && (printSpace as any)[elementType]) {
+    results.push(...ensureArray((printSpace as any)[elementType]));
+  }
+  
+  // Extract from margins
+  ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin'].forEach(margin => {
+    const marginElement = page[margin as keyof typeof page];
+    if (marginElement && (marginElement as any)[elementType]) {
+      results.push(...ensureArray((marginElement as any)[elementType]));
+    }
+  });
+};
+
+/**
+ * Helper function to recursively extract elements from ComposedBlocks
+ */
+const extractElementsFromComposedBlocks = <T>(
+  blocks: AltoComposedBlockJson[],
+  elementType: string,
+  results: T[]
+): void => {
+  blocks.forEach(block => {
+    // Get elements directly in this ComposedBlock
+    if ((block as any)[elementType]) {
+      results.push(...ensureArray((block as any)[elementType]));
+    }
+    
+    // Recursively process nested ComposedBlocks
+    if (block.ComposedBlock) {
+      extractElementsFromComposedBlocks(
+        ensureArray(block.ComposedBlock),
+        elementType,
+        results
+      );
+    }
+  });
+};
+
+/**
+ * Helper function to process ComposedBlocks in PrintSpace and margins
+ */
+const processComposedBlocks = <T>(
+  page: AltoPageJson,
+  elementType: string,
+  results: T[]
+): void => {
+  // Get ComposedBlocks from containers
+  const composedBlocks: AltoComposedBlockJson[] = [];
+  
+  // From PrintSpace
+  if (page.PrintSpace?.ComposedBlock) {
+    composedBlocks.push(...ensureArray(page.PrintSpace.ComposedBlock));
+  }
+  
+  // From margins
+  ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin'].forEach(margin => {
+    const marginElement = page[margin as keyof typeof page];
+    if (marginElement && (marginElement as any).ComposedBlock) {
+      composedBlocks.push(...ensureArray((marginElement as any).ComposedBlock));
+    }
+  });
+  
+  // Extract elements from these ComposedBlocks
+  extractElementsFromComposedBlocks(composedBlocks, elementType, results);
+};
+
+/**
  * Extracts all TextBlocks from the ALTO document
- * Searches in PrintSpace and all margins
+ * Searches in PrintSpace, all margins, and ComposedBlocks
  */
 export const getAllTextBlocks = (altoJson: AltoJson): AltoTextBlockJson[] => {
   const page = getFirstPage(altoJson);
@@ -158,25 +237,28 @@ export const getAllTextBlocks = (altoJson: AltoJson): AltoTextBlockJson[] => {
   
   const blocks: AltoTextBlockJson[] = [];
   
-  // Get blocks from PrintSpace
-  if (page.PrintSpace?.TextBlock) {
-    blocks.push(...ensureArray(page.PrintSpace.TextBlock));
-  }
-  
-  // Get blocks from margins
-  ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin'].forEach(margin => {
-    const marginElement = page[margin as keyof typeof page];
-    if (marginElement && (marginElement as any).TextBlock) {
-      blocks.push(...ensureArray((marginElement as any).TextBlock));
-    }
-  });
+  extractElementsFromContainers(page, 'TextBlock', blocks);
+  processComposedBlocks(page, 'TextBlock', blocks);
   
   return blocks;
 };
 
 /**
+ * Extracts all Margins from the ALTO document
+ * Searches in PrintSpace, all margins, and ComposedBlocks
+ */
+export const getAllMargins = (altoJson: AltoJson): AltoMarginJson[] => {
+  const page = getFirstPage(altoJson);
+  if (!page) return [];
+
+  const margins = [page.TopMargin, page.LeftMargin, page.RightMargin, page.BottomMargin].filter(Boolean) as AltoMarginJson[];
+
+  return margins;
+};
+
+/**
  * Extracts all Illustrations from the ALTO document
- * Searches in PrintSpace and all margins
+ * Searches in PrintSpace, all margins, and ComposedBlocks
  */
 export const getAllIllustrations = (altoJson: AltoJson): AltoIllustrationJson[] => {
   const page = getFirstPage(altoJson);
@@ -184,25 +266,15 @@ export const getAllIllustrations = (altoJson: AltoJson): AltoIllustrationJson[] 
   
   const illustrations: AltoIllustrationJson[] = [];
   
-  // Get illustrations from PrintSpace
-  if (page.PrintSpace?.Illustration) {
-    illustrations.push(...ensureArray(page.PrintSpace.Illustration));
-  }
-  
-  // Get illustrations from margins
-  ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin'].forEach(margin => {
-    const marginElement = page[margin as keyof typeof page];
-    if (marginElement && (marginElement as any).Illustration) {
-      illustrations.push(...ensureArray((marginElement as any).Illustration));
-    }
-  });
+  extractElementsFromContainers(page, 'Illustration', illustrations);
+  processComposedBlocks(page, 'Illustration', illustrations);
   
   return illustrations;
 };
 
 /**
  * Extracts all GraphicalElements from the ALTO document
- * Searches in PrintSpace and all margins
+ * Searches in PrintSpace, all margins, and ComposedBlocks
  */
 export const getAllGraphicalElements = (altoJson: AltoJson): AltoGraphicalElementJson[] => {
   const page = getFirstPage(altoJson);
@@ -210,25 +282,15 @@ export const getAllGraphicalElements = (altoJson: AltoJson): AltoGraphicalElemen
   
   const elements: AltoGraphicalElementJson[] = [];
   
-  // Get elements from PrintSpace
-  if (page.PrintSpace?.GraphicalElement) {
-    elements.push(...ensureArray(page.PrintSpace.GraphicalElement));
-  }
-  
-  // Get elements from margins
-  ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin'].forEach(margin => {
-    const marginElement = page[margin as keyof typeof page];
-    if (marginElement && (marginElement as any).GraphicalElement) {
-      elements.push(...ensureArray((marginElement as any).GraphicalElement));
-    }
-  });
+  extractElementsFromContainers(page, 'GraphicalElement', elements);
+  processComposedBlocks(page, 'GraphicalElement', elements);
   
   return elements;
 };
 
 /**
  * Extracts all ComposedBlocks from the ALTO document
- * Searches in PrintSpace and all margins
+ * Searches in PrintSpace, all margins, and includes nested ComposedBlocks
  */
 export const getAllComposedBlocks = (altoJson: AltoJson): AltoComposedBlockJson[] => {
   const page = getFirstPage(altoJson);
@@ -236,20 +298,75 @@ export const getAllComposedBlocks = (altoJson: AltoJson): AltoComposedBlockJson[
   
   const blocks: AltoComposedBlockJson[] = [];
   
-  // Get blocks from PrintSpace
-  if (page.PrintSpace?.ComposedBlock) {
-    blocks.push(...ensureArray(page.PrintSpace.ComposedBlock));
-  }
+  extractElementsFromContainers(page, 'ComposedBlock', blocks);
   
-  // Get blocks from margins
-  ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin'].forEach(margin => {
-    const marginElement = page[margin as keyof typeof page];
-    if (marginElement && (marginElement as any).ComposedBlock) {
-      blocks.push(...ensureArray((marginElement as any).ComposedBlock));
+  // Helper function to recursively find nested ComposedBlocks
+  const extractNestedComposedBlocks = (parentBlocks: AltoComposedBlockJson[]): void => {
+    parentBlocks.forEach(block => {
+      if (block.ComposedBlock) {
+        const nestedBlocks = ensureArray(block.ComposedBlock);
+        blocks.push(...nestedBlocks);
+        // Recursively process deeper nested blocks
+        extractNestedComposedBlocks(nestedBlocks);
+      }
+    });
+  };
+  
+  // Process nested ComposedBlocks
+  extractNestedComposedBlocks(blocks);
+  
+  return blocks;
+};
+
+/**
+ * Extracts all TextLines from the ALTO document
+ * Works by collecting all TextBlocks and extracting TextLines from them
+ */
+export const getAllTextLines = (altoJson: AltoJson): AltoTextLineJson[] => {
+  const textBlocks = getAllTextBlocks(altoJson);
+  const textLines: AltoTextLineJson[] = [];
+  
+  textBlocks.forEach(block => {
+    if (block.TextLine) {
+      textLines.push(...ensureArray(block.TextLine));
     }
   });
   
-  return blocks;
+  return textLines;
+};
+
+/**
+ * Extracts all String elements (words) from the ALTO document
+ * Works by collecting all TextLines and extracting Strings from them
+ */
+export const getAllStrings = (altoJson: AltoJson): AltoStringJson[] => {
+  const textLines = getAllTextLines(altoJson);
+  const strings: AltoStringJson[] = [];
+  
+  textLines.forEach(line => {
+    if (line.String) {
+      strings.push(...ensureArray(line.String));
+    }
+  });
+  
+  return strings;
+};
+
+/**
+ * Extracts all Space elements from the ALTO document
+ * Works by collecting all TextLines and extracting Spaces from them
+ */
+export const getAllSpaces = (altoJson: AltoJson): AltoSpaceJson[] => {
+  const textLines = getAllTextLines(altoJson);
+  const spaces: AltoSpaceJson[] = [];
+  
+  textLines.forEach(line => {
+    if (line.SP) {
+      spaces.push(...ensureArray(line.SP));
+    }
+  });
+  
+  return spaces;
 };
 
 /**

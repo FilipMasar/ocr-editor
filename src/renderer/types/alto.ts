@@ -37,6 +37,7 @@ export interface AltoStringJson {
   '@_SUBS_CONTENT'?: string;
   '@_LANG'?: string;
   '@_CS'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 // Space element
@@ -50,11 +51,13 @@ export interface AltoSpaceJson {
   '@_VPOS'?: string;
   '@_WIDTH'?: string;
   '@_HEIGHT'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 // Hyphen element
 export interface AltoHyphen {
   '@_CONTENT'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 // TextLine element
@@ -77,6 +80,7 @@ export interface AltoTextLineJson {
   '@_ROTATION'?: string;
   '@_LANG'?: string;
   '@_CS'?: string;
+  '@_CUSTOM_ID': string;
   String?: AltoStringJson | AltoStringJson[];
   SP?: AltoSpaceJson | AltoSpaceJson[];
   HYP?: AltoHyphen;
@@ -102,6 +106,7 @@ export interface AltoTextBlockJson {
   '@_TAGREFS'?: string;
   '@_LANG'?: string;
   '@_CS'?: string;
+  '@_CUSTOM_ID': string;
   TextLine?: AltoTextLineJson | AltoTextLineJson[];
 }
 
@@ -122,6 +127,7 @@ export interface AltoIllustrationJson {
   '@_ROTATION'?: string;
   '@_TYPE'?: string;
   '@_FILEID'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 // GraphicalElement element
@@ -136,6 +142,7 @@ export interface AltoGraphicalElementJson {
   '@_WIDTH'?: string;
   '@_HEIGHT'?: string;
   '@_ROTATION'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 // ComposedBlock element
@@ -159,6 +166,7 @@ export interface AltoComposedBlockJson {
   '@_ROTATION'?: string;
   '@_TYPE'?: string;
   '@_FILEID'?: string;
+  '@_CUSTOM_ID': string;
   TextBlock?: AltoTextBlockJson | AltoTextBlockJson[];
   Illustration?: AltoIllustrationJson | AltoIllustrationJson[];
   GraphicalElement?: AltoGraphicalElementJson | AltoGraphicalElementJson[];
@@ -182,6 +190,7 @@ export interface AltoPrintSpaceJson {
   '@_WIDTH'?: string;
   '@_HEIGHT'?: string;
   '@_ROTATION'?: string;
+  '@_CUSTOM_ID': string;
   TextBlock?: AltoTextBlockJson | AltoTextBlockJson[];
   Illustration?: AltoIllustrationJson | AltoIllustrationJson[];
   GraphicalElement?: AltoGraphicalElementJson | AltoGraphicalElementJson[];
@@ -204,6 +213,7 @@ export interface AltoMarginJson {
   '@_VPOS'?: string;
   '@_WIDTH'?: string;
   '@_HEIGHT'?: string;
+  '@_CUSTOM_ID': string;
   TextBlock?: AltoTextBlockJson | AltoTextBlockJson[];
   Illustration?: AltoIllustrationJson | AltoIllustrationJson[];
   GraphicalElement?: AltoGraphicalElementJson | AltoGraphicalElementJson[];
@@ -241,6 +251,7 @@ export interface AltoPageJson {
   '@_PC'?: string;
   '@_WIDTH'?: string;
   '@_HEIGHT'?: string;
+  '@_CUSTOM_ID': string;
   TopMargin?: AltoMarginJson;
   LeftMargin?: AltoMarginJson;
   RightMargin?: AltoMarginJson;
@@ -256,6 +267,7 @@ export interface AltoLayout {
 // Layout element as it appears in the JSON
 export interface AltoLayoutJson {
   Page?: AltoPageJson | AltoPageJson[];
+  '@_CUSTOM_ID': string;
 }
 
 // Style definitions
@@ -273,6 +285,7 @@ export interface AltoTextStyleJson {
   '@_FONTSIZE'?: string;
   '@_FONTCOLOR'?: string;
   '@_FONTSTYLE'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 export interface AltoParagraphStyle {
@@ -291,6 +304,7 @@ export interface AltoParagraphStyleJson {
   '@_RIGHT'?: string;
   '@_LINESPACE'?: string;
   '@_FIRSTLINE'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 export interface AltoStyles {
@@ -301,6 +315,7 @@ export interface AltoStyles {
 export interface AltoStylesJson {
   TextStyle?: AltoTextStyleJson | AltoTextStyleJson[];
   ParagraphStyle?: AltoParagraphStyleJson | AltoParagraphStyleJson[];
+  '@_CUSTOM_ID': string;
 }
 
 // Tags definitions
@@ -318,6 +333,7 @@ export interface AltoTagJson {
   '@_LABEL'?: string;
   '@_DESCRIPTION'?: string;
   '@_URI'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 export interface AltoTags {
@@ -334,6 +350,7 @@ export interface AltoTagsJson {
   RoleTag?: AltoTagJson | AltoTagJson[];
   NamedEntityTag?: AltoTagJson | AltoTagJson[];
   OtherTag?: AltoTagJson | AltoTagJson[];
+  '@_CUSTOM_ID': string;
 }
 
 // Main ALTO document
@@ -352,9 +369,11 @@ export interface AltoDocumentJson {
   Tags?: AltoTagsJson;
   Layout: AltoLayoutJson;
   '@_SCHEMAVERSION'?: string;
+  '@_CUSTOM_ID': string;
 }
 
 // Complete ALTO JSON structure as returned by the parser
 export interface AltoJson {
   alto: AltoDocumentJson;
+  '@_CUSTOM_ID': string;
 } 

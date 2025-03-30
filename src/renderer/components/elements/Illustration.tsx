@@ -5,19 +5,11 @@ import { useAlto } from '../../context/app/AltoContext';
 import { convertToPixels } from '../../utils/alto';
 import { AltoIllustrationJson } from '../../types/alto';
 
-interface IllustrationMetadata {
-  index: number;
-  source?: string;
-  isEditable?: boolean;
-  [key: string]: any; // Maintain compatibility with other properties
-}
-
 interface IllustrationProps {
   element: AltoIllustrationJson;
-  metadata: IllustrationMetadata;
 }
 
-const Illustration: FC<IllustrationProps> = ({ element, metadata }) => {
+const Illustration: FC<IllustrationProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { updateIllustration, measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
@@ -30,7 +22,7 @@ const Illustration: FC<IllustrationProps> = ({ element, metadata }) => {
   const handleClick = () => {
     openAltoEditor(
       element,
-      () => (updated: AltoIllustrationJson) => updateIllustration(updated, metadata.index)
+      () => (updated: AltoIllustrationJson) => updateIllustration(updated, 0)
     );
   };
 

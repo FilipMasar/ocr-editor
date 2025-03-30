@@ -12,19 +12,11 @@ const defaultStyle: TextStyle = {
   fontFamily: 'Times New Roman',
 };
 
-interface StringMetadata {
-  index: number;
-  '@_STYLEREFS'?: string;
-  lineVPos?: number;
-  [key: string]: any; // Keeping this for compatibility with other properties
-}
-
 interface StringProps {
   element: AltoStringJson;
-  metadata: StringMetadata;
 }
 
-const String: FC<StringProps> = ({ element, metadata }) => {
+const String: FC<StringProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { styles, measurementUnit } = useAlto();
   const { settings } = useSettings();
@@ -38,19 +30,20 @@ const String: FC<StringProps> = ({ element, metadata }) => {
   const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
   const text = element['@_CONTENT'];
 
-  useEffect(() => {
-    if (!metadata['@_STYLEREFS']) {
-      return;
-    }
+  // TODO: add style refs
+  // useEffect(() => {
+  //   if (!metadata['@_STYLEREFS']) {
+  //     return;
+  //   }
     
-    const styleRefsArray = metadata['@_STYLEREFS'].split(' ');
+  //   const styleRefsArray = metadata['@_STYLEREFS'].split(' ');
 
-    for (const id of styleRefsArray) {
-      if (styles[id]) {
-        setTextStyle(styles[id]);
-      }
-    }
-  }, [metadata, styles]);
+  //   for (const id of styleRefsArray) {
+  //     if (styles[id]) {
+  //       setTextStyle(styles[id]);
+  //     }
+  //   }
+  // }, [metadata, styles]);
 
   return (
     <>
@@ -97,7 +90,7 @@ const String: FC<StringProps> = ({ element, metadata }) => {
       )}
 
       {/* Text Above */}
-      {show.textAbove && text && metadata.lineVPos !== undefined && (
+      {/* {show.textAbove && text && metadata.lineVPos !== undefined && (
         <div
           style={{
             display: 'flex',
@@ -115,7 +108,7 @@ const String: FC<StringProps> = ({ element, metadata }) => {
             </span>
           ))}
         </div>
-      )}
+      )} */}
     </>
   );
 };

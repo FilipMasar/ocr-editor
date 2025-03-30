@@ -5,6 +5,7 @@ import {
   Stack,
   Title,
   useMantineTheme,
+  Text,
 } from '@mantine/core';
 import { FC, useEffect, useState, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -86,17 +87,21 @@ const StartingPage: FC = () => {
               spacing={4}
               className="recent-project-container"
             >
-              <Anchor
-                component="button"
-                type="button"
-                onClick={() => openProject(project.path)}
-              >
-                {project.name}
-              </Anchor>
+              <div>
+                <Anchor
+                  component="button"
+                  type="button"
+                  onClick={() => openProject(project.path)}
+                  >
+                  {project.name}
+                </Anchor>
+                <Text size="xs">{project.path}</Text>
+              </div>
+
               <ActionIcon
                 variant="subtle"
                 size={18}
-                ml="xs"
+                mx="xs"
                 className="recent-project-delete"
                 onClick={(e: MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();

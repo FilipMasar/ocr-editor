@@ -1,33 +1,21 @@
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
-import { useTextEditor } from '../../context/editor/AltoTextEditorContext';
 import { useSettings } from '../../context/app/SettingsContext';
 import { useAlto } from '../../context/app/AltoContext';
 import { getStringsFromLine, convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextLineJson } from '../../types/alto';
 
-interface TextLineMetadata {
-  index: number;
-  textBlockIndex: number;
-  source?: string;
-  isEditable?: boolean;
-  [key: string]: any; // Maintain compatibility with other properties
-}
 
 interface TextLineProps {
   element: AltoTextLineJson;
-  metadata: TextLineMetadata;
 }
 
-const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
+const TextLine: FC<TextLineProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const [text, setText] = useState<string>();
-  const { updateTextLine, measurementUnit } = useAlto();
+  const { measurementUnit } = useAlto();
   const { settings } = useSettings();
-  const { openAltoEditor } = useAltoEditor();
-  const { openTextEditor } = useTextEditor();
 
   // Convert coordinates using the current measurement unit
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
@@ -44,30 +32,6 @@ const TextLine: FC<TextLineProps> = ({ element, metadata }) => {
     }
   }, [element]);
 
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (event.altKey) {
-        openAltoEditor(
-          element,
-          () => (updated: AltoTextLineJson) =>
-            updateTextLine(updated, metadata.textBlockIndex, metadata.index)
-        );
-      } else {
-        openTextEditor('TEXTLINE', { element, metadata });
-      }
-    };
-
-    const div = ref.current;
-
-    if (div) {
-      div.addEventListener('click', handleClick);
-
-      return () => {
-        div.removeEventListener('click', handleClick);
-      };
-    }
-    return undefined;
-  }, [element, metadata, openAltoEditor, openTextEditor, ref, updateTextLine]);
 
   return (
     <div

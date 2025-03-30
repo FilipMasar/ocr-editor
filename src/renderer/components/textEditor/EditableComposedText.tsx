@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Badge, Stack, Title } from '@mantine/core';
 import { addMetadata, getStringsFromLine } from '../../utils/alto';
-import { getTextBlocksFromComposedBlock } from '../../utils/composedBlockUtils';
 import EditableLine from './EditableLine';
 import { useAlto } from '../../context/app/AltoContext';
 import { AltoComposedBlockJson, AltoTextBlockJson, AltoTextLineJson } from '../../types/alto';
@@ -32,11 +31,6 @@ const EditableComposedText: FC<EditableComposedTextProps> = ({
   const [textLines, setTextLines] = useState<AltoElement<AltoTextLineJson>[]>([]);
   const { updateComposedBlockTextLine, updateComposedBlockString } = useAlto();
 
-  // Extract all TextBlocks from the ComposedBlock
-  useEffect(() => {
-    const blocks = getTextBlocksFromComposedBlock(composedBlock.element);
-    setNestedBlocks(blocks);
-  }, [composedBlock]);
 
   // Process all text lines from the nested blocks
   useEffect(() => {

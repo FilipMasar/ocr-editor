@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { Notification as MantineNotification, NotificationProps } from '@mantine/core';
-import { X, AlertCircle, Info, Check, AlertTriangle } from 'react-feather';
+import { X, Info, Check, AlertTriangle } from 'react-feather';
 
 type NotificationType = 'success' | 'error' | 'info' | 'warning';
 
