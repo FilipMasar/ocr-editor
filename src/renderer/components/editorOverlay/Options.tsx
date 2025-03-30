@@ -67,6 +67,18 @@ const Options: FC = () => {
                     setSettings((old) => ({ ...old, imageOpacity: value }))
                   }
                 />
+                
+                <Text mt="md" mb="xs">Border width:</Text>
+                <Slider
+                  w={200}
+                  min={1}
+                  max={5}
+                  step={1}
+                  value={settings.borderWidth}
+                  onChange={(value) =>
+                    setSettings((old) => ({ ...old, borderWidth: value }))
+                  }
+                />
               </Paper>
             </Menu.Dropdown>
           </Menu>

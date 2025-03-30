@@ -1,5 +1,6 @@
 export type Settings = {
   imageOpacity: number;
+  borderWidth: number;
   show: {
     page: boolean;
     margins: boolean;

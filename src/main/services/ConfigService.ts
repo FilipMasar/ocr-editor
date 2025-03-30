@@ -21,6 +21,7 @@ import {
  */
 const defaultSettings: Settings = {
   imageOpacity: 100,
+  borderWidth: 1,
   show: {
     page: true,
     margins: true,

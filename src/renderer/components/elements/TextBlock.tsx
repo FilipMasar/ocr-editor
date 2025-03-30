@@ -5,6 +5,7 @@ import { convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextBlockJson } from '../../types/alto';
 import { elementColors } from './colors';
+import { useSettings } from '../../context/app/SettingsContext';
 
 interface TextBlockProps {
   element: AltoTextBlockJson;
@@ -13,6 +14,7 @@ interface TextBlockProps {
 const TextBlock: FC<TextBlockProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { settings } = useSettings();
 
   // Convert coordinates using the current measurement unit
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
@@ -29,7 +31,7 @@ const TextBlock: FC<TextBlockProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `1px solid ${elementColors.textBlock.borderColor}`,
+        border: `${settings.borderWidth}px solid ${elementColors.textBlock.borderColor}`,
         backgroundColor: hovered ? elementColors.textBlock.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}

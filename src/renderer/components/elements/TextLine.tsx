@@ -43,7 +43,7 @@ const TextLine: FC<TextLineProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `1px solid ${elementColors.textLine.borderColor}`,
+        border: `${settings.borderWidth}px solid ${elementColors.textLine.borderColor}`,
         backgroundColor: hovered ? elementColors.textLine.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}

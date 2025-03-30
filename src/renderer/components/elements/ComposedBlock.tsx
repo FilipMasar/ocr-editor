@@ -5,6 +5,7 @@ import { convertToPixels } from '../../utils/alto';
 import { AltoComposedBlockJson } from '../../types/alto';
 import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { elementColors } from './colors';
+import { useSettings } from '../../context/app/SettingsContext';
 
 interface ComposedBlockProps {
   element: AltoComposedBlockJson;
@@ -14,6 +15,7 @@ const ComposedBlock: FC<ComposedBlockProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit, updateComposedBlock } = useAlto();
   const { openAltoEditor } = useAltoEditor();
+  const { settings } = useSettings();
 
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
@@ -36,7 +38,7 @@ const ComposedBlock: FC<ComposedBlockProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `1px solid ${elementColors.composedBlock.borderColor}`,
+        border: `${settings.borderWidth}px solid ${elementColors.composedBlock.borderColor}`,
         backgroundColor: hovered ? elementColors.composedBlock.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}

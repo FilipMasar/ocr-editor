@@ -58,7 +58,7 @@ const String: FC<StringProps> = ({ element }) => {
             left,
             width,
             height,
-            border: `1px solid ${elementColors.string.borderColor}`,
+            border: `${settings.borderWidth}px solid ${elementColors.string.borderColor}`,
             backgroundColor: hovered ? elementColors.string.backgroundColor : 'transparent',
           }}
           // TODO className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}

@@ -4,6 +4,7 @@ import { convertToPixels } from '../../utils/alto';
 import { AltoMarginJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
+import { useSettings } from '../../context/app/SettingsContext';
 
 interface MarginProps {
   element: AltoMarginJson;
@@ -12,6 +13,7 @@ interface MarginProps {
 const Margin: FC<MarginProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { settings } = useSettings();
 
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
@@ -27,7 +29,7 @@ const Margin: FC<MarginProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `1px solid ${elementColors.margin.borderColor}`,
+        border: `${settings.borderWidth}px solid ${elementColors.margin.borderColor}`,
         backgroundColor: hovered ? elementColors.margin.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}

@@ -5,6 +5,7 @@ import { useAlto } from '../../context/app/AltoContext';
 import { convertToPixels } from '../../utils/alto';
 import { AltoIllustrationJson } from '../../types/alto';
 import { elementColors } from './colors';
+import { useSettings } from '../../context/app/SettingsContext';
 
 interface IllustrationProps {
   element: AltoIllustrationJson;
@@ -14,6 +15,7 @@ const Illustration: FC<IllustrationProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { updateIllustration, measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
+  const { settings } = useSettings();
 
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
@@ -36,7 +38,7 @@ const Illustration: FC<IllustrationProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `1px solid ${elementColors.illustration.borderColor}`,
+        border: `${settings.borderWidth}px solid ${elementColors.illustration.borderColor}`,
         backgroundColor: hovered ? elementColors.illustration.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
