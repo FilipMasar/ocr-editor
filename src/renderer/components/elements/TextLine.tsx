@@ -5,6 +5,7 @@ import { useAlto } from '../../context/app/AltoContext';
 import { getStringsFromLine, convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextLineJson } from '../../types/alto';
+import { elementColors, specialElementColors } from './colors';
 
 
 interface TextLineProps {
@@ -42,9 +43,8 @@ const TextLine: FC<TextLineProps> = ({ element }) => {
         left,
         width,
         height,
-        border: '1px solid orange',
-        backgroundColor: hovered ? 'orange' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `1px solid ${elementColors.textLine.borderColor}`,
+        backgroundColor: hovered ? elementColors.textLine.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
       title={text}
@@ -57,7 +57,7 @@ const TextLine: FC<TextLineProps> = ({ element }) => {
             right: 0,
             width: 10,
             height,
-            backgroundColor: 'rgba(0,255,0,0.7)',
+            backgroundColor: specialElementColors.hyphen.background,
           }}
         />
       )}

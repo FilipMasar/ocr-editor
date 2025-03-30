@@ -10,6 +10,7 @@ import {
   Text,
   Badge,
   Tooltip,
+  Box,
 } from '@mantine/core';
 import { FC, useCallback } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
@@ -17,6 +18,7 @@ import { useAlto } from '../../context/app/AltoContext';
 import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useTextEditor } from '../../context/editor/AltoTextEditorContext';
 import { useSettings } from '../../context/app/SettingsContext';
+import { elementColors } from '../../components/elements/colors';
 
 const Options: FC = () => {
   const { settings, setSettings } = useSettings();
@@ -84,7 +86,19 @@ const Options: FC = () => {
               <Paper p="sm">
                 <Text mb="xs">Display elements:</Text>
                 <Checkbox
-                  label="Page"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Page
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.page.backgroundColor,
+                          border: `1px solid ${elementColors.page.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.page}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -97,7 +111,19 @@ const Options: FC = () => {
                   }
                 />
                 <Checkbox
-                  label="Margins"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Margins
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.margin.backgroundColor,
+                          border: `1px solid ${elementColors.margin.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.margins}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -110,7 +136,19 @@ const Options: FC = () => {
                   }
                 />
                 <Checkbox
-                  label="Print Space"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Print Space
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.printSpace.backgroundColor,
+                          border: `1px solid ${elementColors.printSpace.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.printSpace}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -123,7 +161,19 @@ const Options: FC = () => {
                   }
                 />
                 <Checkbox
-                  label="Graphical Element"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Graphical Element
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.graphicalElement.backgroundColor,
+                          border: `1px solid ${elementColors.graphicalElement.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.graphicalElements}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -136,7 +186,19 @@ const Options: FC = () => {
                   }
                 />
                 <Checkbox
-                  label="Illustration"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Illustration
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.illustration.backgroundColor,
+                          border: `1px solid ${elementColors.illustration.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.illustrations}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -150,8 +212,16 @@ const Options: FC = () => {
                 />
                 <Checkbox
                   label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       Composed Block
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.composedBlock.backgroundColor,
+                          border: `1px solid ${elementColors.composedBlock.borderColor}`,
+                        }} 
+                      />
                       {altoVersion && !altoVersion.startsWith('3.') && (
                         <Tooltip label="Requires ALTO v3+" position="right">
                           <Badge color="orange" size="xs">v3+</Badge>
@@ -172,7 +242,19 @@ const Options: FC = () => {
                   disabled={altoVersion && !altoVersion.startsWith('3.')}
                 />
                 <Checkbox
-                  label="Text Block"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Text Block
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.textBlock.backgroundColor,
+                          border: `1px solid ${elementColors.textBlock.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.textBlocks}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -185,7 +267,19 @@ const Options: FC = () => {
                   }
                 />
                 <Checkbox
-                  label="Text Line"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      Text Line
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.textLine.backgroundColor,
+                          border: `1px solid ${elementColors.textLine.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.textLines}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -198,7 +292,19 @@ const Options: FC = () => {
                   }
                 />
                 <Checkbox
-                  label="String"
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      String
+                      <Box 
+                        style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          backgroundColor: elementColors.string.backgroundColor,
+                          border: `1px solid ${elementColors.string.borderColor}`,
+                        }} 
+                      />
+                    </div>
+                  }
                   checked={settings.show.strings}
                   onChange={(e) =>
                     setSettings((old) => ({

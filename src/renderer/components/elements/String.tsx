@@ -6,6 +6,7 @@ import { TextStyle } from '../../types/app';
 import { convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoStringJson } from '../../types/alto';
+import { elementColors } from './colors';
 
 const defaultStyle: TextStyle = {
   fontSize: 16,
@@ -57,9 +58,8 @@ const String: FC<StringProps> = ({ element }) => {
             left,
             width,
             height,
-            border: '1px solid green',
-            backgroundColor: hovered ? 'green' : 'transparent',
-            opacity: hovered ? 0.5 : 1,
+            border: `1px solid ${elementColors.string.borderColor}`,
+            backgroundColor: hovered ? elementColors.string.backgroundColor : 'transparent',
           }}
           // TODO className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}
         />

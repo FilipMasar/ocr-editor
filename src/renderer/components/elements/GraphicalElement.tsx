@@ -4,6 +4,7 @@ import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useAlto } from '../../context/app/AltoContext';
 import { convertToPixels } from '../../utils/alto';
 import { AltoGraphicalElementJson } from '../../types/alto';
+import { elementColors } from './colors';
 
 interface GraphicalElementProps {
   element: AltoGraphicalElementJson;
@@ -35,9 +36,8 @@ const GraphicalElement: FC<GraphicalElementProps> = ({ element }) => {
         left,
         width,
         height,
-        border: '1px solid blue',
-        backgroundColor: hovered ? 'blue' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `1px solid ${elementColors.graphicalElement.borderColor}`,
+        backgroundColor: hovered ? elementColors.graphicalElement.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
       onClick={handleClick}

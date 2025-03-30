@@ -4,6 +4,7 @@ import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useAlto } from '../../context/app/AltoContext';
 import { convertToPixels } from '../../utils/alto';
 import { AltoIllustrationJson } from '../../types/alto';
+import { elementColors } from './colors';
 
 interface IllustrationProps {
   element: AltoIllustrationJson;
@@ -35,9 +36,8 @@ const Illustration: FC<IllustrationProps> = ({ element }) => {
         left,
         width,
         height,
-        border: '1px solid pink',
-        backgroundColor: hovered ? 'pink' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `1px solid ${elementColors.illustration.borderColor}`,
+        backgroundColor: hovered ? elementColors.illustration.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
       onClick={handleClick}

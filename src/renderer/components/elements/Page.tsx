@@ -3,6 +3,7 @@ import { useAlto } from '../../context/app/AltoContext';
 import { convertToPixels } from '../../utils/alto';
 import { AltoPageJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
+import { elementColors } from './colors';
 
 interface PageProps {
   element: AltoPageJson;
@@ -29,9 +30,8 @@ const Page: FC<PageProps> = ({ element }) => {
         left: 0,
         width,
         height,
-        border: '1px solid black',
-        backgroundColor: hovered ? 'black' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `1px solid ${elementColors.page.borderColor}`,
+        backgroundColor: hovered ? elementColors.page.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
     />

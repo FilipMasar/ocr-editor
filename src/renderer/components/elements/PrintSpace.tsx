@@ -3,6 +3,7 @@ import { useAlto } from '../../context/app/AltoContext';
 import { convertToPixels } from '../../utils/alto';
 import { AltoPrintSpaceJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
+import { elementColors } from './colors';
 
 interface PrintSpaceProps {
   element: AltoPrintSpaceJson;
@@ -26,9 +27,8 @@ const PrintSpace: FC<PrintSpaceProps> = ({ element }) => {
         left,
         width,
         height,
-        border: '1px solid blue',
-        backgroundColor: hovered ? 'blue' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `1px solid ${elementColors.printSpace.borderColor}`,
+        backgroundColor: hovered ? elementColors.printSpace.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
     />
