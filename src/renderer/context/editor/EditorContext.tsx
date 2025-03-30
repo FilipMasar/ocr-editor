@@ -96,8 +96,9 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
       'editor-channel',
       'PAGE_ASSETS',
       (payload) => {
+        console.log('PAGE_ASSETS', payload);
         setImageSrc(payload.imageUri);
-        setAlto(payload.altoJson);
+        setAlto(payload.altoJson as AltoJson);
         setInitialAlto(JSON.parse(JSON.stringify(payload.altoJson))); // Make a deep copy
         
         // Set ALTO version and validation status if available

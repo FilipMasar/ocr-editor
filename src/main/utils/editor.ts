@@ -43,25 +43,7 @@ export const getPageAssets = async (
     const altoXml = fs.readFileSync(altoPath, 'utf8');
     
     // Use parseAndValidateAlto for validation, versioning, and conversion
-    const { json: parsedJson, validation, version } = parseAndValidateAlto(altoXml);
-    
-    // Create a fallback Alto structure if the parsed JSON is null
-    const altoJson = parsedJson || {
-      alto: {
-        Layout: {
-          Page: {
-            '@_WIDTH': '800',
-            '@_HEIGHT': '1200',
-            PrintSpace: {
-              '@_HPOS': '0',
-              '@_VPOS': '0',
-              '@_WIDTH': '800', 
-              '@_HEIGHT': '1200'
-            }
-          }
-        }
-      }
-    };
+    const { json: altoJson, validation, version } = parseAndValidateAlto(altoXml);
     
     // Log validation issues if any
     if (!validation.valid) {

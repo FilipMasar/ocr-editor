@@ -121,6 +121,7 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
 
   // Process ALTO document when it changes
   useEffect(() => {
+    console.log('ALTO_CONTEXT', alto);
     if (!alto || Object.keys(alto).length === 0) {
       setPrintSpace(undefined);
       setIllustrations([]);
@@ -147,30 +148,31 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
       
       // If page dimensions are missing, try to get from PrintSpace
       if ((width === 0 || height === 0) && page.PrintSpace) {
-        width = convertToPixels(page.PrintSpace['@_WIDTH'], unit) || width;
-        height = convertToPixels(page.PrintSpace['@_HEIGHT'], unit) || height;
+        width = convertToPixels(page.PrintSpace['@_WIDTH'], unit);
+        height = convertToPixels(page.PrintSpace['@_HEIGHT'], unit);
       }
       
+      // TODO remove
       // Last resort: If dimensions are still missing, try to calculate from TextBlocks
-      if ((width === 0 || height === 0) && page.PrintSpace?.TextBlock) {
-        const blocks = Array.isArray(page.PrintSpace.TextBlock) 
-          ? page.PrintSpace.TextBlock 
-          : [page.PrintSpace.TextBlock];
+      // if ((width === 0 || height === 0) && page.PrintSpace?.TextBlock) {
+      //   const blocks = Array.isArray(page.PrintSpace.TextBlock) 
+      //     ? page.PrintSpace.TextBlock 
+      //     : [page.PrintSpace.TextBlock];
         
-        let maxRight = 0;
-        let maxBottom = 0;
+      //   let maxRight = 0;
+      //   let maxBottom = 0;
         
-        blocks.forEach(block => {
-          const blockRight = convertToPixels(block['@_HPOS'], unit) + convertToPixels(block['@_WIDTH'], unit);
-          const blockBottom = convertToPixels(block['@_VPOS'], unit) + convertToPixels(block['@_HEIGHT'], unit);
+      //   blocks.forEach(block => {
+      //     const blockRight = convertToPixels(block['@_HPOS'], unit) + convertToPixels(block['@_WIDTH'], unit);
+      //     const blockBottom = convertToPixels(block['@_VPOS'], unit) + convertToPixels(block['@_HEIGHT'], unit);
           
-          maxRight = Math.max(maxRight, blockRight);
-          maxBottom = Math.max(maxBottom, blockBottom);
-        });
+      //     maxRight = Math.max(maxRight, blockRight);
+      //     maxBottom = Math.max(maxBottom, blockBottom);
+      //   });
         
-        width = maxRight > 0 ? maxRight + 50 : width;
-        height = maxBottom > 0 ? maxBottom + 50 : height;
-      }
+      //   width = maxRight > 0 ? maxRight + 50 : width;
+      //   height = maxBottom > 0 ? maxBottom + 50 : height;
+      // }
       
       // Only set dimensions if we have valid values
       if (width > 0 && height > 0) {
