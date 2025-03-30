@@ -11,7 +11,8 @@ import { useHover } from '@mantine/hooks';
 import { ChangeEvent, FC, MouseEvent } from 'react';
 import { Image, Trash } from 'react-feather';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { useProjectActions, useTheme } from '../../hooks';
+import { useTheme } from '../../hooks';
+import { useProject } from '../../context';
 
 interface Props {
   image: string;
@@ -26,7 +27,7 @@ interface Props {
  * PageCard component displays a card for a page in the project with image and ALTO information
  */
 const PageCard: FC<Props> = ({ image, imageSrc, alto, done, wer, index }) => {
-  const { removeAsset, updatePageDone } = useProjectActions();
+  const { removeAsset, updatePageDone } = useProject();
   const { getStatusColor } = useTheme();
   const navigate = useNavigate();
   const hoverImage = useHover();
