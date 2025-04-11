@@ -36,6 +36,7 @@ const elementVisibilityOptions: ElementVisibilityOption[] = [
   { key: 'textLines', label: 'Text Line' },
   { key: 'strings', label: 'String' },
   { key: 'hyphens', label: 'Hyphens' },
+  { key: 'spaces', label: 'Spaces' },
 ];
 
 const Options: FC = () => {

@@ -22,7 +22,8 @@ import {
   getAllTextLines,
   getAllStrings,
   getAllMargins,
-  getAllHyphens
+  getAllHyphens,
+  getAllSpaces
 } from '../../utils/alto';
 import { 
   AltoJson, 
@@ -36,7 +37,8 @@ import {
   AltoStringJson,
   AltoPageJson,
   AltoMarginJson,
-  AltoHyphenJson
+  AltoHyphenJson,
+  AltoSpaceJson
 } from '../../types/alto';
 import { ValidationStatus } from '../../../shared/ipc/editor-channel';
 
@@ -71,6 +73,7 @@ interface AltoProviderValue {
   textLines: AltoTextLineJson[];
   textStrings: AltoStringJson[];
   hyphens: AltoHyphenJson[];
+  spaces: AltoSpaceJson[];
   altoVersion?: string;
   setAltoVersion: Dispatch<SetStateAction<string | undefined>>;
   validationStatus?: ValidationStatus;
@@ -139,6 +142,7 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
   const [textLines, setTextLines] = useState<AltoTextLineJson[]>([]);
   const [textStrings, setTextStrings] = useState<AltoStringJson[]>([]);
   const [hyphens, setHyphens] = useState<AltoHyphenJson[]>([]);
+  const [spaces, setSpaces] = useState<AltoSpaceJson[]>([]);
 
   // Process ALTO document when it changes
   useEffect(() => {
@@ -211,6 +215,7 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
       setTextLines(getAllTextLines(alto));
       setTextStrings(getAllStrings(alto));
       setHyphens(getAllHyphens(alto));
+      setSpaces(getAllSpaces(alto));
 
       // Extract styles
       const stylesMap: Record<string, TextStyle> = {};
@@ -600,6 +605,7 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
         textLines,
         textStrings,
         hyphens,
+        spaces,
         altoVersion,
         setAltoVersion,
         validationStatus,

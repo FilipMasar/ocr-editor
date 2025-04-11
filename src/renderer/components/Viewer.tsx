@@ -13,6 +13,7 @@ import ComposedBlock from './elements/ComposedBlock';
 import Page from './elements/Page';
 import Margin from './elements/Margin';
 import Hyphen from './elements/Hyphen';
+import Space from './elements/Space';
 
 const Viewer: FC = () => {
   const {
@@ -28,6 +29,7 @@ const Viewer: FC = () => {
     textStrings,
     alto,
     hyphens,
+    spaces,
   } = useAlto();
   const { settings } = useSettings();
   const { imageSrc } = useEditor();
@@ -150,6 +152,14 @@ const Viewer: FC = () => {
           <Hyphen
             key={hyphen['@_CUSTOM_ID']}
             element={hyphen}
+          />
+        ))}
+
+      {show.spaces &&
+        spaces.map((space) => (
+          <Space
+            key={space['@_CUSTOM_ID']}
+            element={space}
           />
         ))}
     </>

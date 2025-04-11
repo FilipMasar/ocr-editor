@@ -52,4 +52,8 @@ export const elementColors: Record<string, ElementColorConfig> = {
     borderColor: 'lime',
     backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
+  spaces: {
+    borderColor: 'aqua',
+    backgroundColor: 'rgba(0, 255, 255, 0.5)',
+  },
 };

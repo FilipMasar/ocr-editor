@@ -375,8 +375,8 @@ export const getAllSpaces = (altoJson: AltoJson): AltoSpaceJson[] => {
  * Searches within TextLines located in TextBlocks and ComposedBlocks
  */
 export const getAllHyphens = (altoJson: AltoJson): AltoHyphenJson[] => {
-  const hyphens: AltoHyphenJson[] = [];
   const textLines = getAllTextLines(altoJson);
+  const hyphens: AltoHyphenJson[] = [];
 
   textLines.forEach(textLine => {
     const hyphen = textLine.HYP;

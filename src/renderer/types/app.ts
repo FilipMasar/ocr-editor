@@ -15,6 +15,7 @@ export type Settings = {
     textAbove: boolean;
     textNext: boolean;
     hyphens: boolean;
+    spaces: boolean;
   };
 };
 
