@@ -57,7 +57,7 @@ export function registerEditorHandlers(
       
       // Return the save result
       const response = {
-        action: 'ALTO_SAVED',
+        action: 'ALTO_SAVED' as const,
         payload: saveResult
       };
       

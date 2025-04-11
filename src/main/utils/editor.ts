@@ -66,18 +66,11 @@ export const getPageAssets = async (
       altoJson: {
         alto: {
           Layout: {
-            Page: {
-              '@_WIDTH': '800',
-              '@_HEIGHT': '1200',
-              PrintSpace: {
-                '@_HPOS': '0',
-                '@_VPOS': '0',
-                '@_WIDTH': '800', 
-                '@_HEIGHT': '1200'
-              }
-            }
-          }
-        }
+            '@_CUSTOM_ID': '1',
+          },
+          '@_CUSTOM_ID': '1',
+        },
+        '@_CUSTOM_ID': '1',
       },
       validationStatus: {
         valid: false,

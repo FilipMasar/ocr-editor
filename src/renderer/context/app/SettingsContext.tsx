@@ -10,7 +10,6 @@ import {
   useState,
 } from 'react';
 import { Settings } from '../../types/app';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { logger } from '../../utils/logger';
 
 /**
@@ -64,8 +63,7 @@ export const useSettings = () => useContext(SettingsContext);
  */
 const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
   // Use localStorage as a fallback and for initial state
-  const [localSettings, setLocalSettings] = useLocalStorage<Settings>('app-settings', defaultSettings);
-  const [settings, setSettingsState] = useState<Settings>(localSettings);
+  const [settings, setSettingsState] = useState<Settings>();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -108,9 +106,6 @@ const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
           throw new Error('Invalid settings structure');
         }
         
-        // Save to localStorage as backup
-        setLocalSettings(updatedSettings);
-        
         // Send to main process
         setSaving(true);
         setError(null);
@@ -131,7 +126,7 @@ const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
         return prevSettings;
       }
     });
-  }, [setLocalSettings]);
+  }, []);
 
   // Force sync settings from main process
   const syncSettings = useCallback(() => {
@@ -157,7 +152,6 @@ const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
         if (payload) {
           logger.debug('SettingsContext', 'Received settings from main process');
           setSettingsState(payload);
-          setLocalSettings(payload);
           setRetryCount(0); // Reset retry count on success
         } else {
           logger.warn('SettingsContext', 'Received empty settings payload');
@@ -181,7 +175,7 @@ const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
       unsubscribeSettings();
       unsubscribeError();
     };
-  }, [setLocalSettings]);
+  }, []);
 
   return (
     <SettingsContext.Provider 

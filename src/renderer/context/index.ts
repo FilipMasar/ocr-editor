@@ -11,8 +11,6 @@ export {
   useEditor, 
   AltoEditorProvider, 
   useAltoEditor,
-  TextEditorProvider,
-  useTextEditor
 } from './editor';
 
 // App contexts

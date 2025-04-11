@@ -41,12 +41,11 @@ export const xmlToJson = (xml: string): AltoJson => {
     return {
       alto: {
         Layout: {
-          Page: {
-            '@_WIDTH': '0',
-            '@_HEIGHT': '0',
-          }
-        }
-      }
+          '@_CUSTOM_ID': '1',
+        },
+        '@_CUSTOM_ID': '1',
+      },
+      '@_CUSTOM_ID': '1',
     };
   }
 };

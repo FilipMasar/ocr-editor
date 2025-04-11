@@ -14,7 +14,6 @@ import { FC, useCallback, ChangeEvent } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
 import { useAlto } from '../../context/app/AltoContext';
 import { useAltoEditor } from '../../context/editor/AltoEditorContext';
-import { useTextEditor } from '../../context/editor/AltoTextEditorContext';
 import { useSettings } from '../../context/app/SettingsContext';
 import { elementColors } from '../../components/elements/colors';
 import { Settings } from '../../types/app';
@@ -43,7 +42,6 @@ const Options: FC = () => {
   const { settings, setSettings } = useSettings();
   const { alto, setAlto, textBlocks } = useAlto();
   const { openAltoEditor } = useAltoEditor();
-  const { openTextEditor } = useTextEditor();
 
   const onEditWholeAlto = useCallback(() => {
     // openAltoEditor(alto, () => setAlto);
@@ -51,7 +49,7 @@ const Options: FC = () => {
 
   const onEditWholeText = useCallback(() => {
     // openTextEditor('ALL', textBlocks);
-  }, [openTextEditor, textBlocks]);
+  }, [textBlocks]);
 
   // Generic handler for visibility checkboxes
   const handleVisibilityChange = useCallback((key: keyof Settings['show'], checked: boolean) => {

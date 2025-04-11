@@ -4,7 +4,6 @@ import {
   AltoProvider,
   AltoEditorProvider,
   EditorProvider,
-  TextEditorProvider,
   useProject
 } from './context';
 import { ErrorDialog } from './components/ErrorDialog';
@@ -47,9 +46,7 @@ export default function AppRoutes() {
                     <AltoProvider>
                       <AltoEditorProvider>
                         <EditorProvider>
-                          <TextEditorProvider>
-                            <Editor />
-                          </TextEditorProvider>
+                          <Editor />
                         </EditorProvider>
                       </AltoEditorProvider>
                     </AltoProvider>

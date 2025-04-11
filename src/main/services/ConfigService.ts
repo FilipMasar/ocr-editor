@@ -35,7 +35,8 @@ const defaultSettings: Settings = {
     textFit: false,
     textAbove: false,
     textNext: false,
-    hyphens: true,
+    hyphens: false,
+    spaces: false,
   },
 };
 
