@@ -90,14 +90,14 @@ const String: FC<StringProps> = ({ element }) => {
       )}
 
       {/* Text Above */}
-      {/* {show.textAbove && text && metadata.lineVPos !== undefined && (
+      {show.textAbove && text && (
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-around',
             alignItems: 'flex-start',
             position: 'absolute',
-            top: convertToPixels(metadata.lineVPos, measurementUnit) - 20,
+            top: top - 20,
             left,
             width,
           }}
@@ -108,7 +108,7 @@ const String: FC<StringProps> = ({ element }) => {
             </span>
           ))}
         </div>
-      )} */}
+      )}
     </>
   );
 };

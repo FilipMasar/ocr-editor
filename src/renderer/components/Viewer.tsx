@@ -139,13 +139,13 @@ const Viewer: FC = () => {
           />
         ))}
 
-      {show.strings &&
-        textStrings.map((string) => (
-          <String
-            key={string['@_CUSTOM_ID']}
-            element={string}
-          />
-        ))}
+      {/* show settings are handled in String component */}
+      {textStrings.map((string) => (
+        <String
+          key={string['@_CUSTOM_ID']}
+          element={string}
+        />
+      ))}
 
       {show.hyphens &&
         hyphens.map((hyphen) => (
