@@ -38,21 +38,10 @@ import {
   AltoPageJson,
   AltoMarginJson,
   AltoHyphenJson,
-  AltoSpaceJson
+  AltoSpaceJson,
 } from '../../types/alto';
 import { ValidationStatus } from '../../../shared/ipc/editor-channel';
 
-/**
- * TODO remove
- * Represents an ALTO element with its metadata
- */
-interface AltoElement<T> {
-  element: T;
-  metadata: {
-    index: number;
-    [key: string]: any;
-  };
-}
 
 /**
  * Alto context for managing ALTO document state and operations
@@ -60,8 +49,6 @@ interface AltoElement<T> {
 interface AltoProviderValue {
   alto: AltoJson;
   setAlto: Dispatch<SetStateAction<AltoJson>>;
-  styles: Record<string, TextStyle>;
-  setStyles: Dispatch<SetStateAction<Record<string, TextStyle>>>;
   pageDimensions: PageDimensions;
   page: AltoPageJson | undefined;
   margins: AltoMarginJson[];
@@ -122,7 +109,6 @@ export const useAlto = () => useContext(AltoContext);
  */
 const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
   const [alto, setAlto] = useState<AltoJson>();
-  const [styles, setStyles] = useState<Record<string, TextStyle>>({});
   const [pageDimensions, setPageDimensions] = useState<PageDimensions>({
     width: 0,
     height: null,
@@ -153,8 +139,6 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
       setGraphicalElements([]);
       setTextBlocks([]);
       setComposedBlocks([]);
-      // Don't set dimensions at all when clearing
-      setStyles({});
       return;
     }
 
@@ -216,32 +200,6 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
       setTextStrings(getAllStrings(alto));
       setHyphens(getAllHyphens(alto));
       setSpaces(getAllSpaces(alto));
-
-      // Extract styles
-      const stylesMap: Record<string, TextStyle> = {};
-      const styles = alto.alto?.Styles;
-      if (styles) {
-        if (styles.TextStyle) {
-          if (Array.isArray(styles.TextStyle)) {
-            styles.TextStyle.forEach((style: AltoTextStyleJson) => {
-              if (style['@_ID']) {
-                stylesMap[style['@_ID']] = {
-                  fontFamily: style['@_FONTFAMILY'],
-                  fontSize: style['@_FONTSIZE'] ? parseInt(style['@_FONTSIZE'], 10) : undefined,
-                };
-              }
-            });
-          } else if (styles.TextStyle['@_ID']) {
-            stylesMap[styles.TextStyle['@_ID']] = {
-              fontFamily: styles.TextStyle['@_FONTFAMILY'],
-              fontSize: styles.TextStyle['@_FONTSIZE']
-                ? parseInt(styles.TextStyle['@_FONTSIZE'], 10)
-                : undefined,
-            };
-          }
-        }
-        setStyles(stylesMap);
-      }
     } catch (error) {
       console.error('Error processing ALTO document:', error);
     }
@@ -592,8 +550,6 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
       value={{
         alto,
         setAlto,
-        styles,
-        setStyles,
         pageDimensions,
         page,
         margins,

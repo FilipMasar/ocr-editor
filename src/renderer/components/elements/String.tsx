@@ -19,7 +19,7 @@ interface StringProps {
 
 const String: FC<StringProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-  const { styles, measurementUnit } = useAlto();
+  const { measurementUnit } = useAlto();
   const { settings } = useSettings();
   const { show } = settings;
   const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle);
@@ -31,20 +31,6 @@ const String: FC<StringProps> = ({ element }) => {
   const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
   const text = element['@_CONTENT'];
 
-  // TODO: add style refs
-  // useEffect(() => {
-  //   if (!metadata['@_STYLEREFS']) {
-  //     return;
-  //   }
-    
-  //   const styleRefsArray = metadata['@_STYLEREFS'].split(' ');
-
-  //   for (const id of styleRefsArray) {
-  //     if (styles[id]) {
-  //       setTextStyle(styles[id]);
-  //     }
-  //   }
-  // }, [metadata, styles]);
 
   return (
     <>
