@@ -38,8 +38,8 @@ const ComposedBlock: FC<ComposedBlockProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `${settings.borderWidth}px solid ${elementColors.composedBlock.borderColor}`,
-        backgroundColor: hovered ? elementColors.composedBlock.backgroundColor : 'transparent',
+        border: `${settings.borderWidth}px solid ${elementColors.composedBlocks.borderColor}`,
+        backgroundColor: hovered ? elementColors.composedBlocks.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
       onClick={handleClick}

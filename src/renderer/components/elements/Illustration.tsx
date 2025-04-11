@@ -38,8 +38,8 @@ const Illustration: FC<IllustrationProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `${settings.borderWidth}px solid ${elementColors.illustration.borderColor}`,
-        backgroundColor: hovered ? elementColors.illustration.backgroundColor : 'transparent',
+        border: `${settings.borderWidth}px solid ${elementColors.illustrations.borderColor}`,
+        backgroundColor: hovered ? elementColors.illustrations.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
       onClick={handleClick}

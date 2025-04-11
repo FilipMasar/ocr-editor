@@ -10,6 +10,7 @@ import {
   AltoComposedBlockJson,
   AltoSpaceJson,
   AltoMarginJson,
+  AltoHyphenJson,
 } from '../types/alto';
 
 /**
@@ -370,8 +371,40 @@ export const getAllSpaces = (altoJson: AltoJson): AltoSpaceJson[] => {
 };
 
 /**
- * Helper function to get all text content from the ALTO document
- * Useful for text extraction and validation
+ * Extracts all HYP elements from the ALTO document
+ * Searches within TextLines located in TextBlocks and ComposedBlocks
+ */
+export const getAllHyphens = (altoJson: AltoJson): AltoHyphenJson[] => {
+  const hyphens: AltoHyphenJson[] = [];
+  const textLines = getAllTextLines(altoJson);
+
+  textLines.forEach(textLine => {
+    const hyphen = textLine.HYP;
+    if (hyphen) {
+      // if HYP does not have width, height, or vpos, hpos, add it based on the textLine
+      if (!hyphen['@_WIDTH']) {
+        hyphen['@_WIDTH'] = '10';
+      }
+      if (!hyphen['@_HEIGHT']) {
+        hyphen['@_HEIGHT'] = textLine['@_HEIGHT'];
+      }
+      if (!hyphen['@_VPOS']) {
+        hyphen['@_VPOS'] = textLine['@_VPOS'];
+      }
+      if (!hyphen['@_HPOS']) {
+        hyphen['@_HPOS'] = (Number(textLine['@_HPOS']) + Number(textLine['@_WIDTH']) - Number(hyphen['@_WIDTH'])).toString();
+      }
+
+      hyphens.push(hyphen);
+    }
+  });
+
+  return hyphens;
+};
+
+/**
+ * Extracts all text content from the ALTO document
+ * Concatenates text from all Strings across all TextLines
  */
 export const getAllText = (altoJson: AltoJson): string => {
   const textBlocks = getAllTextBlocks(altoJson);

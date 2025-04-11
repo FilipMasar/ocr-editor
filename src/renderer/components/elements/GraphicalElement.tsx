@@ -38,8 +38,8 @@ const GraphicalElement: FC<GraphicalElementProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `${settings.borderWidth}px solid ${elementColors.graphicalElement.borderColor}`,
-        backgroundColor: hovered ? elementColors.graphicalElement.backgroundColor : 'transparent',
+        border: `${settings.borderWidth}px solid ${elementColors.graphicalElements.borderColor}`,
+        backgroundColor: hovered ? elementColors.graphicalElements.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
       onClick={handleClick}

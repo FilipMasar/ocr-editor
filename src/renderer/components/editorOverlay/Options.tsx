@@ -8,31 +8,60 @@ import {
   Slider,
   Stack,
   Text,
-  Badge,
-  Tooltip,
   Box,
 } from '@mantine/core';
-import { FC, useCallback } from 'react';
+import { FC, useCallback, ChangeEvent } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
 import { useAlto } from '../../context/app/AltoContext';
 import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { useTextEditor } from '../../context/editor/AltoTextEditorContext';
 import { useSettings } from '../../context/app/SettingsContext';
 import { elementColors } from '../../components/elements/colors';
+import { Settings } from '../../types/app';
+
+// Define the structure for element visibility options
+type ElementVisibilityOption = {
+  key: keyof Settings['show'];
+  label: string;
+};
+
+const elementVisibilityOptions: ElementVisibilityOption[] = [
+  { key: 'page', label: 'Page' },
+  { key: 'margins', label: 'Margins' },
+  { key: 'printSpace', label: 'Print Space' },
+  { key: 'graphicalElements', label: 'Graphical Element' },
+  { key: 'illustrations', label: 'Illustration' },
+  { key: 'composedBlocks', label: 'Composed Block' },
+  { key: 'textBlocks', label: 'Text Block' },
+  { key: 'textLines', label: 'Text Line' },
+  { key: 'strings', label: 'String' },
+  { key: 'hyphens', label: 'Hyphens' },
+];
 
 const Options: FC = () => {
   const { settings, setSettings } = useSettings();
-  const { alto, setAlto, textBlocks, altoVersion } = useAlto();
+  const { alto, setAlto, textBlocks } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const { openTextEditor } = useTextEditor();
 
   const onEditWholeAlto = useCallback(() => {
-    openAltoEditor(alto, () => setAlto);
+    // openAltoEditor(alto, () => setAlto);
   }, [alto, openAltoEditor, setAlto]);
 
   const onEditWholeText = useCallback(() => {
-    openTextEditor('ALL', textBlocks);
+    // openTextEditor('ALL', textBlocks);
   }, [openTextEditor, textBlocks]);
+
+  // Generic handler for visibility checkboxes
+  const handleVisibilityChange = useCallback((key: keyof Settings['show'], checked: boolean) => {
+    setSettings((old) => ({
+      ...old,
+      show: {
+        ...old.show,
+        [key]: checked,
+      },
+    }));
+  }, [setSettings]);
 
   return (
     <div
@@ -95,239 +124,31 @@ const Options: FC = () => {
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-              <Paper p="sm">
+              <Paper p="sm" w={200}>
                 <Text mb="xs">Display elements:</Text>
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Page
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.page.backgroundColor,
-                          border: `1px solid ${elementColors.page.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.page}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        page: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Margins
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.margin.backgroundColor,
-                          border: `1px solid ${elementColors.margin.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.margins}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        margins: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Print Space
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.printSpace.backgroundColor,
-                          border: `1px solid ${elementColors.printSpace.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.printSpace}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        printSpace: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Graphical Element
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.graphicalElement.backgroundColor,
-                          border: `1px solid ${elementColors.graphicalElement.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.graphicalElements}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        graphicalElements: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Illustration
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.illustration.backgroundColor,
-                          border: `1px solid ${elementColors.illustration.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.illustrations}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        illustrations: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Composed Block
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.composedBlock.backgroundColor,
-                          border: `1px solid ${elementColors.composedBlock.borderColor}`,
-                        }} 
-                      />
-                      {altoVersion && !altoVersion.startsWith('3.') && (
-                        <Tooltip label="Requires ALTO v3+" position="right">
-                          <Badge color="orange" size="xs">v3+</Badge>
-                        </Tooltip>
-                      )}
-                    </div>
-                  }
-                  checked={settings.show.composedBlocks}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        composedBlocks: e.target.checked,
-                      },
-                    }))
-                  }
-                  disabled={altoVersion && !altoVersion.startsWith('3.')}
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Text Block
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.textBlock.backgroundColor,
-                          border: `1px solid ${elementColors.textBlock.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.textBlocks}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        textBlocks: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      Text Line
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.textLine.backgroundColor,
-                          border: `1px solid ${elementColors.textLine.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.textLines}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        textLines: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label={
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      String
-                      <Box 
-                        style={{ 
-                          width: '16px', 
-                          height: '16px', 
-                          backgroundColor: elementColors.string.backgroundColor,
-                          border: `1px solid ${elementColors.string.borderColor}`,
-                        }} 
-                      />
-                    </div>
-                  }
-                  checked={settings.show.strings}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        strings: e.target.checked,
-                      },
-                    }))
-                  }
-                />
+                {elementVisibilityOptions.map((option) => (
+                  <Checkbox
+                    key={option.key}
+                    label={
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {option.label}
+                        <Box
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            backgroundColor: elementColors[option.key].backgroundColor,
+                            border: `1px solid ${elementColors[option.key].borderColor}`,
+                          }}
+                        />
+                      </div>
+                    }
+                    checked={settings.show[option.key]}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                       handleVisibilityChange(option.key, e.target.checked)
+                    }
+                    my={4}
+                  />
+                ))}
                 <Divider my="sm" />
                 <Button onClick={onEditWholeAlto}>Edit ALTO</Button>
               </Paper>
@@ -383,19 +204,6 @@ const Options: FC = () => {
                       show: {
                         ...old.show,
                         textNext: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label="Hyphens"
-                  checked={settings.show.hyphens}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        hyphens: e.target.checked,
                       },
                     }))
                   }

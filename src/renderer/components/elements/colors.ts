@@ -12,27 +12,27 @@ export interface ElementColorConfig {
 }
 
 export const elementColors: Record<string, ElementColorConfig> = {
-  string: {
+  strings: {
     borderColor: 'blue',
     backgroundColor: 'rgba(0, 0, 255, 0.5)',
   },
-  textLine: {
+  textLines: {
     borderColor: 'orange',
     backgroundColor: 'rgba(255, 165, 0, 0.5)',
   },
-  textBlock: {
+  textBlocks: {
     borderColor: 'purple',
     backgroundColor: 'rgba(128, 0, 128, 0.5)',
   },
-  graphicalElement: {
+  graphicalElements: {
     borderColor: 'olive',
     backgroundColor: 'rgba(128, 128, 0, 0.5)',
   },
-  illustration: {
+  illustrations: {
     borderColor: 'fuchsia',
     backgroundColor: 'rgba(255, 0, 255, 0.5)',
   },
-  composedBlock: {
+  composedBlocks: {
     borderColor: 'red',
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
   },
@@ -40,7 +40,7 @@ export const elementColors: Record<string, ElementColorConfig> = {
     borderColor: 'maroon', 
     backgroundColor: 'rgba(128, 0, 0, 0.5)',
   },
-  margin: {
+  margins: {
     borderColor: 'teal',
     backgroundColor: 'rgba(0, 128, 128, 0.5)',
   },
@@ -48,11 +48,8 @@ export const elementColors: Record<string, ElementColorConfig> = {
     borderColor: 'black',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
-};
-
-// Special configurations
-export const specialElementColors = {
-  hyphen: {
-    background: 'rgba(0, 255, 0, 0.7)',
+  hyphens: {
+    borderColor: 'lime',
+    backgroundColor: 'rgba(0, 255, 0, 0.5)',
   },
-}; 
+};

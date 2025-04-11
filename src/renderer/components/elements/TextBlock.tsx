@@ -31,8 +31,8 @@ const TextBlock: FC<TextBlockProps> = ({ element }) => {
         left,
         width,
         height,
-        border: `${settings.borderWidth}px solid ${elementColors.textBlock.borderColor}`,
-        backgroundColor: hovered ? elementColors.textBlock.backgroundColor : 'transparent',
+        border: `${settings.borderWidth}px solid ${elementColors.textBlocks.borderColor}`,
+        backgroundColor: hovered ? elementColors.textBlocks.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
     />

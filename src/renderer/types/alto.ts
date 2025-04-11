@@ -55,7 +55,19 @@ export interface AltoSpaceJson {
 }
 
 // Hyphen element
-export interface AltoHyphen {
+// A hyphenation character. Usually positioned at the end of a line.
+export interface AltoHyphen extends AltoBasicAttributes {
+  CONTENT?: string;
+}
+
+// Hyphen element as it appears in the JSON
+export interface AltoHyphenJson {
+  '@_ID'?: string;
+  '@_STYLEREFS'?: string;
+  '@_HPOS'?: string;
+  '@_VPOS'?: string;
+  '@_WIDTH'?: string;
+  '@_HEIGHT'?: string;
   '@_CONTENT'?: string;
   '@_CUSTOM_ID': string;
 }
@@ -83,7 +95,7 @@ export interface AltoTextLineJson {
   '@_CUSTOM_ID': string;
   String?: AltoStringJson | AltoStringJson[];
   SP?: AltoSpaceJson | AltoSpaceJson[];
-  HYP?: AltoHyphen;
+  HYP?: AltoHyphenJson;
 }
 
 // TextBlock element
@@ -376,4 +388,4 @@ export interface AltoDocumentJson {
 export interface AltoJson {
   alto: AltoDocumentJson;
   '@_CUSTOM_ID': string;
-} 
+}
