@@ -14,6 +14,7 @@ import Page from './elements/Page';
 import Margin from './elements/Margin';
 import Hyphen from './elements/Hyphen';
 import Space from './elements/Space';
+import TextLineNextTo from './elements/TextLineNextTo';
 
 const Viewer: FC = () => {
   const {
@@ -162,6 +163,25 @@ const Viewer: FC = () => {
             element={space}
           />
         ))}
+
+      {settings.show.textNext &&
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: pageDimensions.width,
+            width: pageDimensions.width,
+            height: pageDimensions.height,
+          }}
+        >
+         {textLines.map((textLine) => (
+            <TextLineNextTo
+              key={textLine['@_CUSTOM_ID']}
+              element={textLine}
+            />
+          ))}
+        </div>
+      }
     </>
   );
 };

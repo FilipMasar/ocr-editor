@@ -74,48 +74,6 @@ export const getStringsFromLine = (textLine: AltoTextLineJson): string[] | strin
 };
 
 /**
- * This is a helper for UI rendering and processing
- */
-export const addMetadata = <T extends Record<string, any>, M extends Record<string, any>>(
-  element: T | T[],
-  parentStyleRefs?: string,
-  otherMetadata?: M
-): Array<{
-  element: T;
-  metadata: M & {
-    index: number;
-    '@_STYLEREFS': string | undefined;
-  };
-}> => {
-  if (Array.isArray(element)) {
-    return element.map((e, i) => ({
-      element: e,
-      metadata: {
-        ...otherMetadata,
-        index: i,
-        '@_STYLEREFS': e['@_STYLEREFS'] || parentStyleRefs,
-      } as M & {
-        index: number;
-        '@_STYLEREFS': string | undefined;
-      },
-    }));
-  }
-  return [
-    {
-      element,
-      metadata: {
-        ...otherMetadata,
-        index: -1,
-        '@_STYLEREFS': element['@_STYLEREFS'] || parentStyleRefs,
-      } as M & {
-        index: number;
-        '@_STYLEREFS': string | undefined;
-      },
-    },
-  ];
-};
-
-/**
  * Ensures an element is always treated as an array
  * Useful for handling ALTO elements that can be either single or array
  */
@@ -351,6 +309,14 @@ export const getAllStrings = (altoJson: AltoJson): AltoStringJson[] => {
   });
   
   return strings;
+};
+
+/**
+ * Extracts all Strings from a TextLine
+ * Returns an array of Strings
+ */
+export const getStringsFromTextLine = (textLine: AltoTextLineJson): AltoStringJson[] => {
+  return ensureArray(textLine.String);
 };
 
 /**
