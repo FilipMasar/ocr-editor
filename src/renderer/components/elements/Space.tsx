@@ -5,6 +5,7 @@ import { convertToPixels } from '../../utils/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
 import { useSettings } from '../../context/app/SettingsContext';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface SpaceProps {
   element: AltoSpaceJson;
@@ -14,6 +15,7 @@ const Space: FC<SpaceProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
   const { settings } = useSettings();
+  const { openAltoEditor } = useAltoEditor();
 
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
@@ -33,6 +35,7 @@ const Space: FC<SpaceProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.spaces.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

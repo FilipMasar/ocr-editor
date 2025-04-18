@@ -5,6 +5,7 @@ import { AltoMarginJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
 import { useSettings } from '../../context/app/SettingsContext';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface MarginProps {
   element: AltoMarginJson;
@@ -13,6 +14,7 @@ interface MarginProps {
 const Margin: FC<MarginProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
 
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
@@ -33,6 +35,7 @@ const Margin: FC<MarginProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.margins.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

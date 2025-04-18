@@ -5,7 +5,7 @@ import { AltoPrintSpaceJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
 import { useSettings } from '../../context/app/SettingsContext';
-
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 interface PrintSpaceProps {
   element: AltoPrintSpaceJson;
 }
@@ -13,6 +13,7 @@ interface PrintSpaceProps {
 const PrintSpace: FC<PrintSpaceProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
 
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
@@ -33,6 +34,7 @@ const PrintSpace: FC<PrintSpaceProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.printSpace.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

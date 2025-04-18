@@ -6,7 +6,7 @@ import { getStringsFromLine, convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextLineJson } from '../../types/alto';
 import { elementColors } from './colors';
-
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface TextLineProps {
   element: AltoTextLineJson;
@@ -15,6 +15,7 @@ interface TextLineProps {
 const TextLine: FC<TextLineProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const [text, setText] = useState<string>();
+  const { openAltoEditor } = useAltoEditor();
   const { measurementUnit } = useAlto();
   const { settings } = useSettings();
 
@@ -48,20 +49,8 @@ const TextLine: FC<TextLineProps> = ({ element }) => {
         cursor: 'pointer',
       }}
       title={text}
-    >
-      {element.HYP && settings.show.hyphens && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: 10,
-            height,
-            backgroundColor: elementColors.hyphens.backgroundColor,
-          }}
-        />
-      )}
-    </div>
+      onClick={() => openAltoEditor(element)}
+    />
   );
 };
 

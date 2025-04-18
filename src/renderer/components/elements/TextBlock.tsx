@@ -6,6 +6,7 @@ import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextBlockJson } from '../../types/alto';
 import { elementColors } from './colors';
 import { useSettings } from '../../context/app/SettingsContext';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface TextBlockProps {
   element: AltoTextBlockJson;
@@ -14,6 +15,7 @@ interface TextBlockProps {
 const TextBlock: FC<TextBlockProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
 
   // Convert coordinates using the current measurement unit
@@ -35,6 +37,7 @@ const TextBlock: FC<TextBlockProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.textBlocks.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

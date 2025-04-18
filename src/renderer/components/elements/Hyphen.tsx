@@ -5,6 +5,7 @@ import { convertToPixels } from '../../utils/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
 import { useSettings } from '../../context/app/SettingsContext';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface HyphenProps {
   element: AltoHyphenJson;
@@ -13,6 +14,7 @@ interface HyphenProps {
 const Hyphen: FC<HyphenProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
 
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
@@ -33,6 +35,7 @@ const Hyphen: FC<HyphenProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.hyphens.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

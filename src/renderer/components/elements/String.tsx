@@ -1,5 +1,5 @@
 import { useHover } from '@mantine/hooks';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useSettings } from '../../context/app/SettingsContext';
 import { useAlto } from '../../context/app/AltoContext';
 import { TextStyle } from '../../types/app';
@@ -7,6 +7,7 @@ import { convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoStringJson } from '../../types/alto';
 import { elementColors } from './colors';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 const defaultStyle: TextStyle = {
   fontSize: 16,
@@ -20,9 +21,9 @@ interface StringProps {
 const String: FC<StringProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
   const { show } = settings;
-  const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle);
 
   // Convert coordinates using the current measurement unit
   const top = convertToPixels(element['@_VPOS'], measurementUnit);
@@ -46,8 +47,9 @@ const String: FC<StringProps> = ({ element }) => {
             height,
             border: `${settings.borderWidth}px solid ${elementColors.strings.borderColor}`,
             backgroundColor: hovered ? elementColors.strings.backgroundColor : 'transparent',
+            cursor: 'pointer',
           }}
-          // TODO className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}
+          onClick={() => openAltoEditor(element)}
         />
       )}
 
@@ -63,8 +65,8 @@ const String: FC<StringProps> = ({ element }) => {
             left,
             width,
             height,
-            fontFamily: textStyle.fontFamily,
-            fontSize: `calc(${textStyle.fontSize}pt / 0.2645833333)`,
+            fontFamily: defaultStyle.fontFamily,
+            fontSize: `calc(${defaultStyle.fontSize}pt / 0.2645833333)`,
             lineHeight: `${height}px`,
             color: 'black',
           }}

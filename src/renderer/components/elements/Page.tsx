@@ -5,6 +5,7 @@ import { AltoPageJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
 import { useSettings } from '../../context/app/SettingsContext';
+import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface PageProps {
   element: AltoPageJson;
@@ -13,6 +14,7 @@ interface PageProps {
 const Page: FC<PageProps> = ({ element }) => {
   const { ref, hovered } = useHover();
   const { measurementUnit } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
   
   const width = convertToPixels(element['@_WIDTH'], measurementUnit);
@@ -36,6 +38,7 @@ const Page: FC<PageProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.page.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

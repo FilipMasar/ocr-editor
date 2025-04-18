@@ -94,7 +94,7 @@ const Editor: FC = () => {
       </ErrorBoundary>
 
       {loading ? (
-        <Center w="100vw" h="100vh">
+        <Center w="100vw" h="90vh">
           <Loader />
         </Center>
       ) : (
@@ -122,7 +122,7 @@ const Editor: FC = () => {
           </div>
         </div>
       )}
-      
+
       <ErrorBoundary componentName="EditorOverlay">
         <EditorOverlay
           alignCenter={alignCenter}
