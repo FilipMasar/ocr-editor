@@ -79,5 +79,3 @@ export function withErrorBoundary<P extends object>(
   
   return WithErrorBoundary;
 }
-
-export default ErrorBoundary; 
