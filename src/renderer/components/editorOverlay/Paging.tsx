@@ -66,6 +66,9 @@ const Paging: FC<Props> = ({ pageNumber }) => {
     });
   };
 
+  const currentAsset = projectAssets?.[pageNumber];
+  const altoFilename = currentAsset?.alto;
+
   return (
     <div
       style={{
@@ -94,6 +97,11 @@ const Paging: FC<Props> = ({ pageNumber }) => {
             <ArrowLeft />
           </ActionIcon>
           <Text size="xs">{pageNumber + 1}</Text>
+          {altoFilename && (
+            <Text size="xs" truncate title={altoFilename} style={{ maxWidth: 150 }}>
+              ({altoFilename})
+            </Text>
+          )}
           <ActionIcon
             size={18}
             variant="subtle"
