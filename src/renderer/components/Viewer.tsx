@@ -1,77 +1,69 @@
 import { Title } from '@mantine/core';
-import { FC, useEffect, useState } from 'react';
-import { useSettings } from '../context/SettingsContext';
-import { useAlto } from '../context/AltoContext';
-import { useEditor } from '../context/EditorContext';
-import { addMetadata, toNumber } from '../utils/alto';
+import { FC } from 'react';
+import { useSettings, useAlto, useEditor } from '../context';
 import GraphicalElement from './elements/GraphicalElement';
 import Illustration from './elements/Illustration';
 import PrintSpace from './elements/PrintSpace';
 import String from './elements/String';
 import TextBlock from './elements/TextBlock';
 import TextLine from './elements/TextLine';
-import EditableBlock from './textEditor/EditableBlock';
+import ComposedBlock from './elements/ComposedBlock';
+import Page from './elements/Page';
+import Margin from './elements/Margin';
+import Hyphen from './elements/Hyphen';
+import Space from './elements/Space';
+import TextLineNextTo from './elements/TextLineNextTo';
 
 const Viewer: FC = () => {
-  const [textLines, setTextLines] = useState<any[]>([]);
-  const [strings, setStrings] = useState<any[]>([]);
   const {
     pageDimensions,
+    page,
+    margins,
     printSpace,
     illustrations,
     graphicalElements,
     textBlocks,
+    composedBlocks,
+    textLines,
+    textStrings,
+    alto,
+    hyphens,
+    spaces,
   } = useAlto();
   const { settings } = useSettings();
   const { imageSrc } = useEditor();
   const { imageOpacity, show } = settings;
 
-  useEffect(() => {
-    setTextLines([]);
-    for (const textBlock of textBlocks) {
-      if (textBlock.element?.TextLine && textBlock.metadata) {
-        const parentStyleRefs = textBlock.metadata['@_STYLEREFS'];
-        const otherMetadata = {
-          textBlockIndex: textBlock.metadata.index,
-        };
-
-        setTextLines((old) => [
-          ...old,
-          ...addMetadata(
-            textBlock.element.TextLine,
-            parentStyleRefs,
-            otherMetadata
-          ),
-        ]);
-      }
-    }
-  }, [textBlocks]);
-
-  useEffect(() => {
-    setStrings([]);
-    for (const textLine of textLines) {
-      if (textLine.element?.String && textLine.metadata) {
-        const parentStyleRefs = textLine.metadata['@_STYLEREFS'];
-        const otherMetadata = {
-          textBlockIndex: textLine.metadata.textBlockIndex,
-          textLineIndex: textLine.metadata.index,
-          lineVPos: toNumber(textLine.element['@_VPOS']),
-        };
-
-        setStrings((old) => [
-          ...old,
-          ...addMetadata(
-            textLine.element.String,
-            parentStyleRefs,
-            otherMetadata
-          ),
-        ]);
-      }
-    }
-  }, [textLines]);
-
+  // Check for valid page dimensions - provide a better error message
+  if (pageDimensions.height === null) {
+    return (
+      <Title order={2} style={{ textAlign: 'center', marginTop: '2rem' }}>
+        Loading page dimensions...
+      </Title>
+    );
+  }
+  
   if (!pageDimensions.height || !pageDimensions.width) {
-    return <Title>No or wrong xml</Title>;
+    console.error("Invalid page dimensions:", pageDimensions);
+    console.error("Current ALTO structure:", alto);
+    
+    return (
+      <Title order={2} style={{ textAlign: 'center', marginTop: '2rem', color: 'red' }}>
+        Error: Missing page dimensions
+        <div style={{ fontSize: '1rem', marginTop: '1rem' }}>
+          Please check that your ALTO file has WIDTH and HEIGHT attributes either:
+          <ul style={{ textAlign: 'left', marginTop: '0.5rem' }}>
+            <li>In the &lt;Page&gt; element, or</li>
+            <li>In the &lt;PrintSpace&gt; element</li>
+          </ul>
+          <div style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#555' }}>
+            Try opening the ALTO file in a text editor and ensure it includes:<br/>
+            <code>&lt;Page WIDTH="1234" HEIGHT="5678"&gt;</code> or<br/>
+            <code>&lt;PrintSpace WIDTH="1234" HEIGHT="5678"&gt;</code>
+          </div>
+        </div>
+      </Title>
+    );
   }
 
   return (
@@ -86,78 +78,108 @@ const Viewer: FC = () => {
         />
       )}
 
-      {show.printSpace && (
-        <PrintSpace
-          top={toNumber(printSpace['@_VPOS'])}
-          left={toNumber(printSpace['@_HPOS'])}
-          width={toNumber(printSpace['@_WIDTH'])}
-          height={toNumber(printSpace['@_HEIGHT'])}
+      {show.page && page && (
+        <Page
+          element={page}
         />
       )}
 
+      {show.margins && 
+        margins.map((margin) => (
+          <Margin
+            key={margin['@_CUSTOM_ID']}
+            element={margin}
+          />
+        ))}
+
+      {show.printSpace && printSpace && (
+        <PrintSpace
+          element={printSpace}
+        />
+      )}
+
+      {show.composedBlocks &&
+        composedBlocks.map((composedBlock) => (
+          <ComposedBlock
+            key={composedBlock['@_CUSTOM_ID']}
+            element={composedBlock}
+          />
+        ))}
+
       {show.illustrations &&
-        illustrations.map((illustration: any, index: number) => (
+        illustrations.map((illustration) => (
           <Illustration
-            key={index}
-            element={illustration.element}
-            metadata={illustration.metadata}
+            key={illustration['@_CUSTOM_ID']}
+            element={illustration}
           />
         ))}
 
       {show.graphicalElements &&
-        graphicalElements.map((graphicalElement: any, index: number) => (
+        graphicalElements.map((graphicalElement) => (
           <GraphicalElement
-            key={index}
-            element={graphicalElement.element}
-            metadata={graphicalElement.metadata}
+            key={graphicalElement['@_CUSTOM_ID']}
+            element={graphicalElement}
           />
         ))}
 
       {show.textBlocks &&
-        textBlocks.map((textBlock: any, index: number) => (
+        textBlocks.map((textBlock) => (
           <TextBlock
-            key={index}
-            element={textBlock.element}
-            metadata={textBlock.metadata}
+            key={textBlock['@_CUSTOM_ID']}
+            element={textBlock}
           />
         ))}
 
       {show.textLines &&
-        textLines.map((textLine: any, index: number) => (
+        textLines.map((textLine) => (
           <TextLine
-            key={index}
-            element={textLine.element}
-            metadata={textLine.metadata}
+            key={textLine['@_CUSTOM_ID']}
+            element={textLine}
           />
         ))}
 
-      {strings.map((string: any, index: number) => (
+      {/* show settings are handled in String component */}
+      {textStrings.map((string) => (
         <String
-          key={index}
-          element={string.element}
-          metadata={string.metadata}
+          key={string['@_CUSTOM_ID']}
+          element={string}
         />
       ))}
 
-      <div
-        style={{
-          position: 'absolute',
-          top: toNumber(printSpace['@_VPOS']),
-          left:
-            toNumber(printSpace['@_HPOS']) + toNumber(printSpace['@_WIDTH']),
-          width: toNumber(printSpace['@_WIDTH']),
-          height: toNumber(printSpace['@_HEIGHT']),
-        }}
-      >
-        {settings.show.textNext &&
-          textBlocks.map((textBlock: any) => (
-            <EditableBlock
-              key={textBlock.metadata.index}
-              textBlock={textBlock}
-              showTextNext
+      {show.hyphens &&
+        hyphens.map((hyphen) => (
+          <Hyphen
+            key={hyphen['@_CUSTOM_ID']}
+            element={hyphen}
+          />
+        ))}
+
+      {show.spaces &&
+        spaces.map((space) => (
+          <Space
+            key={space['@_CUSTOM_ID']}
+            element={space}
+          />
+        ))}
+
+      {settings.show.textNext &&
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: pageDimensions.width,
+            width: pageDimensions.width,
+            height: pageDimensions.height,
+          }}
+        >
+         {textLines.map((textLine) => (
+            <TextLineNextTo
+              key={textLine['@_CUSTOM_ID']}
+              element={textLine}
             />
           ))}
-      </div>
+        </div>
+      }
     </>
   );
 };

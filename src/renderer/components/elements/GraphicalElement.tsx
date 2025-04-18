@@ -1,30 +1,24 @@
 import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
-import { useAltoEditor } from '../../context/AltoEditorContext';
-import { useAlto } from '../../context/AltoContext';
-import { toNumber } from '../../utils/alto';
+import { useAltoEditor, useAlto, useSettings } from '../../context';
+import { convertToPixels } from '../../utils/alto';
+import { AltoGraphicalElementJson } from '../../types/alto';
+import { elementColors } from './colors';
 
 interface GraphicalElementProps {
-  element: any;
-  metadata: any;
+  element: AltoGraphicalElementJson;
 }
 
-const GraphicalElement: FC<GraphicalElementProps> = ({ element, metadata }) => {
+const GraphicalElement: FC<GraphicalElementProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-  const { updateGraphicalElement } = useAlto();
+  const { measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
-
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
-
-  const handleClick = () => {
-    openAltoEditor(
-      element,
-      () => (updated: any) => updateGraphicalElement(updated, metadata.index)
-    );
-  };
+  const { settings } = useSettings();
+  
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
 
   return (
     <div
@@ -35,12 +29,11 @@ const GraphicalElement: FC<GraphicalElementProps> = ({ element, metadata }) => {
         left,
         width,
         height,
-        border: '1px solid blue',
-        backgroundColor: hovered ? 'blue' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `${settings.borderWidth}px solid ${elementColors.graphicalElements.borderColor}`,
+        backgroundColor: hovered ? elementColors.graphicalElements.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
-      onClick={handleClick}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

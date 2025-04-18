@@ -1,4 +1,3 @@
-import { ProjectAssetList } from '../../main/project';
 import {
   createContext,
   FC,
@@ -8,30 +7,31 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { ProjectContextValues } from '../types/project';
+import { ProjectAssetList, ProjectContextValues } from '../types/project';
 
-// Context
+/**
+ * Context for managing project-related state and operations
+ */
 const ProjectContext = createContext({} as ProjectContextValues);
 
-// useContext
+/**
+ * Hook to access the project context
+ */
 export const useProject = () => useContext(ProjectContext);
 
-// Provider
-const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
+/**
+ * Provider component for the project context
+ */
+export const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
   const [projectAssets, setProjectAssets] = useState<ProjectAssetList>();
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const createProject = () => {
-    window.electron.ipcRenderer.sendMessage('project-channel', {
-      action: 'CREATE_PROJECT',
-    });
+    window.electron.ipc.send('project-channel', 'CREATE_PROJECT');
   };
 
   const openProject = (projectPath?: string) => {
-    window.electron.ipcRenderer.sendMessage('project-channel', {
-      action: 'OPEN_PROJECT',
-      payload: projectPath,
-    });
+    window.electron.ipc.send('project-channel', 'OPEN_PROJECT', projectPath);
   };
 
   const closeProject = () => {
@@ -39,22 +39,15 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const addImages = () => {
-    window.electron.ipcRenderer.sendMessage('project-channel', {
-      action: 'ADD_IMAGES',
-    });
+    window.electron.ipc.send('project-channel', 'ADD_IMAGES');
   };
 
   const addAltos = () => {
-    window.electron.ipcRenderer.sendMessage('project-channel', {
-      action: 'ADD_ALTOS',
-    });
+    window.electron.ipc.send('project-channel', 'ADD_ALTOS');
   };
 
   const removeAsset = (directory: 'images' | 'altos', name: string) => {
-    window.electron.ipcRenderer.sendMessage('project-channel', {
-      action: 'REMOVE_ASSET',
-      payload: { directory, name },
-    });
+    window.electron.ipc.send('project-channel', 'REMOVE_ASSET', { directory, name });
   };
 
   const resetErrorMessage = () => {
@@ -62,8 +55,10 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const updatePageDone = (done: boolean, index: number) => {
-    setProjectAssets((prev) => {
-      const newState = prev?.map((page, i) => {
+    setProjectAssets((prev?: ProjectAssetList) => {
+      if (!prev) return prev;
+      
+      const newState = prev.map((page, i) => {
         if (i === index) {
           return {
             ...page,
@@ -76,19 +71,21 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
       return newState;
     });
 
-    window.electron.ipcRenderer.sendMessage('project-channel', {
-      action: done ? 'MARK_AS_DONE' : 'REMOVE_FROM_DONE',
-      payload: {
-        fileName: projectAssets?.[index].alto,
+    const action = done ? 'MARK_AS_DONE' : 'REMOVE_FROM_DONE';
+    if (projectAssets?.[index]?.alto) {
+      window.electron.ipc.send('project-channel', action, {
+        fileName: projectAssets[index].alto,
         index,
-      },
-    });
+      });
+    }
   };
 
   const updateWer = useCallback((index: number, wer: number | undefined) => {
     console.log('updateWer', index, wer);
-    setProjectAssets((prev) => {
-      const newState = prev?.map((page, i) => {
+    setProjectAssets((prev?: ProjectAssetList) => {
+      if (!prev) return prev;
+      
+      const newState = prev.map((page, i) => {
         if (i === index) {
           return { ...page, wer };
         }
@@ -99,22 +96,34 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('project-channel', (data) => {
-      console.log('project-channel', data);
-      switch (data.action) {
-        case 'UPDATE_ASSET_LIST':
-          setProjectAssets(data.payload);
-          break;
-        case 'WER_UPDATED':
-          updateWer(data.payload.index, data.payload.value);
-          break;
-        case 'ERROR':
-          setErrorMessage(String(data.payload));
-          break;
-        default:
-          console.log('Unhandled action:', data.action);
+    // Setup IPC listeners with type safety
+    const unsubscribeAssetList = window.electron.ipc.on(
+      'project-channel', 
+      'UPDATE_ASSET_LIST', 
+      (payload) => {
+        setProjectAssets(payload);
       }
+    );
+
+    const unsubscribeWerUpdated = window.electron.ipc.on(
+      'project-channel', 
+      'WER_UPDATED', 
+      (payload) => {
+        updateWer(payload.index, payload.value);
+      }
+    );
+
+    // Setup error handler
+    const unsubscribeError = window.electron.ipc.onError((message) => {
+      setErrorMessage(message);
     });
+
+    // Clean up listeners when component unmounts
+    return () => {
+      unsubscribeAssetList();
+      unsubscribeWerUpdated();
+      unsubscribeError();
+    };
   }, [updateWer]);
 
   return (
@@ -136,5 +145,3 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     </ProjectContext.Provider>
   );
 };
-
-export default ProjectProvider;

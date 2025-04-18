@@ -1,11 +1,13 @@
-import { Center, Loader, Title } from '@mantine/core';
+import { Center, Loader, Box } from '@mantine/core';
 import { FC, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import EditorOverlay from '../components/editorOverlay/EditorOverlay';
 import Viewer from '../components/Viewer';
-import { useAlto } from '../context/AltoContext';
-import { useEditor } from '../context/EditorContext';
-import { useSettings } from '../context/SettingsContext';
+import ValidationWarning from '../components/ValidationWarning';
+import AltoVersionBadge from '../components/AltoVersionBadge';
+import { useAlto, useEditor, useSettings } from '../context';
+import { ErrorBoundary } from '../components/common';
+import { logger } from '../utils/logger';
 
 const Editor: FC = () => {
   const [urlSearchParams] = useSearchParams();
@@ -24,7 +26,7 @@ const Editor: FC = () => {
     const contentWidth = settings.show.textNext
       ? pageDimensions.width * 2
       : pageDimensions.width;
-    const contentHeight = pageDimensions.height;
+    const contentHeight = pageDimensions.height || 0;
 
     const scaleWidth = availableWidth / contentWidth;
     const scaleHeight = availableHeight / contentHeight;
@@ -50,6 +52,7 @@ const Editor: FC = () => {
 
   const onSave = useCallback(() => {
     if (altoFileName && index) {
+      logger.info('Editor', `Saving ALTO file: ${altoFileName} with index ${index}`);
       saveAlto(altoFileName, parseInt(index, 10));
     }
   }, [altoFileName, index, saveAlto]);
@@ -60,23 +63,38 @@ const Editor: FC = () => {
 
   useEffect(() => {
     if (imageFileName && altoFileName) {
+      logger.info('Editor', `Loading page assets: ${imageFileName}, ${altoFileName}`);
       requestPageAssets(imageFileName, altoFileName);
     }
   }, [imageFileName, altoFileName, requestPageAssets]);
 
-  if (loading)
-    return (
-      <Center mt={120}>
-        <Loader />
-        <Title order={2} ml="sm">
-          Loading...
-        </Title>
-      </Center>
-    );
-
   return (
     <>
-      <div
+      <ErrorBoundary componentName="EditorStatusBar">
+        <Box 
+          style={{
+            position: 'fixed',
+            top: 70,
+            right: 20,
+            zIndex: 1000,
+            width: 300,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            gap: 10,
+          }}
+        >
+          <AltoVersionBadge />
+          <ValidationWarning />
+        </Box>
+      </ErrorBoundary>
+
+      {loading ? (
+        <Center w="100vw" h="90vh">
+          <Loader />
+        </Center>
+      ) : (
+        <div
         style={{
           minHeight: '100vh',
           minWidth: '100vw',
@@ -94,14 +112,20 @@ const Editor: FC = () => {
             transformOrigin: 'center top',
           }}
         >
-          <Viewer />
+          <ErrorBoundary componentName="Viewer">
+            <Viewer />
+          </ErrorBoundary>
+          </div>
         </div>
-      </div>
-      <EditorOverlay
-        alignCenter={alignCenter}
-        pageNumber={parseInt(index || '0', 10)}
-        onSave={onSave}
-      />
+      )}
+
+      <ErrorBoundary componentName="EditorOverlay">
+        <EditorOverlay
+          alignCenter={alignCenter}
+          pageNumber={parseInt(index || '0', 10)}
+          onSave={onSave}
+        />
+      </ErrorBoundary>
     </>
   );
 };

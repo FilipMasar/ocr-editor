@@ -1,15 +1,14 @@
+import { ChangeEvent, FC, MouseEvent } from 'react';
 import {
-  ActionIcon,
-  Checkbox,
   Group,
+  Checkbox,
+  ActionIcon,
   Loader,
   Paper,
   Tooltip,
 } from '@mantine/core';
-import { ChangeEvent, FC, MouseEvent } from 'react';
 import { Save } from 'react-feather';
-import { useEditor } from '../../context/EditorContext';
-import { useProject } from '../../context/ProjectContext';
+import { useEditor, useProject } from '../../context';
 
 interface Props {
   onSave: () => void;

@@ -1,55 +1,26 @@
 import { useHover } from '@mantine/hooks';
-import { FC, useEffect } from 'react';
-import { useAltoEditor } from '../../context/AltoEditorContext';
-import { useTextEditor } from '../../context/AltoTextEditorContext';
-import { useAlto } from '../../context/AltoContext';
-import { toNumber } from '../../utils/alto';
+import { FC } from 'react';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
+import { convertToPixels } from '../../utils/alto';
+import { withErrorBoundary } from '../../utils/withErrorBoundary';
+import { AltoTextBlockJson } from '../../types/alto';
+import { elementColors } from './colors';
 
 interface TextBlockProps {
-  element: any;
-  metadata: any;
+  element: AltoTextBlockJson;
 }
 
-const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
+const TextBlock: FC<TextBlockProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-
-  const { updateTextBlock } = useAlto();
+  const { measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
-  const { openTextEditor } = useTextEditor();
+  const { settings } = useSettings();
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
-
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (event.altKey) {
-        openAltoEditor(
-          element,
-          () => (updated: any) => updateTextBlock(updated, metadata.index)
-        );
-      } else {
-        openTextEditor('TEXTBLOCK', { element, metadata });
-      }
-    };
-
-    const div = ref.current;
-
-    div.addEventListener('click', handleClick);
-
-    return () => {
-      div.removeEventListener('click', handleClick);
-    };
-  }, [
-    element,
-    metadata,
-    metadata.index,
-    openAltoEditor,
-    openTextEditor,
-    ref,
-    updateTextBlock,
-  ]);
+  // Convert coordinates using the current measurement unit
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
 
   return (
     <div
@@ -60,13 +31,13 @@ const TextBlock: FC<TextBlockProps> = ({ element, metadata }) => {
         left,
         width,
         height,
-        border: '1px solid red',
-        backgroundColor: hovered ? 'red' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `${settings.borderWidth}px solid ${elementColors.textBlocks.borderColor}`,
+        backgroundColor: hovered ? elementColors.textBlocks.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };
 
-export default TextBlock;
+export default withErrorBoundary(TextBlock, 'TextBlock');

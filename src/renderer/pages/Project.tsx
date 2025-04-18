@@ -3,7 +3,16 @@ import { FC, useEffect, useState } from 'react';
 import { ArrowLeft, PlusCircle } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import PageCard from '../components/PageCard';
-import { useProject } from '../context/ProjectContext';
+import { useProject } from '../context';
+
+// Extended type to include imageSrc property that's added during processing
+interface ExtendedProjectAsset {
+  image: string;
+  imageSrc: string;
+  alto: string;
+  done: boolean;
+  wer?: number;
+}
 
 const Project: FC = () => {
   const [progress, setProgress] = useState<number>(0);
@@ -73,11 +82,11 @@ const Project: FC = () => {
       </Button>
 
       <Flex wrap="wrap">
-        {projectAssets.map(({ image, imageSrc, alto, done, wer }, index) => (
+        {(projectAssets as ExtendedProjectAsset[]).map(({ image, imageSrc, alto, done, wer }, index) => (
           <PageCard
             key={image + alto}
             image={image}
-            imageSrc={imageSrc}
+            imageSrc={imageSrc || ''}
             alto={alto}
             done={done}
             wer={wer}

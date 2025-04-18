@@ -1,9 +1,11 @@
 import { useHover } from '@mantine/hooks';
-import { FC, useEffect, useState } from 'react';
-import { useSettings } from '../../context/SettingsContext';
-import { useAlto } from '../../context/AltoContext';
+import { FC } from 'react';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { TextStyle } from '../../types/app';
-import { toNumber } from '../../utils/alto';
+import { convertToPixels } from '../../utils/alto';
+import { withErrorBoundary } from '../../utils/withErrorBoundary';
+import { AltoStringJson } from '../../types/alto';
+import { elementColors } from './colors';
 
 const defaultStyle: TextStyle = {
   fontSize: 16,
@@ -11,54 +13,46 @@ const defaultStyle: TextStyle = {
 };
 
 interface StringProps {
-  element: any;
-  metadata: any;
+  element: AltoStringJson;
 }
 
-const String: FC<StringProps> = ({ element, metadata }) => {
+const String: FC<StringProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-  const { styles } = useAlto();
+  const { measurementUnit } = useAlto();
+  const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
   const { show } = settings;
-  const [textStyle, setTextStyle] = useState<TextStyle>(defaultStyle);
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
+  // Convert coordinates using the current measurement unit
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
   const text = element['@_CONTENT'];
 
-  useEffect(() => {
-    const styleRefsArray = metadata['@_STYLEREFS'].split(' ');
-
-    for (const id of styleRefsArray) {
-      if (styles[id]) {
-        setTextStyle(styles[id]);
-      }
-    }
-  }, [metadata, styles]);
 
   return (
     <>
       {/* Strings elements */}
       {show.strings && (
         <div
+          ref={ref}
           style={{
             position: 'absolute',
             top,
             left,
             width,
             height,
-            border: '1px solid green',
-            backgroundColor: hovered ? 'green' : 'transparent',
-            opacity: hovered ? 0.5 : 1,
+            border: `${settings.borderWidth}px solid ${elementColors.strings.borderColor}`,
+            backgroundColor: hovered ? elementColors.strings.backgroundColor : 'transparent',
+            cursor: 'pointer',
           }}
-          // TODO className={`border border-green-500 hover:bg-green-500 hover:opacity-30 ${textStyle.color}`}
+          onClick={() => openAltoEditor(element)}
         />
       )}
 
       {/* Text Fit */}
-      {show.textFit && (
+      {show.textFit && text && (
         <div
           style={{
             display: 'flex',
@@ -69,8 +63,8 @@ const String: FC<StringProps> = ({ element, metadata }) => {
             left,
             width,
             height,
-            fontFamily: textStyle.fontFamily,
-            fontSize: `calc(${textStyle.fontSize}pt / 0.2645833333)`,
+            fontFamily: defaultStyle.fontFamily,
+            fontSize: `calc(${defaultStyle.fontSize}pt / 0.2645833333)`,
             lineHeight: `${height}px`,
             color: 'black',
           }}
@@ -82,14 +76,14 @@ const String: FC<StringProps> = ({ element, metadata }) => {
       )}
 
       {/* Text Above */}
-      {show.textAbove && (
+      {show.textAbove && text && (
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-around',
             alignItems: 'flex-start',
             position: 'absolute',
-            top: metadata.lineVPos - 20,
+            top: top - 20,
             left,
             width,
           }}
@@ -105,4 +99,4 @@ const String: FC<StringProps> = ({ element, metadata }) => {
   );
 };
 
-export default String;
+export default withErrorBoundary(String, 'String');

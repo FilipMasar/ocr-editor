@@ -1,30 +1,24 @@
 import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
-import { useAltoEditor } from '../../context/AltoEditorContext';
-import { useAlto } from '../../context/AltoContext';
-import { toNumber } from '../../utils/alto';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
+import { convertToPixels } from '../../utils/alto';
+import { AltoIllustrationJson } from '../../types/alto';
+import { elementColors } from './colors';
 
 interface IllustrationProps {
-  element: any;
-  metadata: any;
+  element: AltoIllustrationJson;
 }
 
-const Illustration: FC<IllustrationProps> = ({ element, metadata }) => {
+const Illustration: FC<IllustrationProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-  const { updateIllustration } = useAlto();
+  const { measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
+  const { settings } = useSettings();
 
-  const top = toNumber(element['@_VPOS']);
-  const left = toNumber(element['@_HPOS']);
-  const width = toNumber(element['@_WIDTH']);
-  const height = toNumber(element['@_HEIGHT']);
-
-  const handleClick = () => {
-    openAltoEditor(
-      element,
-      () => (updated: any) => updateIllustration(updated, metadata.index)
-    );
-  };
+  const top = convertToPixels(element['@_VPOS'], measurementUnit);
+  const left = convertToPixels(element['@_HPOS'], measurementUnit);
+  const width = convertToPixels(element['@_WIDTH'], measurementUnit);
+  const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
 
   return (
     <div
@@ -35,12 +29,11 @@ const Illustration: FC<IllustrationProps> = ({ element, metadata }) => {
         left,
         width,
         height,
-        border: '1px solid pink',
-        backgroundColor: hovered ? 'pink' : 'transparent',
-        opacity: hovered ? 0.5 : 1,
+        border: `${settings.borderWidth}px solid ${elementColors.illustrations.borderColor}`,
+        backgroundColor: hovered ? elementColors.illustrations.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
-      onClick={handleClick}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

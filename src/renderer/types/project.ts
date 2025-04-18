@@ -1,4 +1,6 @@
-import { ProjectAssetList } from '../../main/project';
+import { ProjectAssetList as BaseProjectAssetList } from '../../shared/ipc/project-channel';
+
+export type ProjectAssetList = BaseProjectAssetList;
 
 export type ProjectContextValues = {
   projectAssets: ProjectAssetList | undefined;

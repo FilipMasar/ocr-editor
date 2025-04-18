@@ -1,14 +1,17 @@
 import { MantineProvider } from '@mantine/core';
 import AppRoutes from './AppRoutes';
-import ProjectProvider from './context/ProjectContext';
-import SettingsProvider from './context/SettingsContext';
+import { ProjectProvider, SettingsProvider } from './context';
+import { theme } from './theme';
 
+/**
+ * Main application component
+ */
 export default function App() {
   return (
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
-      theme={{ colorScheme: 'light' }}
+      theme={theme}
     >
       <ProjectProvider>
         <SettingsProvider>

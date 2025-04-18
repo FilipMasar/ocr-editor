@@ -2,7 +2,7 @@ import { BrowserWindow, dialog } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { addToRecentProjects, getDonePages, getWerValues } from './configData';
-import { getImageUri } from './utils/image';
+import { getImageUri } from './image';
 
 type Page = {
   image: string;

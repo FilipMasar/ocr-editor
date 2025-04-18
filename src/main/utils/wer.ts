@@ -1,21 +1,37 @@
 /*
   File for computing word error rate (WER) between original alto and updated alto
 */
-import { wordErrorRate } from 'word-error-rate';
+import {
+  wordErrorRate
+} from 'word-error-rate';
 import path from 'path';
 import fs from 'fs';
-import { updateWer } from '../configData';
+import { updateWer } from './configData';
 import { xmlToJson } from './xmlConvertor';
+import { AltoJson, AltoTextBlockJson } from '../../renderer/types/alto';
 
-const getTextFromAlto = (altoJson: any) => {
-  let textBlocks = altoJson?.alto?.Layout?.Page?.PrintSpace?.TextBlock;
-  if (textBlocks === undefined) return '';
-
+const getTextFromAlto = (altoJson: AltoJson) => {
+  // Safely navigate the ALTO structure
+  const page = altoJson?.alto?.Layout?.Page;
+  if (!page) return '';
+  
+  // Handle both single page and array of pages
+  const firstPage = Array.isArray(page) ? page[0] : page;
+  
+  // Get PrintSpace from page
+  const printSpace = firstPage.PrintSpace;
+  if (!printSpace) return '';
+  
+  // Get TextBlocks from PrintSpace
+  let textBlocks = printSpace.TextBlock;
+  if (!textBlocks) return '';
+  
+  // Ensure textBlocks is an array
   if (!Array.isArray(textBlocks)) textBlocks = [textBlocks];
 
   const text = textBlocks
-    .map((textBlock: any) => {
-      if (textBlock.TextLine === undefined) return '';
+    .map((textBlock: AltoTextBlockJson) => {
+      if (!textBlock.TextLine) return '';
 
       const textLines = Array.isArray(textBlock.TextLine)
         ? textBlock.TextLine
@@ -23,11 +39,12 @@ const getTextFromAlto = (altoJson: any) => {
 
       let words = '';
       for (let i = 0; i < textLines.length; i += 1) {
-        if (textLines[i].String === undefined) return '';
+        const textLine = textLines[i];
+        if (!textLine.String) return '';
 
-        const strings = Array.isArray(textLines[i].String)
-          ? textLines[i].String
-          : [textLines[i].String];
+        const strings = Array.isArray(textLine.String)
+          ? textLine.String
+          : [textLine.String];
 
         for (let j = 0; j < strings.length; j += 1) {
           words += strings[j]['@_CONTENT'];
@@ -36,7 +53,7 @@ const getTextFromAlto = (altoJson: any) => {
 
         // If the line ends with a hyphen, don't add a space
         if (i !== textLines.length - 1) {
-          if (textLines[i].HYP === undefined) {
+          if (!textLine.HYP) {
             words += ' ';
           }
         }

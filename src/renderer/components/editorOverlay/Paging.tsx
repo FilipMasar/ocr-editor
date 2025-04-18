@@ -2,8 +2,7 @@ import { ActionIcon, Button, Group, Paper, Text } from '@mantine/core';
 import { FC, MouseEvent } from 'react';
 import { ArrowLeft, ArrowRight } from 'react-feather';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { useEditor } from '../../context/EditorContext';
-import { useProject } from '../../context/ProjectContext';
+import { useEditor, useProject } from '../../context';
 
 interface Props {
   pageNumber: number;

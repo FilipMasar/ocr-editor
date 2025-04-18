@@ -8,27 +8,53 @@ import {
   Slider,
   Stack,
   Text,
+  Box,
 } from '@mantine/core';
-import { FC, useCallback } from 'react';
+import { FC, useCallback, ChangeEvent } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
-import { useAlto } from '../../context/AltoContext';
-import { useAltoEditor } from '../../context/AltoEditorContext';
-import { useTextEditor } from '../../context/AltoTextEditorContext';
-import { useSettings } from '../../context/SettingsContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
+import { elementColors } from '../../components/elements/colors';
+import { Settings } from '../../types/app';
+
+// Define the structure for element visibility options
+type ElementVisibilityOption = {
+  key: keyof Settings['show'];
+  label: string;
+};
+
+const elementVisibilityOptions: ElementVisibilityOption[] = [
+  { key: 'page', label: 'Page' },
+  { key: 'margins', label: 'Margins' },
+  { key: 'printSpace', label: 'Print Space' },
+  { key: 'graphicalElements', label: 'Graphical Element' },
+  { key: 'illustrations', label: 'Illustration' },
+  { key: 'composedBlocks', label: 'Composed Block' },
+  { key: 'textBlocks', label: 'Text Block' },
+  { key: 'textLines', label: 'Text Line' },
+  { key: 'strings', label: 'String' },
+  { key: 'hyphens', label: 'Hyphens' },
+  { key: 'spaces', label: 'Spaces' },
+];
 
 const Options: FC = () => {
   const { settings, setSettings } = useSettings();
-  const { alto, setAlto, textBlocks } = useAlto();
+  const { alto } = useAlto();
   const { openAltoEditor } = useAltoEditor();
-  const { openTextEditor } = useTextEditor();
 
   const onEditWholeAlto = useCallback(() => {
-    openAltoEditor(alto, () => setAlto);
-  }, [alto, openAltoEditor, setAlto]);
+    openAltoEditor(alto);
+  }, [alto, openAltoEditor]);
 
-  const onEditWholeText = useCallback(() => {
-    openTextEditor('ALL', textBlocks);
-  }, [openTextEditor, textBlocks]);
+  // Generic handler for visibility checkboxes
+  const handleVisibilityChange = useCallback((key: keyof Settings['show'], checked: boolean) => {
+    setSettings((old) => ({
+      ...old,
+      show: {
+        ...old.show,
+        [key]: checked,
+      },
+    }));
+  }, [setSettings]);
 
   return (
     <div
@@ -63,6 +89,18 @@ const Options: FC = () => {
                     setSettings((old) => ({ ...old, imageOpacity: value }))
                   }
                 />
+                
+                <Text mt="md" mb="xs">Border width:</Text>
+                <Slider
+                  w={200}
+                  min={1}
+                  max={5}
+                  step={1}
+                  value={settings.borderWidth}
+                  onChange={(value) =>
+                    setSettings((old) => ({ ...old, borderWidth: value }))
+                  }
+                />
               </Paper>
             </Menu.Dropdown>
           </Menu>
@@ -79,86 +117,31 @@ const Options: FC = () => {
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-              <Paper p="sm">
+              <Paper p="sm" w={200}>
                 <Text mb="xs">Display elements:</Text>
-                <Checkbox
-                  label="Print Space"
-                  checked={settings.show.printSpace}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        printSpace: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label="Graphical Element"
-                  checked={settings.show.graphicalElements}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        graphicalElements: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label="Illustration"
-                  checked={settings.show.illustrations}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        illustrations: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label="Text Block"
-                  checked={settings.show.textBlocks}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        textBlocks: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label="Text Line"
-                  checked={settings.show.textLines}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        textLines: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Checkbox
-                  label="String"
-                  checked={settings.show.strings}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        strings: e.target.checked,
-                      },
-                    }))
-                  }
-                />
+                {elementVisibilityOptions.map((option) => (
+                  <Checkbox
+                    key={option.key}
+                    label={
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {option.label}
+                        <Box
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            backgroundColor: elementColors[option.key].backgroundColor,
+                            border: `1px solid ${elementColors[option.key].borderColor}`,
+                          }}
+                        />
+                      </div>
+                    }
+                    checked={settings.show[option.key]}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                       handleVisibilityChange(option.key, e.target.checked)
+                    }
+                    my={4}
+                  />
+                ))}
                 <Divider my="sm" />
                 <Button onClick={onEditWholeAlto}>Edit ALTO</Button>
               </Paper>
@@ -181,6 +164,7 @@ const Options: FC = () => {
                 <Text mb="xs">Display text:</Text>
                 <Checkbox
                   label="Text fit"
+                  disabled // TODO: Implement text fit
                   checked={settings.show.textFit}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -218,21 +202,6 @@ const Options: FC = () => {
                     }))
                   }
                 />
-                <Checkbox
-                  label="Hyphens"
-                  checked={settings.show.hyphens}
-                  onChange={(e) =>
-                    setSettings((old) => ({
-                      ...old,
-                      show: {
-                        ...old.show,
-                        hyphens: e.target.checked,
-                      },
-                    }))
-                  }
-                />
-                <Divider my="sm" />
-                <Button onClick={onEditWholeText}>Edit Text</Button>
               </Paper>
             </Menu.Dropdown>
           </Menu>

@@ -1,16 +1,15 @@
-import { ChannelData, Channels } from 'main/preload';
+/**
+ * TypeScript declaration file for Electron preload APIs exposed to the renderer
+ */
+import { TypedIpc } from '../shared/ipc';
 
 declare global {
   interface Window {
     electron: {
-      ipcRenderer: {
-        sendMessage(channel: Channels, data: ChannelData): void;
-        on(
-          channel: Channels,
-          func: (data: ChannelData) => void
-        ): (() => void) | undefined;
-        once(channel: Channels, func: (data: ChannelData) => void): void;
-      };
+      /**
+       * Type-safe interface for IPC communication with the main process
+       */
+      ipc: TypedIpc;
     };
   }
 }
