@@ -21,7 +21,7 @@ import { projectService } from './ProjectService';
 /**
  * Service for managing editor operations
  */
-export class EditorService {
+class EditorService {
   /**
    * Gets assets for a page (image and ALTO file)
    * 

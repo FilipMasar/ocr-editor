@@ -32,7 +32,7 @@ import calculateWer from '../utils/wer';
 /**
  * Service for managing project operations
  */
-export class ProjectService {
+class ProjectService {
   private currentProjectPath: string | undefined;
   private currentProjectAssets: ProjectAssetList | undefined;
 

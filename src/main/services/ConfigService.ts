@@ -43,7 +43,7 @@ const defaultSettings: Settings = {
 /**
  * Service for managing configuration operations
  */
-export class ConfigService {
+class ConfigService {
   private settingsFilePath: string;
 
   constructor() {

@@ -83,22 +83,6 @@ export const ensureArray = <T>(item: T | T[] | undefined): T[] => {
 };
 
 /**
- * Gets the ALTO schema version from the document
- * Returns undefined if not found
- */
-export const getAltoVersion = (altoJson: AltoJson): string | undefined => {
-  return altoJson?.alto?.['@_SCHEMAVERSION'];
-};
-
-/**
- * Checks if the ALTO document is compatible with version 3.x
- */
-export const isAltoV3Compatible = (altoJson: AltoJson): boolean => {
-  const version = getAltoVersion(altoJson);
-  return version ? version.startsWith('3.') : false;
-};
-
-/**
  * Helper function to get the first page from the ALTO document
  * Most ALTO files only have one page, but this handles multi-page cases
  */

@@ -43,7 +43,7 @@ const defaultConfig: LoggingConfig = {
 /**
  * Service for centralized logging
  */
-export class LoggingService {
+class LoggingService {
   private config: LoggingConfig;
   private logDir: string;
   private currentLogFile: string;

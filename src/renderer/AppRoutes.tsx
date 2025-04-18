@@ -7,7 +7,8 @@ import {
   useProject
 } from './context';
 import { ErrorDialog } from './components/ErrorDialog';
-import { ErrorBoundary, Loader } from './components/common';
+import { ErrorBoundary } from './components/common';
+import { Loader } from '@mantine/core';
 
 // Lazy-loaded pages
 const StartingPage = lazy(() => import('./pages/StartingPage'));
@@ -24,7 +25,7 @@ export default function AppRoutes() {
     <>
       <ErrorBoundary componentName="AppRoutes">
         <Router>
-          <Suspense fallback={<Loader text="Loading..." fullHeight />}>
+          <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={
                 <ErrorBoundary componentName="StartingPage">
