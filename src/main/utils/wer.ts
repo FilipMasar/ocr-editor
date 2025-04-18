@@ -8,7 +8,7 @@ import path from 'path';
 import fs from 'fs';
 import { updateWer } from './configData';
 import { xmlToJson } from './xmlConvertor';
-import { AltoJson, AltoTextBlockJson, AltoStringJson, AltoTextLineJson, AltoPrintSpaceJson, AltoPageJson } from '../../renderer/types/alto';
+import { AltoJson, AltoTextBlockJson } from '../../renderer/types/alto';
 
 const getTextFromAlto = (altoJson: AltoJson) => {
   // Safely navigate the ALTO structure

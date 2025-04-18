@@ -1,20 +1,13 @@
-import { ChangeEvent, FC, MouseEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent } from 'react';
 import {
-  Box,
-  Card,
-  Center,
   Group,
-  Text,
   Checkbox,
-  Stack,
-  DefaultMantineColor,
-  SegmentedControl,
   ActionIcon,
   Loader,
   Paper,
   Tooltip,
 } from '@mantine/core';
-import { ToggleLeft, Save } from 'react-feather';
+import { Save } from 'react-feather';
 import { useEditor } from '../../context/editor/EditorContext';
 import { useProject } from '../../context/project/ProjectContext';
 
