@@ -39,7 +39,6 @@ export function registerLoggingHandlers(
     'logging-channel',
     'LOG',
     async (payload) => {
-      console.log('xxxxxxxxxxxxxx LOG', payload);
       if (!payload) {
         throw new Error("Log payload is required");
       }

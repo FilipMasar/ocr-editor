@@ -42,8 +42,6 @@ const AltoVersionBadge: FC<AltoVersionBadgeProps> = ({ showTooltip = true }) => 
     return badge;
   }
 
-  console.log(altoVersion);
-  
   return (
     <Tooltip
       label={

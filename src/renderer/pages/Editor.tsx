@@ -21,8 +21,6 @@ const Editor: FC = () => {
   const { loading, requestPageAssets, zoom, setZoom, saveAlto } = useEditor();
   const { pageDimensions } = useAlto();
 
-  console.log(pageDimensions);
-
   const alignCenter = useCallback(() => {
     const availableWidth = window.innerWidth - 70 * 2;
     const availableHeight = window.innerHeight - 56 * 2;

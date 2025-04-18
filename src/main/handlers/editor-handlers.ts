@@ -18,7 +18,6 @@ export function registerEditorHandlers(ipcMain: IpcMain): void {
     'editor-channel',
     'GET_PAGE_ASSETS',
     async (payload) => {
-      console.log('xxxxxxxxxxxxxx GET_PAGE_ASSETS', payload);
       if (!payload || !payload.imageFileName || !payload.altoFileName) {
         throw new Error("Invalid payload: missing file names");
       }
@@ -41,7 +40,6 @@ export function registerEditorHandlers(ipcMain: IpcMain): void {
     'editor-channel',
     'SAVE_ALTO',
     async (payload, event) => {
-      console.log('xxxxxxxxxxxxxx SAVE_ALTO', payload);
       if (!payload || !payload.fileName || payload.index === undefined) {
         throw new Error("Invalid payload: missing required data");
       }

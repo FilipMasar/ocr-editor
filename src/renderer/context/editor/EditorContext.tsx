@@ -79,7 +79,6 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
       'editor-channel',
       'PAGE_ASSETS',
       (payload) => {
-        console.log('PAGE_ASSETS', payload);
         setImageSrc(payload.imageUri);
         setAlto(payload.altoJson as AltoJson);
         

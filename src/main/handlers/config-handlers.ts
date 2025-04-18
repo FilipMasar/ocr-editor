@@ -20,7 +20,6 @@ export function registerConfigHandlers(
     'config-channel',
     'GET_RECENT_PROJECTS',
     async () => {
-      console.log('xxxxxxxxxxxxxx GET_RECENT_PROJECTS');
       const recentProjects = configService.getRecentProjects();
       
       return {
@@ -36,7 +35,6 @@ export function registerConfigHandlers(
     'config-channel',
     'REMOVE_RECENT_PROJECT',
     async (projectPath) => {
-      console.log('xxxxxxxxxxxxxx REMOVE_RECENT_PROJECT', projectPath);
       if (!projectPath) {
         throw new Error("Project path is required");
       }
@@ -56,7 +54,6 @@ export function registerConfigHandlers(
     'config-channel',
     'GET_SETTINGS',
     async () => {
-      console.log('xxxxxxxxxxxxxx GET_SETTINGS');
       const settings = configService.getSettings();
       
       return {
@@ -72,7 +69,6 @@ export function registerConfigHandlers(
     'config-channel',
     'SAVE_SETTINGS',
     async (settings: Settings) => {
-      console.log('xxxxxxxxxxxxxx SAVE_SETTINGS', settings);
       if (!settings) {
         throw new Error("Settings object is required");
       }

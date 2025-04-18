@@ -24,7 +24,6 @@ export function registerProjectHandlers(
     'project-channel',
     'CREATE_PROJECT',
     async (_, event, window) => {
-      console.log('xxxxxxxxxxxxxx CREATE_PROJECT');
       if (!window) {
         throw new Error('Main window is not defined');
       }
@@ -50,7 +49,6 @@ export function registerProjectHandlers(
     'project-channel',
     'OPEN_PROJECT',
     async (projectPath, event, window) => {
-      console.log('xxxxxxxxxxxxxx OPEN_PROJECT', projectPath);
       if (!window) {
         throw new Error('Main window is not defined');
       }
@@ -78,7 +76,6 @@ export function registerProjectHandlers(
     'project-channel',
     'ADD_IMAGES',
     async (_, event, window) => {
-      console.log('xxxxxxxxxxxxxx ADD_IMAGES');
       if (!window) {
         throw new Error('Main window is not defined');
       }
@@ -100,7 +97,6 @@ export function registerProjectHandlers(
     'project-channel',
     'ADD_ALTOS',
     async (_, event, window) => {
-      console.log('xxxxxxxxxxxxxx ADD_ALTOS');
       if (!window) {
         throw new Error('Main window is not defined');
       }
@@ -122,7 +118,6 @@ export function registerProjectHandlers(
     'project-channel',
     'MARK_AS_DONE',
     async (payload) => {
-      console.log('xxxxxxxxxxxxxx MARK_AS_DONE', payload);
       if (!payload || !payload.fileName || payload.index === undefined) {
         throw new Error("Invalid payload");
       }
@@ -145,7 +140,6 @@ export function registerProjectHandlers(
     'project-channel',
     'REMOVE_FROM_DONE',
     async (payload) => {
-      console.log('xxxxxxxxxxxxxx REMOVE_FROM_DONE', payload);
       if (!payload || !payload.fileName || payload.index === undefined) {
         throw new Error("Invalid payload");
       }
@@ -168,7 +162,6 @@ export function registerProjectHandlers(
     'project-channel',
     'REMOVE_ASSET',
     async (payload) => {
-      console.log('xxxxxxxxxxxxxx REMOVE_ASSET', payload);
       if (!payload || !payload.directory || !payload.name) {
         throw new Error("Invalid payload");
       }
