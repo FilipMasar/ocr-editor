@@ -1,5 +1,6 @@
 import { XMLBuilder, XmlBuilderOptions, XMLParser, XMLValidator } from 'fast-xml-parser';
 import { AltoJson } from '../../renderer/types/alto';
+import { v4 as uuidv4 } from 'uuid';
 
 // Define validation result type
 export interface ValidationResult {
@@ -183,12 +184,11 @@ function addCustomId(json: any): any {
 }
 
 /**
- * Generates a unique ID
- * TODO: consider using a more robust method. Eg. using a UUID
+ * Generates a unique ID using UUID v4
  * @returns {string} A unique ID
  */
 function generateUniqueId(): string {
-  return '_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+  return uuidv4();
 }
 
 /**
