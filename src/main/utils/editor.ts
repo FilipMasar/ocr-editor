@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { jsonToXml, parseAndValidateAlto } from './xmlConvertor';
+import { jsonToXml, parseAndValidateAlto, removeCustomIds } from './xmlConvertor';
 import { getImageUri } from './image';
 import { AltoJson } from '../../renderer/types/alto';
 
@@ -98,7 +98,10 @@ export const saveAlto = async (
     };
   }
 
-  const xmlContent = jsonToXml(alto);
+  // Remove custom IDs from the ALTO object
+  const altoWithoutCustomIds = removeCustomIds(alto);
+
+  const xmlContent = jsonToXml(altoWithoutCustomIds);
   
   // Validate before saving
   const { validation } = parseAndValidateAlto(xmlContent);

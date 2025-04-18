@@ -165,10 +165,10 @@ export const validateAltoV3 = (xml: string): ValidationResult => {
   }
 };
 
-function addCustomId(json: any): any {
+function addCustomIds(json: any): any {
   // Check if json is an array
   if (Array.isArray(json)) {
-    json.forEach((item) => addCustomId(item));
+    json.forEach((item) => addCustomIds(item));
   } else if (json && typeof json === 'object') {
     // Add a new unique ID to the current object
     json['@_CUSTOM_ID'] = generateUniqueId();
@@ -176,7 +176,7 @@ function addCustomId(json: any): any {
     // Iterate over each key (skip the newly added ID to avoid recursion on it)
     Object.keys(json).forEach((key) => {
       if (key !== '@_CUSTOM_ID') {
-        addCustomId(json[key]);
+        addCustomIds(json[key]);
       }
     });
   }
@@ -191,6 +191,27 @@ function generateUniqueId(): string {
   return uuidv4();
 }
 
+export function removeCustomIds(json: any): any {
+  if (Array.isArray(json)) {
+    // Map over the array, recursively calling removeCustomIds on each item
+    return json.map(item => removeCustomIds(item));
+  } else if (json && typeof json === 'object') {
+    // Create a new object to store the results
+    const newObj: { [key: string]: any } = {};
+    // Iterate over the keys of the original object
+    for (const key in json) {
+      // Only copy properties that are not '@_CUSTOM_ID' and belong to the object itself
+      if (Object.prototype.hasOwnProperty.call(json, key) && key !== '@_CUSTOM_ID') {
+        // Recursively call removeCustomIds on the property's value
+        newObj[key] = removeCustomIds(json[key]);
+      }
+    }
+    return newObj;
+  }
+  // Return primitives or other types unchanged
+  return json;
+}
+
 /**
  * Parse and validate ALTO XML
  * Returns the parsed JSON and validation info
@@ -199,7 +220,7 @@ export const parseAndValidateAlto = (xml: string): ParseAndValidateResult => {
   try {
     const version = detectAltoVersion(xml);
     const json = xmlToJson(xml);
-    const jsonWithCustomIds = addCustomId(json);
+    const jsonWithCustomIds = addCustomIds(json);
 
     // Validate if it's version 3
     let validation: ValidationResult = { valid: true };
