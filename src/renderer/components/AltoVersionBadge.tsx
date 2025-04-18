@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Badge, Tooltip, Text } from '@mantine/core';
-import { useAlto } from '../context/app/AltoContext';
+import { useAlto } from '../context';
 
 interface AltoVersionBadgeProps {
   showTooltip?: boolean;

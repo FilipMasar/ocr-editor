@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { PageDimensions } from '../../types/app';
+import { PageDimensions } from '../types/app';
 import { 
   getFirstPage, 
   getMeasurementUnit, 
@@ -23,7 +23,7 @@ import {
   getAllMargins,
   getAllHyphens,
   getAllSpaces,
-} from '../../utils/alto';
+} from '../utils/alto';
 import { 
   AltoJson, 
   AltoTextBlockJson, 
@@ -37,8 +37,8 @@ import {
   AltoMarginJson,
   AltoHyphenJson,
   AltoSpaceJson,
-} from '../../types/alto';
-import { ValidationStatus } from '../../../shared/ipc/editor-channel';
+} from '../types/alto';
+import { ValidationStatus } from '../../shared/ipc/editor-channel';
 
 
 /**
@@ -77,7 +77,7 @@ export const useAlto = () => useContext(AltoContext);
 /**
  * Provider component for the ALTO context
  */
-const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
+export const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
   const [alto, setAlto] = useState<AltoJson>();
   const [pageDimensions, setPageDimensions] = useState<PageDimensions>({
     width: 0,
@@ -180,5 +180,3 @@ const AltoProvider: FC<PropsWithChildren> = ({ children }) => {
     </AltoContext.Provider>
   );
 };
-
-export default AltoProvider; 

@@ -1,13 +1,11 @@
 import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
-import { useSettings } from '../../context/app/SettingsContext';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { TextStyle } from '../../types/app';
 import { convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoStringJson } from '../../types/alto';
 import { elementColors } from './colors';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 const defaultStyle: TextStyle = {
   fontSize: 16,

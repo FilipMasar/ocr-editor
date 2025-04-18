@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { ProjectAssetList, ProjectContextValues } from '../../types/project';
+import { ProjectAssetList, ProjectContextValues } from '../types/project';
 
 /**
  * Context for managing project-related state and operations
@@ -22,7 +22,7 @@ export const useProject = () => useContext(ProjectContext);
 /**
  * Provider component for the project context
  */
-const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
+export const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
   const [projectAssets, setProjectAssets] = useState<ProjectAssetList>();
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -145,5 +145,3 @@ const ProjectProvider: FC<PropsWithChildren> = ({ children }) => {
     </ProjectContext.Provider>
   );
 };
-
-export default ProjectProvider; 

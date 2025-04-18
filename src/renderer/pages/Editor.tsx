@@ -5,9 +5,7 @@ import EditorOverlay from '../components/editorOverlay/EditorOverlay';
 import Viewer from '../components/Viewer';
 import ValidationWarning from '../components/ValidationWarning';
 import AltoVersionBadge from '../components/AltoVersionBadge';
-import { useAlto } from '../context/app/AltoContext';
-import { useEditor } from '../context/editor/EditorContext';
-import { useSettings } from '../context/app/SettingsContext';
+import { useAlto, useEditor, useSettings } from '../context';
 import { ErrorBoundary } from '../components/common';
 import { logger } from '../utils/logger';
 

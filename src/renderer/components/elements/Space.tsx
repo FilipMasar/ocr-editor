@@ -1,11 +1,9 @@
 import { FC } from 'react';
 import { AltoSpaceJson } from '../../types/alto';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { convertToPixels } from '../../utils/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
-import { useSettings } from '../../context/app/SettingsContext';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface SpaceProps {
   element: AltoSpaceJson;

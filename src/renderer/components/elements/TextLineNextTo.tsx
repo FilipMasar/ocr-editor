@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto } from '../../context';
 import { getStringsFromTextLine, convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextLineJson } from '../../types/alto';

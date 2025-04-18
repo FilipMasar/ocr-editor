@@ -1,11 +1,9 @@
 import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { convertToPixels } from '../../utils/alto';
 import { AltoComposedBlockJson } from '../../types/alto';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 import { elementColors } from './colors';
-import { useSettings } from '../../context/app/SettingsContext';
 
 interface ComposedBlockProps {
   element: AltoComposedBlockJson;

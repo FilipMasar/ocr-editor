@@ -16,9 +16,9 @@ import {
   AltoIllustrationJson,
   AltoComposedBlockJson,
   AltoJson 
-} from '../../types/alto';
-import { updateElementInAlto } from '../../utils/alto';
-import { useAlto } from '../app/AltoContext';
+} from '../types/alto';
+import { updateElementInAlto } from '../utils/alto';
+import { useAlto } from './AltoContext';
 import { useEditor } from './EditorContext';
 /**
  * Union type of all possible ALTO elements that can be edited
@@ -50,7 +50,7 @@ export const useAltoEditor = () => useContext(AltoEditorContext);
 /**
  * Provider component for the ALTO editor context
  */
-const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
+export const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [altoNode, setAltoNode] = useState<AltoElement | undefined>();
   const [customId, setCustomId] = useState<string>();
   const { alto, setAlto } = useAlto();
@@ -102,5 +102,3 @@ const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
     </AltoEditorContext.Provider>
   );
 };
-
-export default AltoEditorProvider; 

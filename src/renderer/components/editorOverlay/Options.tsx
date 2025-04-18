@@ -12,9 +12,7 @@ import {
 } from '@mantine/core';
 import { FC, useCallback, ChangeEvent } from 'react';
 import { Layers, Sun, Type } from 'react-feather';
-import { useAlto } from '../../context/app/AltoContext';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
-import { useSettings } from '../../context/app/SettingsContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { elementColors } from '../../components/elements/colors';
 import { Settings } from '../../types/app';
 

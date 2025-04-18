@@ -9,8 +9,8 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { Settings } from '../../types/app';
-import { logger } from '../../utils/logger';
+import { Settings } from '../types/app';
+import { logger } from '../utils/logger';
 
 /**
  * Context value interface for the settings provider
@@ -61,7 +61,7 @@ export const useSettings = () => useContext(SettingsContext);
  * Uses type-safe IPC to sync settings with main process
  * Falls back to localStorage when offline/disconnected
  */
-const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
+export const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
   // Use localStorage as a fallback and for initial state
   const [settings, setSettingsState] = useState<Settings>();
   const [saving, setSaving] = useState(false);
@@ -192,5 +192,3 @@ const SettingsProvider: FC<PropsWithChildren> = ({ children }) => {
     </SettingsContext.Provider>
   );
 };
-
-export default SettingsProvider; 

@@ -8,8 +8,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { Save } from 'react-feather';
-import { useEditor } from '../../context/editor/EditorContext';
-import { useProject } from '../../context/project/ProjectContext';
+import { useEditor, useProject } from '../../context';
 
 interface Props {
   onSave: () => void;

@@ -9,8 +9,8 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { AltoJson } from '../../types/alto';
-import { useAlto } from '../app/AltoContext';
+import { AltoJson } from '../types/alto';
+import { useAlto } from './AltoContext';
 
 /**
  * Editor context for managing editor state and operations
@@ -39,7 +39,7 @@ export const useEditor = () => useContext(EditorContext);
 /**
  * Provider component for the editor context
  */
-const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
+export const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [zoom, setZoom] = useState<number>(1);
   const [imageSrc, setImageSrc] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
@@ -155,5 +155,3 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
     </EditorContext.Provider>
   );
 };
-
-export default EditorProvider; 

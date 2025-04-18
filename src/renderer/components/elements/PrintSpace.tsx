@@ -1,11 +1,10 @@
 import { FC } from 'react';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { convertToPixels } from '../../utils/alto';
 import { AltoPrintSpaceJson } from '../../types/alto';
 import { useHover } from '@mantine/hooks';
 import { elementColors } from './colors';
-import { useSettings } from '../../context/app/SettingsContext';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
+
 interface PrintSpaceProps {
   element: AltoPrintSpaceJson;
 }

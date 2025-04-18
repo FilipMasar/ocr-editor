@@ -1,11 +1,9 @@
 import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { convertToPixels } from '../../utils/alto';
 import { AltoIllustrationJson } from '../../types/alto';
 import { elementColors } from './colors';
-import { useSettings } from '../../context/app/SettingsContext';
 
 interface IllustrationProps {
   element: AltoIllustrationJson;

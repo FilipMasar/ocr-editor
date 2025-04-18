@@ -1,12 +1,10 @@
 import { useHover } from '@mantine/hooks';
 import { FC, useEffect, useState } from 'react';
-import { useSettings } from '../../context/app/SettingsContext';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { getStringsFromLine, convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextLineJson } from '../../types/alto';
 import { elementColors } from './colors';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface TextLineProps {
   element: AltoTextLineJson;

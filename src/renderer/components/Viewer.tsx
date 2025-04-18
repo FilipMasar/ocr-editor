@@ -1,8 +1,6 @@
 import { Title } from '@mantine/core';
 import { FC } from 'react';
-import { useSettings } from '../context/app/SettingsContext';
-import { useAlto } from '../context/app/AltoContext';
-import { useEditor } from '../context/editor/EditorContext';
+import { useSettings, useAlto, useEditor } from '../context';
 import GraphicalElement from './elements/GraphicalElement';
 import Illustration from './elements/Illustration';
 import PrintSpace from './elements/PrintSpace';

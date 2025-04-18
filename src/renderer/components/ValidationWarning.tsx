@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Alert, Badge, Text, Group, Collapse } from '@mantine/core';
 import { AlertTriangle, Info } from 'react-feather';
-import { useAlto } from '../context/app/AltoContext';
+import { useAlto } from '../context';
 import { useDisclosure } from '@mantine/hooks';
 
 const ValidationWarning: FC = () => {

@@ -1,12 +1,10 @@
 import { useHover } from '@mantine/hooks';
 import { FC } from 'react';
-import { useAlto } from '../../context/app/AltoContext';
+import { useAlto, useAltoEditor, useSettings } from '../../context';
 import { convertToPixels } from '../../utils/alto';
 import { withErrorBoundary } from '../../utils/withErrorBoundary';
 import { AltoTextBlockJson } from '../../types/alto';
 import { elementColors } from './colors';
-import { useSettings } from '../../context/app/SettingsContext';
-import { useAltoEditor } from '../../context/editor/AltoEditorContext';
 
 interface TextBlockProps {
   element: AltoTextBlockJson;
