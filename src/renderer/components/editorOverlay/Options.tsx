@@ -40,16 +40,12 @@ const elementVisibilityOptions: ElementVisibilityOption[] = [
 
 const Options: FC = () => {
   const { settings, setSettings } = useSettings();
-  const { alto, textBlocks } = useAlto();
+  const { alto } = useAlto();
   const { openAltoEditor } = useAltoEditor();
 
   const onEditWholeAlto = useCallback(() => {
     openAltoEditor(alto);
   }, [alto, openAltoEditor]);
-
-  const onEditWholeText = useCallback(() => {
-    // openTextEditor('ALL', textBlocks);
-  }, [textBlocks]);
 
   // Generic handler for visibility checkboxes
   const handleVisibilityChange = useCallback((key: keyof Settings['show'], checked: boolean) => {
@@ -170,6 +166,7 @@ const Options: FC = () => {
                 <Text mb="xs">Display text:</Text>
                 <Checkbox
                   label="Text fit"
+                  disabled // TODO: Implement text fit
                   checked={settings.show.textFit}
                   onChange={(e) =>
                     setSettings((old) => ({
@@ -207,8 +204,6 @@ const Options: FC = () => {
                     }))
                   }
                 />
-                <Divider my="sm" />
-                <Button onClick={onEditWholeText}>Edit Text</Button>
               </Paper>
             </Menu.Dropdown>
           </Menu>

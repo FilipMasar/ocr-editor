@@ -19,6 +19,7 @@ import {
 } from '../../types/alto';
 import { updateElementInAlto } from '../../utils/alto';
 import { useAlto } from '../app/AltoContext';
+import { useEditor } from './EditorContext';
 /**
  * Union type of all possible ALTO elements that can be edited
  */
@@ -53,6 +54,7 @@ const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [altoNode, setAltoNode] = useState<AltoElement | undefined>();
   const [customId, setCustomId] = useState<string>();
   const { alto, setAlto } = useAlto();
+  const { setUnsavedChanges } = useEditor();
 
   /**
    * Open the ALTO editor with the specified element and update callback
@@ -70,7 +72,8 @@ const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const onUpdate = useCallback((element: any) => {
     const updatedAlto = updateElementInAlto(alto, element, customId);
     setAlto(updatedAlto);
-  }, [alto, customId]);
+    setUnsavedChanges(true);
+  }, [alto, customId, setUnsavedChanges]);
 
   return (
     <AltoEditorContext.Provider value={{ openAltoEditor }}>

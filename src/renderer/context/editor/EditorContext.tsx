@@ -23,8 +23,8 @@ interface EditorProviderValue {
   requestPageAssets: (imageFileName: string, altoFileName: string) => void;
   saveAlto: (fileName: string, index: number) => void;
   saving: boolean;
+  setUnsavedChanges: Dispatch<SetStateAction<boolean>>;
   unsavedChanges: boolean;
-  setIsFreshPage: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
 }
 
@@ -44,25 +44,8 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [imageSrc, setImageSrc] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [isFreshPage, setIsFreshPage] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [initialAlto, setInitialAlto] = useState<AltoJson | null>(null);
   const { alto, setAlto, setAltoVersion, setValidationStatus } = useAlto();
-
-  useEffect(() => {
-    if (alto && initialAlto) {
-      if (isFreshPage) {
-        setIsFreshPage(false);
-      } else {
-        // Only set unsavedChanges true if alto is different from initialAlto
-        const currentJSON = JSON.stringify(alto);
-        const initialJSON = JSON.stringify(initialAlto);
-        if (currentJSON !== initialJSON) {
-          setUnsavedChanges(true);
-        }
-      }
-    }
-  }, [alto, initialAlto, isFreshPage, setUnsavedChanges, setIsFreshPage]);
 
   const requestPageAssets = useCallback(
     (imageFileName: string, altoFileName: string) => {
@@ -99,7 +82,6 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         console.log('PAGE_ASSETS', payload);
         setImageSrc(payload.imageUri);
         setAlto(payload.altoJson as AltoJson);
-        setInitialAlto(JSON.parse(JSON.stringify(payload.altoJson))); // Make a deep copy
         
         // Set ALTO version and validation status if available
         if (payload.altoVersion) {
@@ -110,7 +92,6 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
           setValidationStatus(payload.validationStatus);
         }
         
-        setIsFreshPage(true);
         setUnsavedChanges(false);
         setTimeout(() => setLoading(false), 1000);
       }
@@ -124,9 +105,6 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         if (payload?.validation) {
           setValidationStatus(payload.validation);
         }
-        
-        // Update initialAlto to current alto state
-        setInitialAlto(JSON.parse(JSON.stringify(alto)));
         
         setTimeout(() => {
           setSaving(false);
@@ -153,11 +131,9 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
     setAltoVersion, 
     setValidationStatus, 
     setImageSrc, 
-    setIsFreshPage, 
     setUnsavedChanges, 
     setLoading,
     setSaving,
-    setInitialAlto,
     alto
   ]);
 
@@ -171,8 +147,8 @@ const EditorProvider: FC<PropsWithChildren> = ({ children }) => {
         requestPageAssets,
         saveAlto,
         saving,
+        setUnsavedChanges,
         unsavedChanges,
-        setIsFreshPage,
         loading,
       }}
     >

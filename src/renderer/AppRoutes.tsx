@@ -44,11 +44,11 @@ export default function AppRoutes() {
                 element={
                   <ErrorBoundary componentName="Editor">
                     <AltoProvider>
-                      <AltoEditorProvider>
-                        <EditorProvider>
+                      <EditorProvider>
+                        <AltoEditorProvider>
                           <Editor />
-                        </EditorProvider>
-                      </AltoEditorProvider>
+                        </AltoEditorProvider>
+                      </EditorProvider>
                     </AltoProvider>
                   </ErrorBoundary>
                 }
