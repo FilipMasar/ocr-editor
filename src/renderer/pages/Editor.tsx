@@ -1,4 +1,4 @@
-import { Center, Loader, Title, Box } from '@mantine/core';
+import { Center, Loader, Box } from '@mantine/core';
 import { FC, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import EditorOverlay from '../components/editorOverlay/EditorOverlay';
@@ -72,16 +72,6 @@ const Editor: FC = () => {
     }
   }, [imageFileName, altoFileName, requestPageAssets]);
 
-  if (loading)
-    return (
-      <Center mt={120}>
-        <Loader />
-        <Title order={2} ml="sm">
-          Loading...
-        </Title>
-      </Center>
-    );
-
   return (
     <>
       <ErrorBoundary componentName="EditorStatusBar">
@@ -103,7 +93,12 @@ const Editor: FC = () => {
         </Box>
       </ErrorBoundary>
 
-      <div
+      {loading ? (
+        <Center w="100vw" h="100vh">
+          <Loader />
+        </Center>
+      ) : (
+        <div
         style={{
           minHeight: '100vh',
           minWidth: '100vw',
@@ -124,8 +119,9 @@ const Editor: FC = () => {
           <ErrorBoundary componentName="Viewer">
             <Viewer />
           </ErrorBoundary>
+          </div>
         </div>
-      </div>
+      )}
       
       <ErrorBoundary componentName="EditorOverlay">
         <EditorOverlay
