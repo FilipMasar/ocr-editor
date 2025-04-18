@@ -1,7 +1,7 @@
 /**
  * Type-safe IPC handlers for the project channel
  */
-import { BrowserWindow, IpcMain, IpcMainEvent } from 'electron';
+import { BrowserWindow, IpcMain } from 'electron';
 import { registerHandler } from '../utils/ipc-handler';
 import { 
   ProjectAssetList 

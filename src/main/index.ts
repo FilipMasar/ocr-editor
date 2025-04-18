@@ -79,7 +79,7 @@ function createWindow(): void {
 
   // Register all type-safe IPC handlers
   registerProjectHandlers(ipcMain, getMainWindow);
-  registerEditorHandlers(ipcMain, getMainWindow);
+  registerEditorHandlers(ipcMain);
   registerConfigHandlers(ipcMain);
   registerLoggingHandlers(ipcMain);
 

@@ -1,7 +1,7 @@
 /**
  * Type-safe IPC handlers for the editor channel
  */
-import { BrowserWindow, IpcMain } from 'electron';
+import { IpcMain } from 'electron';
 import { registerHandler } from '../utils/ipc-handler';
 import { editorService, projectService } from '../services';
 
@@ -11,10 +11,7 @@ import { editorService, projectService } from '../services';
  * @param ipcMain The Electron IPC main instance
  * @param getMainWindow Function to get the current main window
  */
-export function registerEditorHandlers(
-  ipcMain: IpcMain,
-  getMainWindow: () => BrowserWindow | null
-): void {
+export function registerEditorHandlers(ipcMain: IpcMain): void {
   // GET_PAGE_ASSETS handler
   registerHandler(
     ipcMain,
