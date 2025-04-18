@@ -16,6 +16,8 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useProject } from '../context';
 
 interface Props {
+  id: string;
+  isHighlighted?: boolean;
   image: string;
   imageSrc: string;
   alto: string;
@@ -30,7 +32,7 @@ const getColorForWer = (wer: number): DefaultMantineColor => {
   return 'red';
 };
 
-const PageCard: FC<Props> = ({ image, imageSrc, alto, done, wer, index }) => {
+const PageCard: FC<Props> = ({ id, isHighlighted, image, imageSrc, alto, done, wer, index }) => {
   const { removeAsset, updatePageDone } = useProject();
   const navigate = useNavigate();
   const hoverImage = useHover();
@@ -53,6 +55,12 @@ const PageCard: FC<Props> = ({ image, imageSrc, alto, done, wer, index }) => {
 
   return (
     <Card
+      id={id}
+      sx={(theme) => ({
+        outline: isHighlighted ? `2px solid ${theme.colors.blue[6]}` : 'none',
+        outlineOffset: '2px',
+        display: 'flex',
+      })}
       shadow="sm"
       p={0}
       m="sm"
@@ -81,7 +89,11 @@ const PageCard: FC<Props> = ({ image, imageSrc, alto, done, wer, index }) => {
         />
       )}
 
-      <Stack justify="space-between" p="md">
+      <Stack
+        justify="space-between"
+        p="md"
+        sx={{ width: 220, boxSizing: 'border-box' }}
+      >
         <div
           style={{
             display: 'flex',
@@ -100,7 +112,7 @@ const PageCard: FC<Props> = ({ image, imageSrc, alto, done, wer, index }) => {
                   Missing image file
                 </Text>
               ) : (
-                <Text size="xs">{image}</Text>
+                <Text size="xs" truncate title={image}>{image}</Text>
               )}
             </div>
             {image !== '' && (
@@ -130,7 +142,7 @@ const PageCard: FC<Props> = ({ image, imageSrc, alto, done, wer, index }) => {
                   Missing ALTO file
                 </Text>
               ) : (
-                <Text size="xs">{alto}</Text>
+                <Text size="xs" truncate title={alto}>{alto}</Text>
               )}
             </div>
             {alto !== '' && (

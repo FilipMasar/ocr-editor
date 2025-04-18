@@ -1,7 +1,7 @@
 import { Title, Text, Button, RingProgress, Flex } from '@mantine/core';
 import { FC, useEffect, useState } from 'react';
 import { ArrowLeft, PlusCircle } from 'react-feather';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import PageCard from '../components/PageCard';
 import { useProject } from '../context';
 
@@ -16,8 +16,10 @@ interface ExtendedProjectAsset {
 
 const Project: FC = () => {
   const [progress, setProgress] = useState<number>(0);
+  const [highlightedCardIndex, setHighlightedCardIndex] = useState<number | null>(null);
   const { projectAssets, closeProject, addImages, addAltos } = useProject();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const goBack = () => {
     closeProject();
@@ -33,6 +35,42 @@ const Project: FC = () => {
 
     setProgress(prog);
   }, [projectAssets]);
+
+  // Effect to scroll to the highlighted card
+  useEffect(() => {
+    if (location.state && typeof location.state.scrollToPage === 'number') {
+      const pageIndex = location.state.scrollToPage;
+      const cardId = `page-card-${pageIndex}`;
+      const cardElement = document.getElementById(cardId);
+      if (cardElement) {
+        // Use setTimeout to ensure the element is rendered before scrolling
+        setTimeout(() => {
+          cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setHighlightedCardIndex(pageIndex);
+          // Clear the location state after scrolling and highlighting
+          window.history.replaceState({}, document.title)
+        }, 0);
+      }
+    }
+  }, [location.state]);
+
+  // Effect to remove highlight on click
+  useEffect(() => {
+    if (highlightedCardIndex === null) return;
+
+    const removeHighlight = () => {
+      console.log('removing highlight');
+      setHighlightedCardIndex(null);
+    };
+
+    // Add listener
+    document.addEventListener('click', removeHighlight);
+
+    // Cleanup listener
+    return () => {
+      document.removeEventListener('click', removeHighlight);
+    };
+  }, [highlightedCardIndex]);
 
   if (projectAssets === undefined) return <div>Something went wrong</div>;
 
@@ -85,6 +123,8 @@ const Project: FC = () => {
         {(projectAssets as ExtendedProjectAsset[]).map(({ image, imageSrc, alto, done, wer }, index) => (
           <PageCard
             key={image + alto}
+            id={`page-card-${index}`}
+            isHighlighted={index === highlightedCardIndex}
             image={image}
             imageSrc={imageSrc || ''}
             alto={alto}

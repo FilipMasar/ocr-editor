@@ -20,7 +20,7 @@ const Paging: FC<Props> = ({ pageNumber }) => {
       if(!window.confirm('You have unsaved changes. Are you sure you want to leave this page?')) return;
     }
 
-    navigate('/project');
+    navigate('/project', { state: { scrollToPage: pageNumber } });
   };
 
   const nextPage = (e: MouseEvent<HTMLButtonElement>) => {
