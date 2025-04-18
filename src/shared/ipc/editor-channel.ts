@@ -1,3 +1,4 @@
+import { AltoJson } from '../../renderer/types/alto';
 import { ChannelDefinition, IpcMessage } from './channels';
 
 /**
@@ -29,7 +30,7 @@ type GetPageAssetsRequest = IpcMessage<
 
 type SaveAltoRequest = IpcMessage<
   'SAVE_ALTO',
-  { fileName: string; alto: unknown; index: number }
+  { fileName: string; alto: AltoJson; index: number }
 >;
 
 /**

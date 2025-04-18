@@ -8,6 +8,7 @@ import {
   PageAssets, 
   ValidationStatus 
 } from '../../shared/ipc/editor-channel';
+import { AltoJson } from '../../renderer/types/alto';
 
 // Import existing functions
 import { 
@@ -71,7 +72,7 @@ export class EditorService {
    */
   async saveAlto(
     fileName: string, 
-    alto: unknown
+    alto: AltoJson
   ): Promise<{ validation?: ValidationStatus }> {
     const currentProjectPath = projectService.getCurrentProjectPath();
     
