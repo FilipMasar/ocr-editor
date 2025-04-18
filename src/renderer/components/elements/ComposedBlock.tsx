@@ -13,7 +13,7 @@ interface ComposedBlockProps {
 
 const ComposedBlock: FC<ComposedBlockProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-  const { measurementUnit, updateComposedBlock } = useAlto();
+  const { measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
 
@@ -21,13 +21,6 @@ const ComposedBlock: FC<ComposedBlockProps> = ({ element }) => {
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
   const width = convertToPixels(element['@_WIDTH'], measurementUnit);
   const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
-  
-  const handleClick = () => {
-    openAltoEditor(
-      element,
-      () => (updated: AltoComposedBlockJson) => updateComposedBlock(updated, 0)
-    );
-  };
 
   return (
     <div
@@ -42,7 +35,7 @@ const ComposedBlock: FC<ComposedBlockProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.composedBlocks.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
-      onClick={handleClick}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

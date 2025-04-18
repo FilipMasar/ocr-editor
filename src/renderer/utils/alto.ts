@@ -394,39 +394,76 @@ export const getAllText = (altoJson: AltoJson): string => {
 };
 
 /**
- * Updates a TextBlock in the ALTO JSON structure
- * Returns a new ALTO JSON with the updated TextBlock
+ * Recursively searches through the ALTO structure and updates the element
+ * with the matching targetId. Modifies the node object in place.
+ *
+ * @param node The current node in the ALTO structure being traversed.
+ * @param targetId The @_CUSTOM_ID of the element to find and update.
+ * @param newElementData The new data to replace the found element with.
+ * @returns True if the element was found and updated, false otherwise.
  */
-export const updateTextBlockInAlto = (
-  altoJson: AltoJson,
-  textBlock: AltoTextBlockJson,
-  index: number,
-  containerPath: string[] = ['alto', 'Layout', 'Page', 'PrintSpace']
-): AltoJson => {
-  // Create a deep copy of the ALTO JSON
-  const newAlto = JSON.parse(JSON.stringify(altoJson));
-  
-  // Navigate to the container element
-  let container = newAlto;
-  for (const part of containerPath) {
-    container = container[part];
-    if (!container) return altoJson; // Return original if path isn't valid
+function findAndUpdateRecursive(node: any, targetId: string, newElementData: any): boolean {
+  if (!node || typeof node !== 'object') {
+    return false;
   }
-  
-  // Update the TextBlock
-  if (index === -1) {
-    container.TextBlock = textBlock;
-  } else {
-    if (!Array.isArray(container.TextBlock)) {
-      if (index === 0) {
-        container.TextBlock = textBlock;
+
+  // Iterate over properties of the current node
+  for (const key in node) {
+    // Skip non-own properties and attributes
+    if (!Object.prototype.hasOwnProperty.call(node, key) || key.startsWith('@_')) {
+      continue;
+    }
+
+    const child = node[key];
+
+    if (Array.isArray(child)) {
+      // Handle arrays of elements
+      for (let i = 0; i < child.length; i++) {
+        const item = child[i];
+        if (item && typeof item === 'object' && item['@_CUSTOM_ID'] === targetId) {
+          // Found the element in the array, replace it
+          child[i] = newElementData;
+          return true; // Found and updated
+        }
+        // Recurse into the item if it's an object
+        if (findAndUpdateRecursive(item, targetId, newElementData)) {
+          return true; // Found and updated deeper
+        }
       }
-    } else {
-      if (index >= 0 && index < container.TextBlock.length) {
-        container.TextBlock[index] = textBlock;
+    } else if (child && typeof child === 'object') {
+      // Handle single child objects
+      if (child['@_CUSTOM_ID'] === targetId) {
+        // Found the element as a direct property, replace it
+        node[key] = newElementData;
+        return true; // Found and updated
+      }
+      // Recurse into the child object
+      if (findAndUpdateRecursive(child, targetId, newElementData)) {
+        return true; // Found and updated deeper
       }
     }
   }
-  
+
+  return false; // Not found in this subtree
+}
+
+/**
+ * Creates a deep copy of the ALTO JSON and updates a specific element within it.
+ * The element is identified by its @_CUSTOM_ID attribute matching the provided customId.
+ *
+ * @param altoJson The original ALTO JSON object.
+ * @param element The new element data to insert. Using 'any' type due to import issues and for flexibility.
+ * @param customId The @_CUSTOM_ID of the element to be replaced.
+ * @returns A new AltoJson object with the specified element updated, or the original object if the ID was not found.
+ */
+export const updateElementInAlto = (altoJson: AltoJson, element: any, customId: string): AltoJson => {
+  // Create a deep copy to avoid modifying the original object
+  const newAlto: AltoJson = JSON.parse(JSON.stringify(altoJson));
+
+  // Start the recursive search and update process from the Layout level.
+  // The findAndUpdateRecursive function modifies 'newAlto' in place.
+  findAndUpdateRecursive(newAlto.alto.Layout, customId, element);
+
+  // Return the modified deep copy
   return newAlto;
 };

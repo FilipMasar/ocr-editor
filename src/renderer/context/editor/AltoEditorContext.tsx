@@ -4,6 +4,7 @@ import {
   createContext,
   FC,
   PropsWithChildren,
+  useCallback,
   useContext,
   useState,
 } from 'react';
@@ -16,7 +17,8 @@ import {
   AltoComposedBlockJson,
   AltoJson 
 } from '../../types/alto';
-
+import { updateElementInAlto } from '../../utils/alto';
+import { useAlto } from '../app/AltoContext';
 /**
  * Union type of all possible ALTO elements that can be edited
  */
@@ -29,15 +31,11 @@ type AltoElement =
   | AltoIllustrationJson 
   | AltoComposedBlockJson;
 
-// Type for update callback function
-type UpdateCallback = (updatedElement: AltoElement) => void;
-type UpdateFactory = () => UpdateCallback;
-
 /**
  * Alto Editor context value interface
  */
 interface AltoEditorProviderValue {
-  openAltoEditor: (altoElement: AltoElement, onUpdate: UpdateFactory) => void;
+  openAltoEditor: (altoElement: AltoElement) => void;
 }
 
 // Context
@@ -52,45 +50,47 @@ export const useAltoEditor = () => useContext(AltoEditorContext);
  * Provider component for the ALTO editor context
  */
 const AltoEditorProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [alto, setAlto] = useState<AltoElement | undefined>();
-  const [update, setUpdate] = useState<UpdateCallback | undefined>();
+  const [altoNode, setAltoNode] = useState<AltoElement | undefined>();
+  const [customId, setCustomId] = useState<string>();
+  const { alto, setAlto } = useAlto();
 
   /**
    * Open the ALTO editor with the specified element and update callback
    */
-  const openAltoEditor = (altoElement: AltoElement, onUpdate: UpdateFactory) => {
-    setAlto(altoElement);
-    setUpdate(() => onUpdate());
+  const openAltoEditor = (altoElement: AltoElement) => {
+    setAltoNode(altoElement);
+    setCustomId(altoElement["@_CUSTOM_ID"]);
   };
 
   const onClose = () => {
-    setAlto(undefined);
-    setUpdate(undefined);
+    setAltoNode(undefined);
+    setCustomId(undefined);
   };
 
+  const onUpdate = useCallback((element: any) => {
+    const updatedAlto = updateElementInAlto(alto, element, customId);
+    setAlto(updatedAlto);
+  }, [alto, customId]);
+
   return (
-    <AltoEditorContext.Provider
-      value={{
-        openAltoEditor,
-      }}
-    >
+    <AltoEditorContext.Provider value={{ openAltoEditor }}>
       {children}
       <Modal
-        opened={alto !== undefined}
+        opened={altoNode !== undefined}
         onClose={onClose}
         title="Edit alto element"
         size="xl"
         overflow="inside"
       >
-        {alto && update && (
+        {altoNode && (
           <ReactJson
-            src={alto}
+            src={altoNode}
             name={null}
             displayDataTypes={false}
             collapsed={3}
-            onAdd={(edit) => update(edit.updated_src as AltoElement)}
-            onEdit={(edit) => update(edit.updated_src as AltoElement)}
-            onDelete={(edit) => update(edit.updated_src as AltoElement)}
+            onAdd={(edit) => onUpdate(edit.updated_src)}
+            onEdit={(edit) => onUpdate(edit.updated_src)}
+            onDelete={(edit) => onUpdate(edit.updated_src)}
             theme="shapeshifter"
             style={{ padding: 16 }}
           />

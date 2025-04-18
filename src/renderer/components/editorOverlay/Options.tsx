@@ -40,12 +40,12 @@ const elementVisibilityOptions: ElementVisibilityOption[] = [
 
 const Options: FC = () => {
   const { settings, setSettings } = useSettings();
-  const { alto, setAlto, textBlocks } = useAlto();
+  const { alto, textBlocks } = useAlto();
   const { openAltoEditor } = useAltoEditor();
 
   const onEditWholeAlto = useCallback(() => {
-    // openAltoEditor(alto, () => setAlto);
-  }, [alto, openAltoEditor, setAlto]);
+    openAltoEditor(alto);
+  }, [alto, openAltoEditor]);
 
   const onEditWholeText = useCallback(() => {
     // openTextEditor('ALL', textBlocks);

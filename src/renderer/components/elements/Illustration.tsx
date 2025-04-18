@@ -13,7 +13,7 @@ interface IllustrationProps {
 
 const Illustration: FC<IllustrationProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-  const { updateIllustration, measurementUnit } = useAlto();
+  const { measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
 
@@ -21,13 +21,6 @@ const Illustration: FC<IllustrationProps> = ({ element }) => {
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
   const width = convertToPixels(element['@_WIDTH'], measurementUnit);
   const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
-
-  const handleClick = () => {
-    openAltoEditor(
-      element,
-      () => (updated: AltoIllustrationJson) => updateIllustration(updated, 0)
-    );
-  };
 
   return (
     <div
@@ -42,7 +35,7 @@ const Illustration: FC<IllustrationProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.illustrations.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
-      onClick={handleClick}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };

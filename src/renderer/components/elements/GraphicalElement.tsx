@@ -13,7 +13,7 @@ interface GraphicalElementProps {
 
 const GraphicalElement: FC<GraphicalElementProps> = ({ element }) => {
   const { ref, hovered } = useHover();
-  const { updateGraphicalElement, measurementUnit } = useAlto();
+  const { measurementUnit } = useAlto();
   const { openAltoEditor } = useAltoEditor();
   const { settings } = useSettings();
   
@@ -21,13 +21,6 @@ const GraphicalElement: FC<GraphicalElementProps> = ({ element }) => {
   const left = convertToPixels(element['@_HPOS'], measurementUnit);
   const width = convertToPixels(element['@_WIDTH'], measurementUnit);
   const height = convertToPixels(element['@_HEIGHT'], measurementUnit);
-
-  const handleClick = () => {
-    openAltoEditor(
-      element,
-      () => (updated: AltoGraphicalElementJson) => updateGraphicalElement(updated, 0)
-    );
-  };
 
   return (
     <div
@@ -42,7 +35,7 @@ const GraphicalElement: FC<GraphicalElementProps> = ({ element }) => {
         backgroundColor: hovered ? elementColors.graphicalElements.backgroundColor : 'transparent',
         cursor: 'pointer',
       }}
-      onClick={handleClick}
+      onClick={() => openAltoEditor(element)}
     />
   );
 };
